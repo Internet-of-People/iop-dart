@@ -1,0 +1,18 @@
+image: cirrusci/flutter:stable
+
+stages:
+  - analyze
+  - test
+
+analyze:
+  stage: analyze
+  script:
+    - dart --version
+    - dartanalyzer .
+
+unit_test:
+  stage: test
+  script:
+    - flutter --version
+# TODO what kind of tests to run?
+#    - flutter test
