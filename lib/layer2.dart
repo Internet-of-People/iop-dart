@@ -2,6 +2,7 @@ import 'crypto.dart';
 import 'layer1.dart';
 import 'sdk.dart';
 
+
 abstract class BeforeProofHistory {
     ContentId contentId;
     BeforeProofHistory(this.contentId);
@@ -18,9 +19,9 @@ abstract class DidDocument {
 abstract class Layer2 {
     Layer2(Network network);
 
-    BeforeProofHistory getBeforeProofHistory(ContentId contentId);
+    Future<BeforeProofHistory> getBeforeProofHistory(ContentId contentId);
 
-    DidDocument getDidDocument(Did did);
-    TransactionId getLastTransactionId(Did did);
-    bool getTransactionStatus(TransactionId txId);
+    Future<DidDocument> getDidDocument(Did did);
+    Future<TransactionId> getLastTransactionId(Did did);
+    Future<bool> getTransactionStatus(TransactionId txId);
 }

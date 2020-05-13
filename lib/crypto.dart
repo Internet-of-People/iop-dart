@@ -1,15 +1,18 @@
 import 'claim.dart';
 import 'sdk.dart';
 
+
 String maskJson(String json, String keepPaths) { throw UnimplementedError(); }
 String generateNonce() { throw UnimplementedError(); }
 
-abstract class Bip39 {
+class Bip39 {
+    static const String DEMO_PHRASE = 'include pear escape sail spy orange cute despair witness trouble sleep torch wire burst unable brass expose fiction drift clock duck oxygen aerobic already';
+
     Bip39(String languageCode);
 
-    String generateSeedPhrase();
-    bool validateSeedPhrase(String phrase);
-    List<String> listWords(String wordPrefix);
+    String generatePhrase() { throw UnimplementedError(); }
+    bool validatePhrase(String phrase) { throw UnimplementedError(); }
+    List<String> listWords(String wordPrefix) { throw UnimplementedError(); }
 }
 
 abstract class KeyId {}
@@ -43,16 +46,22 @@ abstract class SignedContent {
     bool validateWithKeyId(KeyId keyId);
 }
 
+abstract class Authentication {}
+
 
 // TODO path should be strongly typed, check if there's FilePath
-abstract class Vault {
-    Vault.fromSeedPhrase(String phrase, {String vaultPath});
-    Vault.load({String vaultPath});
+class Vault {
+    Vault.fromPhrase(String phrase, {String languageCode = 'en', String vaultPath = 'vault.test'})
+        { throw UnimplementedError(); }
+    Vault.load({String vaultPath = 'vault.test'}) { throw UnimplementedError(); }
 
-    List<Did> listDids();
-    Did createDid();
+    List<Did> listDids() { throw UnimplementedError(); }
+    Did createDid() { throw UnimplementedError(); }
 
-    Signed<WitnessRequest> signWitnessRequest(String witnessRequest, String authentication);
-    Signed<WitnessStatement> signWitnessStatement(String witnessStatement, String authentication);
-    Signed<Presentation> signClaimPresentation(String claimPresentation, String authentication);
+    Future<MorpheusSigned<WitnessRequest>> signWitnessRequest(String witnessRequest, Authentication authentication)
+        { throw UnimplementedError(); }
+    Future<MorpheusSigned<WitnessStatement>> signWitnessStatement(String witnessStatement, Authentication authentication)
+        { throw UnimplementedError(); }
+    Future<MorpheusSigned<Presentation>> signClaimPresentation(String claimPresentation, Authentication authentication)
+        { throw UnimplementedError(); }
 }

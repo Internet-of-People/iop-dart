@@ -1,2 +1,5 @@
 abstract class ContentId {}
-abstract class Signed<T> {}
+
+// TODO
+class SignedHydraTransaction {}
+class MorpheusSigned<T> {}

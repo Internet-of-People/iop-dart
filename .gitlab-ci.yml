@@ -8,6 +8,7 @@ analyze:
   stage: analyze
   script:
     - dart --version
+    - pub get
     - dartanalyzer .
 
 unit_test:

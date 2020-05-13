@@ -1,3 +1,9 @@
+import 'package:meta/meta.dart';
+
+import 'crypto.dart';
+import 'sdk.dart';
+
+
 // TODO should these be moved to types instead?
 enum Network {
     LocalTestNet,
@@ -15,20 +21,63 @@ extension NetworkProperties on Network {
     }[this];
 }
 
-
+// TODO what goes here?
+class HydraAddress {
+    HydraAddress(String address) { throw UnimplementedError(); }
+}
 abstract class TransactionId {}
+//class TransactionId {
+//    TransactionId(String txId) { throw UnimplementedError(); }
+//    @override String toString() { throw UnimplementedError(); }
+//}
 
 // TODO work this out
-abstract class HydraTransactionBuilder {}
+abstract class Transaction {}
+
+class HydraTransferTransaction extends Transaction {
+    HydraTransferTransaction({
+        @required HydraAddress toAddress,
+        @required BigInt flakes,
+        BigInt fee,
+        // TODO hexencoded binary
+        // String vendorField,
+    }) { throw UnimplementedError(); }
+    @override String toString() { throw UnimplementedError(); }
+}
+
+// TODO this will belong to a Hydra subtree interface of Vault after subtrees are implemented
+extension HydraTransactionSignatures on Vault {
+    Future<SignedHydraTransaction> signHydraTransfer(HydraTransferTransaction tx, HydraAddress senderAddress)
+        { throw UnimplementedError(); }
+    Future<SignedHydraTransaction> signMorpheusTransaction(MorpheusTransaction tx, HydraAddress gasAddress)
+        { throw UnimplementedError(); }
+}
+
 
 // TODO work this out
-abstract class MorpheusOperationBuilder {}
+class MorpheusOperationAttempt {}
+class MorpheusSignableOperationAttempt extends MorpheusOperationAttempt {}
+class MorpheusOperationBuilder {}
+class MorpheusTransaction extends Transaction {
+    @override String toString() { throw UnimplementedError(); }
+}
+class MorpheusTransactionBuilder {}
 
-abstract class Layer1 {
+// TODO this will belong to a Hydra subtree interface of Vault after subtrees are implemented
+extension MorpheusTransactionSignatures on Vault {
+    Future<MorpheusSigned<MorpheusSignableOperationAttempt>> signDidOperation
+        (MorpheusSignableOperationAttempt tx, Authentication authentication)
+    { throw UnimplementedError(); }
+}
+
+
+class Layer1 {
     Layer1(Network network);
 
-    bool getTransactionStatus(TransactionId txId);
+    Future<bool> getTransactionStatus(TransactionId txId) async { throw UnimplementedError(); }
 
-    // TODO is it possible to` implement sendTransferTx() and sendMorpheusTx() here?
+    Future<TransactionId> sendTransaction(SignedHydraTransaction hydraTx) async { throw UnimplementedError(); }
+
+    // TODO implement sendTransferTx() and sendMorpheusTx() here
     // TODO getWallet(nonce/balance/etc), sendTx(RawTxJson), getCurrentHeight()
 }
