@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:convert';
 import 'package:meta/meta.dart';
 
 import 'crypto.dart';
@@ -23,25 +25,35 @@ extension NetworkProperties on Network {
 
 // TODO what goes here?
 class HydraAddress {
-    HydraAddress(String address) { throw UnimplementedError(); }
+    String address;
+    HydraAddress(this.address) {
+        // TODO validate address
+    }
 }
-abstract class TransactionId {}
-//class TransactionId {
-//    TransactionId(String txId) { throw UnimplementedError(); }
-//    @override String toString() { throw UnimplementedError(); }
-//}
+
+class TransactionId {
+    String txId;
+    TransactionId(this.txId);
+    @override String toString() { return txId; }
+}
 
 // TODO work this out
 abstract class Transaction {}
 
 class HydraTransferTransaction extends Transaction {
+    HydraAddress toAddress;
+    BigInt flakes;
+    BigInt fee;
+
     HydraTransferTransaction({
-        @required HydraAddress toAddress,
-        @required BigInt flakes,
-        BigInt fee,
+        @required this.toAddress,
+        @required this.flakes,
+        this.fee
         // TODO hexencoded binary
         // String vendorField,
-    }) { throw UnimplementedError(); }
+    }) {
+        // TODO validate recipient address format
+    }
     @override String toString() { throw UnimplementedError(); }
 }
 
@@ -72,11 +84,32 @@ extension MorpheusTransactionSignatures on Vault {
 
 
 class Layer1 {
-    Layer1(Network network);
+    Network network;
 
-    Future<bool> getTransactionStatus(TransactionId txId) async { throw UnimplementedError(); }
+    Layer1(this.network);
 
-    Future<TransactionId> sendTransaction(SignedHydraTransaction hydraTx) async { throw UnimplementedError(); }
+    Future<BigInt> getWalletNonce() {
+        // TODO
+        return Future.value(BigInt.from(1));
+    }
+
+    Future<bool> getTransactionStatus(TransactionId txId) async {
+        return Future.value(true);
+    }
+
+    Future<TransactionId> sendTransaction(SignedHydraTransaction hydraTx) async {
+        var url = Uri.parse(network.seedServerUrl + ':4703/api/v2/transactions');
+        var client = HttpClient();
+        var req = await client.postUrl(url)
+            ..headers.contentType = ContentType.json
+            ..write(hydraTx.toString());
+        var resp = await req.close();
+        resp.transform(utf8.decoder).listen((content) {
+            print('Transaction response: ${content}');
+        });
+        // TODO process received response content to create a transactioId
+        return Future.value(TransactionId('transactionId'));
+    }
 
     // TODO implement sendTransferTx() and sendMorpheusTx() here
     // TODO getWallet(nonce/balance/etc), sendTx(RawTxJson), getCurrentHeight()
