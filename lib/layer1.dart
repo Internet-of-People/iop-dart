@@ -15,6 +15,14 @@ enum Network {
 }
 
 extension NetworkProperties on Network {
+    // TODO consider if this duplication is needed here or could be connected directly to Rust types
+    String get Id => const {
+        Network.LocalTestNet: 'HYD testnet',
+        Network.TestNet: 'HYD testnet',
+        Network.DevNet: 'HYD devnet',
+        Network.MainNet: 'HYD mainnet',
+    }[this];
+
     String get seedServerUrlBase => const {
         Network.LocalTestNet: 'http://127.0.0.1',
         Network.TestNet: 'http://35.187.56.222',
@@ -22,7 +30,7 @@ extension NetworkProperties on Network {
         Network.MainNet: 'http://35.195.150.223',
     }[this];
 
-    String get seedServerRestUrl => this.seedServerUrlBase + ':4703/api/v2';
+    String get seedServerRestUrl => seedServerUrlBase + ':4703/api/v2';
 }
 
 // TODO what goes here?
@@ -99,7 +107,7 @@ class Layer1 {
         resp.transform(utf8.decoder).listen((content) {
             print('GetWallet response: ${content}');
         });
-        return Future.value("TODO content");
+        return Future.value('TODO content');
     }
 
     Future<bool> getTransactionStatus(TransactionId txId) async {

@@ -1,4 +1,4 @@
-//import 'package:morpheus_sdk/crypto.dart';
+import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/layer1.dart';
 import 'package:morpheus_sdk/sdk.dart';
 
@@ -13,6 +13,8 @@ SignedHydraTransaction buildTransferTx(String toAddress, BigInt flakes, String p
 }
 
 void main(List<String> arguments) async {
+    DartApi.create('./libmorpheus_core.so');
+    
     // TODO use Vault for signing Hydra transfer transaction
 //    var tx = HydraTransferTransaction(
 //        toAddress: HydraAddress(targetHydAddress),
@@ -24,20 +26,22 @@ void main(List<String> arguments) async {
 //    var vault = Vault.fromPhrase(phrase);
 //    var signedTx = await vault.signHydraTransfer(tx, HydraAddress(senderHydAddress));
 
-    var layer1 = Layer1(Network.TestNet);
-    // TODO query nonce properly
+    final network = Network.TestNet;
+    final layer1 = Layer1(network);
 //    var wallet = await layer1.getWallet();
 //    var nonce = wallet.nonce;
-    var nonce = BigInt.from(1);
+    // TODO query nonce properly
+    var nonce = BigInt.from(3);
+    nonce += BigInt.from(1);
     print('Nonce: ${nonce}');
 
-    // TODO use Vault for signing Hydra transfer transaction
-    var signedTx = buildTransferTx(
-        'tjseecxRmob5qBS2T3qc8frXDKz3YUGB8J',
-        BigInt.from(100000000),
-        'scout try doll stuff cake welcome random taste load town clerk ostrich',
-        nonce + BigInt.from(1)
-    );
+    // TODO use some kind of builder API for the transaction
+    // TODO use vault/hydra to get sender info
+    final senderPubKey = '02db11c07afd6ec05980284af58105329d41e9882947188022350219cca9baa3e7';
+    final recipient = 'tjseecxRmob5qBS2T3qc8frXDKz3YUGB8J';
+    final transferTx = DartApi.Instance.hydraTransferTx(network.Id, senderPubKey, recipient, 3141593, nonce.toInt());
+    // TODO use vault/hydra to sign Tx
+    var signedTx = SignedHydraTransaction(transferTx);
 
     print('Sending transaction');
     var txId = await layer1.sendTransaction(signedTx);
