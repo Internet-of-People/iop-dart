@@ -15,12 +15,14 @@ enum Network {
 }
 
 extension NetworkProperties on Network {
-    String get seedServerUrl => const {
+    String get seedServerUrlBase => const {
         Network.LocalTestNet: 'http://127.0.0.1',
         Network.TestNet: 'http://35.187.56.222',
         Network.DevNet: 'http://35.240.62.119',
         Network.MainNet: 'http://35.195.150.223',
     }[this];
+
+    String get seedServerRestUrl => this.seedServerUrlBase + ':4703/api/v2';
 }
 
 // TODO what goes here?
@@ -85,21 +87,28 @@ extension MorpheusTransactionSignatures on Vault {
 
 class Layer1 {
     Network network;
+    HttpClient client;
 
-    Layer1(this.network);
+    Layer1(this.network) { client = HttpClient(); }
 
-    Future<BigInt> getWalletNonce() {
-        // TODO
-        return Future.value(BigInt.from(1));
+    // TODO should return a typed wallet struct
+    Future<String> getWallet(String addressOrPublicKey) async {
+        var url = Uri.parse(network.seedServerRestUrl + '/wallets/${addressOrPublicKey}');
+        var req = await client.getUrl(url);
+        var resp = await req.close();
+        resp.transform(utf8.decoder).listen((content) {
+            print('GetWallet response: ${content}');
+        });
+        return Future.value("TODO content");
     }
 
     Future<bool> getTransactionStatus(TransactionId txId) async {
+        // TODO implement properly
         return Future.value(true);
     }
 
     Future<TransactionId> sendTransaction(SignedHydraTransaction hydraTx) async {
-        var url = Uri.parse(network.seedServerUrl + ':4703/api/v2/transactions');
-        var client = HttpClient();
+        var url = Uri.parse(network.seedServerRestUrl + '/transactions');
         var req = await client.postUrl(url)
             ..headers.contentType = ContentType.json
             ..write(hydraTx.toString());

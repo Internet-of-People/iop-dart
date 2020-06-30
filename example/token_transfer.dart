@@ -1,4 +1,4 @@
-import 'package:morpheus_sdk/crypto.dart';
+//import 'package:morpheus_sdk/crypto.dart';
 import 'package:morpheus_sdk/layer1.dart';
 import 'package:morpheus_sdk/sdk.dart';
 
@@ -25,7 +25,10 @@ void main(List<String> arguments) async {
 //    var signedTx = await vault.signHydraTransfer(tx, HydraAddress(senderHydAddress));
 
     var layer1 = Layer1(Network.TestNet);
-    var nonce = await layer1.getWalletNonce();
+    // TODO query nonce properly
+//    var wallet = await layer1.getWallet();
+//    var nonce = wallet.nonce;
+    var nonce = BigInt.from(1);
     print('Nonce: ${nonce}');
 
     // TODO use Vault for signing Hydra transfer transaction
@@ -36,7 +39,8 @@ void main(List<String> arguments) async {
         nonce + BigInt.from(1)
     );
 
+    print('Sending transaction');
     var txId = await layer1.sendTransaction(signedTx);
     var txStatus = await layer1.getTransactionStatus(txId);
-    print(txStatus);
+    print('Success status: $txStatus');
 }
