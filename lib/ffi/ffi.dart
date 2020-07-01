@@ -29,8 +29,11 @@ class NativeSlice extends Struct {
 
 extension ResultPtr on Pointer<Result> {
   T extract<T>(T Function(Result) fetcher) {
-    try { return fetcher(ref); }
-    finally { ref.dispose(); }
+    try {
+      return fetcher(ref);
+    } finally {
+      ref.dispose();
+    }
   }
 }
 
@@ -74,14 +77,14 @@ class Result extends Struct {
   void get asVoid => _value;
 
   bool asBool() {
-      final intPtr = asPointer<Uint8>();
-      try {
-        final value = intPtr.value;
-        return value != 0;
-      } finally {
-        free(intPtr);
-      }
+    final intPtr = asPointer<Uint8>();
+    try {
+      final value = intPtr.value;
+      return value != 0;
+    } finally {
+      free(intPtr);
     }
+  }
 
   void dispose() {
     if (_success != nullptr) {
