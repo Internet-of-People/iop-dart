@@ -1,7 +1,3 @@
-import 'claim.dart';
-import 'sdk.dart';
-
-
 String maskJson(String json, String keepPaths) { throw UnimplementedError(); }
 String generateNonce() { throw UnimplementedError(); }
 
@@ -47,21 +43,3 @@ abstract class SignedContent {
 }
 
 abstract class Authentication {}
-
-
-// TODO path should be strongly typed, check if there's FilePath
-class Vault {
-    Vault.fromPhrase(String phrase, {String languageCode = 'en', String vaultPath = 'vault.test'})
-        { throw UnimplementedError(); }
-    Vault.load({String vaultPath = 'vault.test'}) { throw UnimplementedError(); }
-
-    List<Did> listDids() { throw UnimplementedError(); }
-    Did createDid() { throw UnimplementedError(); }
-
-    Future<MorpheusSigned<WitnessRequest>> signWitnessRequest(String witnessRequest, Authentication authentication)
-        { throw UnimplementedError(); }
-    Future<MorpheusSigned<WitnessStatement>> signWitnessStatement(String witnessStatement, Authentication authentication)
-        { throw UnimplementedError(); }
-    Future<MorpheusSigned<Presentation>> signClaimPresentation(String claimPresentation, Authentication authentication)
-        { throw UnimplementedError(); }
-}

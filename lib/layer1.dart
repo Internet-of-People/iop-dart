@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:meta/meta.dart';
 
-import 'crypto.dart';
 import 'sdk.dart';
 
 
@@ -67,15 +66,6 @@ class HydraTransferTransaction extends Transaction {
     @override String toString() { throw UnimplementedError(); }
 }
 
-// TODO this will belong to a Hydra subtree interface of Vault after subtrees are implemented
-extension HydraTransactionSignatures on Vault {
-    Future<SignedHydraTransaction> signHydraTransfer(HydraTransferTransaction tx, HydraAddress senderAddress)
-        { throw UnimplementedError(); }
-    Future<SignedHydraTransaction> signMorpheusTransaction(MorpheusTransaction tx, HydraAddress gasAddress)
-        { throw UnimplementedError(); }
-}
-
-
 // TODO work this out
 class MorpheusOperationAttempt {}
 class MorpheusSignableOperationAttempt extends MorpheusOperationAttempt {}
@@ -84,13 +74,6 @@ class MorpheusTransaction extends Transaction {
     @override String toString() { throw UnimplementedError(); }
 }
 class MorpheusTransactionBuilder {}
-
-// TODO this will belong to a Hydra subtree interface of Vault after subtrees are implemented
-extension MorpheusTransactionSignatures on Vault {
-    Future<MorpheusSigned<MorpheusSignableOperationAttempt>> signDidOperation
-        (MorpheusSignableOperationAttempt tx, Authentication authentication)
-    { throw UnimplementedError(); }
-}
 
 
 class Layer1 {

@@ -126,17 +126,19 @@ class DartApi {
   }
 
 
-  Pointer<Void> createVault(String seed, String word25, String unlockPassword) {
+  Pointer<Void> createVault(String langCode, String seed, String word25, String unlockPassword) {
+    final nativeLang = Utf8.toUtf8(langCode);
     final nativeSeed = Utf8.toUtf8(seed);
     final nativeW25 = Utf8.toUtf8(word25);
     final nativePwd = Utf8.toUtf8(unlockPassword);
     try {
-      return _native.create_vault(nativeSeed, nativeW25, nativePwd)
+      return _native.create_vault(nativeLang, nativeSeed, nativeW25, nativePwd)
           .extract( (res) => res.asPointer() );
     } finally {
       free(nativePwd);
       free(nativeW25);
       free(nativeSeed);
+      free(nativeLang);
     }
   }
 
@@ -214,8 +216,8 @@ class DartApi {
     _native.free_hydra_plugin(hydra);
   }
 
-  Pointer<Void> hydraPrivate(Pointer hydra, String unlockPwd) {
-    final nativePwd = Utf8.toUtf8(unlockPwd);
+  Pointer<Void> hydraPrivate(Pointer hydra, String unlockPassword) {
+    final nativePwd = Utf8.toUtf8(unlockPassword);
     try {
       return _native.hydra_private_get(hydra, nativePwd)
           .extract( (res) => res.asPointer() );

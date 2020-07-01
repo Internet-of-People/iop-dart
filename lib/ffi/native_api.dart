@@ -85,9 +85,9 @@ typedef DartFuncHydraTransferTx = Pointer<Result> Function(
     Pointer<Utf8> network, Pointer<Utf8> senderPubKey, Pointer<Utf8> recipient, int amount, int nonce);
 
 typedef NativeFuncCreateVault = Pointer<Result> Function(
-  Pointer<Utf8> seed, Pointer<Utf8> word25, Pointer<Utf8> unlockPassword);
+    Pointer<Utf8> lang, Pointer<Utf8> seed, Pointer<Utf8> word25, Pointer<Utf8> unlockPassword);
 typedef DartFuncCreateVault = Pointer<Result> Function(
-  Pointer<Utf8> seed, Pointer<Utf8> word25, Pointer<Utf8> unlockPassword);
+    Pointer<Utf8> lang, Pointer<Utf8> seed, Pointer<Utf8> word25, Pointer<Utf8> unlockPassword);
 
 typedef NativeFuncFreeVault = Void Function(Pointer vault);
 typedef DartFuncFreeVault = void Function(Pointer vault);
