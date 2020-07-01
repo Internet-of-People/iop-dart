@@ -3,6 +3,54 @@ import 'package:json_annotation/json_annotation.dart';
 part 'io.g.dart';
 
 @JsonSerializable(explicitToJson: true)
+class SendTransactionResponse {
+  final List<String> accept;
+  final List<String> broadcast;
+  final List<String> excess;
+  final List<String> invalid;
+  final List<String> errors;
+
+  SendTransactionResponse(
+    this.accept,
+    this.broadcast,
+    this.excess,
+    this.invalid,
+    this.errors,
+  );
+
+  factory SendTransactionResponse.fromJson(Map<String, dynamic> json) =>
+      _$SendTransactionResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SendTransactionResponseToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class BlockchainResponse {
+  final BlockchainBlock block;
+  final String supply;
+
+  BlockchainResponse(this.block, this.supply);
+
+  factory BlockchainResponse.fromJson(Map<String, dynamic> json) =>
+      _$BlockchainResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BlockchainResponseToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class BlockchainBlock {
+  final String id;
+  final int height;
+
+  BlockchainBlock(this.id, this.height);
+
+  factory BlockchainBlock.fromJson(Map<String, dynamic> json) =>
+      _$BlockchainBlockFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BlockchainBlockToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class WalletResponse {
   final String address;
   final String publicKey;
@@ -104,7 +152,7 @@ class TransactionStatusResponse {
   final int network;
   final int typeGroup;
   final int type;
-  final int timestamp;
+  final Map<String, dynamic> timestamp;
   final String nonce;
   final String senderPublicKey;
   final String fee;

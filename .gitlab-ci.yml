@@ -15,5 +15,5 @@ unit_test:
   stage: test
   script:
     - flutter --version
-# TODO what kind of tests to run?
-#    - flutter test
+    - pub get
+    - pub run test

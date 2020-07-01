@@ -6,6 +6,55 @@ part of 'io.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+SendTransactionResponse _$SendTransactionResponseFromJson(
+    Map<String, dynamic> json) {
+  return SendTransactionResponse(
+    (json['accept'] as List)?.map((e) => e as String)?.toList(),
+    (json['broadcast'] as List)?.map((e) => e as String)?.toList(),
+    (json['excess'] as List)?.map((e) => e as String)?.toList(),
+    (json['invalid'] as List)?.map((e) => e as String)?.toList(),
+    (json['errors'] as List)?.map((e) => e as String)?.toList(),
+  );
+}
+
+Map<String, dynamic> _$SendTransactionResponseToJson(
+        SendTransactionResponse instance) =>
+    <String, dynamic>{
+      'accept': instance.accept,
+      'broadcast': instance.broadcast,
+      'excess': instance.excess,
+      'invalid': instance.invalid,
+      'errors': instance.errors,
+    };
+
+BlockchainResponse _$BlockchainResponseFromJson(Map<String, dynamic> json) {
+  return BlockchainResponse(
+    json['block'] == null
+        ? null
+        : BlockchainBlock.fromJson(json['block'] as Map<String, dynamic>),
+    json['supply'] as String,
+  );
+}
+
+Map<String, dynamic> _$BlockchainResponseToJson(BlockchainResponse instance) =>
+    <String, dynamic>{
+      'block': instance.block?.toJson(),
+      'supply': instance.supply,
+    };
+
+BlockchainBlock _$BlockchainBlockFromJson(Map<String, dynamic> json) {
+  return BlockchainBlock(
+    json['id'] as String,
+    json['height'] as int,
+  );
+}
+
+Map<String, dynamic> _$BlockchainBlockToJson(BlockchainBlock instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'height': instance.height,
+    };
+
 WalletResponse _$WalletResponseFromJson(Map<String, dynamic> json) {
   return WalletResponse(
     json['address'] as String,
@@ -119,7 +168,7 @@ TransactionStatusResponse _$TransactionStatusResponseFromJson(
     json['network'] as int,
     json['typeGroup'] as int,
     json['type'] as int,
-    json['timestamp'] as int,
+    json['timestamp'] as Map<String, dynamic>,
     json['nonce'] as String,
     json['senderPublicKey'] as String,
     json['fee'] as String,

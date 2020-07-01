@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 abstract class ContentId {}
 
 class MorpheusSigned<T> {}
@@ -7,9 +9,11 @@ class SignedHydraTransaction {
 
   SignedHydraTransaction(this._txContents);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'transactions': [_txContents]
-    };
+  @override
+  String toString() {
+    final content = json.decode(_txContents);
+    return json.encode({
+      'transactions': [content],
+    });
   }
 }

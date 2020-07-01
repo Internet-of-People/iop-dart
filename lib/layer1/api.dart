@@ -40,12 +40,8 @@ class Layer1Api {
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
-      final height = body?.data?.block?.height;
-      if (height == null) {
-        return Future.error(HttpResponseError(resp.statusCode, resp.body));
-      }
-
-      return height;
+      final blockchainResp = BlockchainResponse.fromJson(body['data']);
+      return blockchainResp.block.height;
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
@@ -116,13 +112,29 @@ class Layer1Api {
 
     final resp = await _client.post(
       '${network.layer1ApiUrl}/transactions',
-      body: json.encode(signedTx.toJson()),
+      body: signedTx.toString(),
       headers: _jsonHeaders,
     );
-    if (resp.statusCode == HttpStatus.ok) {
-      return resp.body;
+    if (resp.statusCode != HttpStatus.ok) {
+      return Future.error(HttpResponseError(resp.statusCode, resp.body));
     }
 
-    return Future.error(HttpResponseError(resp.statusCode, resp.body));
+    final body = json.decode(resp.body);
+    final txResp = SendTransactionResponse.fromJson(body['data']);
+
+    if (txResp.invalid.isNotEmpty) {
+      return Future.error(HttpResponseError(
+        resp.statusCode,
+        'Transaction failed: ${json.encode(txResp.errors)}',
+      ));
+    }
+
+    if(txResp.accept.length > 1) {
+      return Future.error(HttpResponseError(
+        resp.statusCode,
+        'sendTx expected 1 accepted tx, got ${txResp.accept.length}. Response: ${resp.body}',
+      ));
+    }
+    return txResp.accept[0];
   }
 }
