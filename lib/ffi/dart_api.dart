@@ -6,69 +6,72 @@ import 'package:morpheus_sdk/ffi/native_api.dart';
 
 class DartApi {
   static DartApi _instance;
-  final NativeAPI _native;
+  final NativeApi _native;
 
   DartApi._(this._native);
 
-  static DartApi create(String libPath) {
-    if (_instance != null) {
-      _instance.dispose();
+  static DartApi get instance {
+    if (_instance == null) {
+      final lib = DynamicLibrary.open('./libmorpheus_core.so');
+      final api = NativeApi(
+        lib.lookupFunction<NBip39GeneratePhrase, DBip39GeneratePhrase>(
+          'Bip39_generate_phrase',
+        ),
+        lib.lookupFunction<NBip39ValidatePhrase, DBip39ValidatePhrase>(
+          'Bip39_validate_phrase',
+        ),
+        lib.lookupFunction<NBip39ListWords, DBip39ListWords>(
+          'Bip39_list_words',
+        ),
+        lib.lookupFunction<NMaskJson, DMaskJson>('Json_selective_digest'),
+        lib.lookupFunction<NGenerateNonce, DGenerateNonce>('Nonce_generate'),
+        lib.lookupFunction<NHydraTransferTx, DHydraTransferTx>(
+          'TxBuilder_hydraTransferTx',
+        ),
+        lib.lookupFunction<NCreateVault, DCreateVault>('Vault_create'),
+        lib.lookupFunction<NFreeVault, DFreeVault>('delete_Vault'),
+        lib.lookupFunction<NVaultToJson, DVaultToJson>('Vault_save'),
+        lib.lookupFunction<NJsonToVault, DJsonToVault>('Vault_load'),
+        lib.lookupFunction<NVaultIsDirty, DVaultIsDirty>('Vault_dirty_get'),
+        lib.lookupFunction<NMorpheusRewind, DMorpheusRewind>(
+          'MorpheusPlugin_rewind',
+        ),
+        lib.lookupFunction<NMorpheusGet, DMorpheusGet>('MorpheusPlugin_get'),
+        lib.lookupFunction<NFreeMorpheus, DFreeMorpheus>(
+          'delete_MorpheusPlugin',
+        ),
+        lib.lookupFunction<NMorpheusPersona, DMorpheusPersona>(
+          'MorpheusPlugin_persona',
+        ),
+        lib.lookupFunction<NHydraPluginRewind, DHydraPluginRewind>(
+          'HydraPlugin_rewind',
+        ),
+        lib.lookupFunction<NHydraPluginGet, DHydraPluginGet>('HydraPlugin_get'),
+        lib.lookupFunction<NFreeHydraPlugin, DFreeHydraPlugin>(
+          'delete_HydraPlugin',
+        ),
+        lib.lookupFunction<NHydraPluginPrivateGet, DHydraPluginPrivateGet>(
+          'HydraPlugin_private',
+        ),
+        lib.lookupFunction<NFreeHydraPrivate, DFreeHydraPrivate>(
+          'delete_HydraPrivate',
+        ),
+        lib.lookupFunction<NHydraPrivateSignTx, DHydraPrivateSignTx>(
+          'HydraPrivate_sign_hydra_tx',
+        ),
+        lib.lookupFunction<NHydraPluginPublicGet, DHydraPluginPublicGet>(
+          'HydraPlugin_public',
+        ),
+        lib.lookupFunction<NFreeHydraPublic, DFreeHydraPublic>(
+          'delete_HydraPublic',
+        ),
+        lib.lookupFunction<NHydraPublicAddress, DHydraPublicAddress>(
+          'HydraPublic_address',
+        ),
+      );
+      _instance = DartApi._(api);
     }
 
-    final lib = DynamicLibrary.open(libPath);
-
-    final api = NativeAPI(
-      lib.lookupFunction<NativeFuncBip39GeneratePhrase,
-          DartFuncBip39GeneratePhrase>('Bip39_generate_phrase'),
-      lib.lookupFunction<NativeFuncBip39ValidatePhrase,
-          DartFuncBip39ValidatePhrase>('Bip39_validate_phrase'),
-      lib.lookupFunction<NativeFuncBip39ListWords, DartFuncBip39ListWords>(
-          'Bip39_list_words'),
-      lib.lookupFunction<NativeFuncMaskJson, DartFuncMaskJson>(
-          'Json_selective_digest'),
-      lib.lookupFunction<NativeFuncGenerateNonce, DartFuncGenerateNonce>(
-          'Nonce_generate'),
-      lib.lookupFunction<NativeFuncHydraTransferTx, DartFuncHydraTransferTx>(
-          'TxBuilder_hydraTransferTx'),
-      lib.lookupFunction<NativeFuncCreateVault, DartFuncCreateVault>(
-          'Vault_create'),
-      lib.lookupFunction<NativeFuncFreeVault, DartFuncFreeVault>(
-          'delete_Vault'),
-      lib.lookupFunction<NativeFuncVaultToJson, DartFuncVaultToJson>(
-          'Vault_save'),
-      lib.lookupFunction<NativeFuncJsonToVault, DartFuncJsonToVault>(
-          'Vault_load'),
-      lib.lookupFunction<NativeFuncVaultIsDirty, DartFuncVaultIsDirty>(
-          'Vault_dirty_get'),
-      lib.lookupFunction<NativeFuncMorpheusRewind, DartFuncMorpheusRewind>(
-          'MorpheusPlugin_rewind'),
-      lib.lookupFunction<NativeFuncMorpheusGet, DartFuncMorpheusGet>(
-          'MorpheusPlugin_get'),
-      lib.lookupFunction<NativeFuncFreeMorpheus, DartFuncFreeMorpheus>(
-          'delete_MorpheusPlugin'),
-      lib.lookupFunction<NativeFuncMorpheusPersona, DartFuncMorpheusPersona>(
-          'MorpheusPlugin_persona'),
-      lib.lookupFunction<NativeFuncHydraPluginRewind,
-          DartFuncHydraPluginRewind>('HydraPlugin_rewind'),
-      lib.lookupFunction<NativeFuncHydraPluginGet, DartFuncHydraPluginGet>(
-          'HydraPlugin_get'),
-      lib.lookupFunction<NativeFuncFreeHydraPlugin, DartFuncFreeHydraPlugin>(
-          'delete_HydraPlugin'),
-      lib.lookupFunction<NativeFuncHydraPluginPrivateGet,
-          DartFuncHydraPluginPrivateGet>('HydraPlugin_private'),
-      lib.lookupFunction<NativeFuncFreeHydraPrivate, DartFuncFreeHydraPrivate>(
-          'delete_HydraPrivate'),
-      lib.lookupFunction<NativeFuncHydraPrivateSignTx,
-          DartFuncHydraPrivateSignTx>('HydraPrivate_sign_hydra_tx'),
-      lib.lookupFunction<NativeFuncHydraPluginPublicGet,
-          DartFuncHydraPluginPublicGet>('HydraPlugin_public'),
-      lib.lookupFunction<NativeFuncFreeHydraPublic, DartFuncFreeHydraPublic>(
-          'delete_HydraPublic'),
-      lib.lookupFunction<NativeFuncHydraPublicAddress,
-          DartFuncHydraPublicAddress>('HydraPublic_address'),
-    );
-
-    _instance = DartApi._(api);
     return _instance;
   }
 
@@ -78,8 +81,6 @@ class DartApi {
       _instance = null;
     }
   }
-
-  static DartApi get Instance => DartApi._instance;
 
   String bip39GeneratePhrase(String langCode) {
     final nativeLangCode = Utf8.toUtf8(langCode);

@@ -1,11 +1,3 @@
-String maskJson(String json, String keepPaths) {
-  throw UnimplementedError();
-}
-
-String generateNonce() {
-  throw UnimplementedError();
-}
-
 class Bip39 {
   static const String DEMO_PHRASE =
       'include pear escape sail spy orange cute despair witness trouble sleep torch wire burst unable brass expose fiction drift clock duck oxygen aerobic already';
