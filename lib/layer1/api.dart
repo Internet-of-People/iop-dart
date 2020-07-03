@@ -1,28 +1,20 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:http/http.dart';
+import 'package:morpheus_sdk/crypto/bip44.dart';
 import 'package:morpheus_sdk/crypto/hydra_plugin.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
+import 'package:morpheus_sdk/utils/api.dart';
 import 'package:morpheus_sdk/utils/io.dart';
 import 'package:morpheus_sdk/network.dart';
 import 'package:optional/optional.dart';
 
 import 'io.dart';
 
-class Layer1Api {
-  static final Map<String, String> _jsonHeaders = {
-    'Content-Type': 'application/json',
-  };
-  final Client _client = Client();
-  final Network network;
-
-  Layer1Api(this.network);
+class Layer1Api extends LayerApi {
+  Layer1Api(Network network) : super(network);
 
   Future<NodeCryptoConfigResponse> getNodeCryptoConfig() async {
-    final resp = await _client.get(
-      '${network.layer1ApiUrl}/node/configuration/crypto',
-      headers: _jsonHeaders,
-    );
+    final resp = await layer1ApiGet('/node/configuration/crypto');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
@@ -33,10 +25,7 @@ class Layer1Api {
   }
 
   Future<int> getCurrentHeight() async {
-    final resp = await _client.get(
-      '${network.layer1ApiUrl}/blockchain',
-      headers: _jsonHeaders,
-    );
+    final resp = await layer1ApiGet('/blockchain');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
@@ -48,10 +37,8 @@ class Layer1Api {
   }
 
   Future<Optional<TransactionStatusResponse>> getTxnStatus(String txId) async {
-    final resp = await _client.get(
-      '${network.layer1ApiUrl}/transactions/$txId',
-      headers: _jsonHeaders,
-    );
+    final resp = await layer1ApiGet('/transactions/$txId');
+
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
       return Optional.of(TransactionStatusResponse.fromJson(body['data']));
@@ -63,10 +50,8 @@ class Layer1Api {
   }
 
   Future<Optional<WalletResponse>> getWallet(String addressOrPublicKey) async {
-    final resp = await _client.get(
-      '${network.layer1ApiUrl}/wallets/$addressOrPublicKey',
-      headers: _jsonHeaders,
-    );
+    final resp = await layer1ApiGet('/wallets/$addressOrPublicKey');
+
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
       return Optional.of(WalletResponse.fromJson(body['data']));
@@ -110,11 +95,8 @@ class Layer1Api {
       transferTx,
     );
 
-    final resp = await _client.post(
-      '${network.layer1ApiUrl}/transactions',
-      body: signedTx.toString(),
-      headers: _jsonHeaders,
-    );
+    final resp = await layer1ApiPost('/transactions', signedTx.toString());
+
     if (resp.statusCode != HttpStatus.ok) {
       return Future.error(HttpResponseError(resp.statusCode, resp.body));
     }

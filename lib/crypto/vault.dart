@@ -5,7 +5,7 @@ import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
 
-class Vault implements IDisposable {
+class Vault implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 

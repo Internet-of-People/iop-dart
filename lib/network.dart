@@ -21,4 +21,6 @@ extension NetworkProperties on Network {
       }[this];
 
   String get layer1ApiUrl => seedServerUrlBase + ':4705/api/v2';
+
+  String get layer2ApiUrl => seedServerUrlBase + ':4705/morpheus/v1';
 }

@@ -5,7 +5,7 @@ import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
 import 'package:morpheus_sdk/ffi/native_api.dart';
 
-class DartApi implements IDisposable {
+class DartApi implements Disposable {
   static DartApi _instance;
   final NativeApi _native;
 

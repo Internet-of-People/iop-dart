@@ -8,7 +8,7 @@ import 'package:morpheus_sdk/ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 
-class PublicKey implements IDisposable {
+class PublicKey implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
@@ -89,7 +89,7 @@ class PublicKey implements IDisposable {
   }
 }
 
-class KeyId implements IDisposable {
+class KeyId implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
@@ -120,4 +120,6 @@ class KeyId implements IDisposable {
       _owned = false;
     }
   }
+
+  static String prefix() => 'i'; // TODO: must come from Rust
 }

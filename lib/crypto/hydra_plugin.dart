@@ -9,7 +9,7 @@ import 'package:morpheus_sdk/ffi/ffi.dart';
 import 'package:morpheus_sdk/layer1/sdk.dart';
 import 'package:morpheus_sdk/network.dart';
 
-class HydraPlugin implements IDisposable {
+class HydraPlugin implements Disposable {
   static void rewind(
       Vault vault, String unlockPassword, Network network, int account) {
     final nativePwd = Utf8.toUtf8(unlockPassword);
@@ -68,7 +68,7 @@ class HydraPlugin implements IDisposable {
   }
 }
 
-class HydraPrivate implements IDisposable {
+class HydraPrivate implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
@@ -104,7 +104,7 @@ class HydraPrivate implements IDisposable {
   }
 }
 
-class HydraPublic implements IDisposable {
+class HydraPublic implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 

@@ -7,7 +7,7 @@ import 'package:morpheus_sdk/crypto/vault.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
 
-class MorpheusPublicKind implements IDisposable {
+class MorpheusPublicKind implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
@@ -42,7 +42,7 @@ class MorpheusPublicKind implements IDisposable {
   }
 }
 
-class MorpheusPublic implements IDisposable {
+class MorpheusPublic implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
@@ -72,7 +72,7 @@ class MorpheusPublic implements IDisposable {
   }
 }
 
-class MorpheusPrivate implements IDisposable {
+class MorpheusPrivate implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
@@ -88,7 +88,7 @@ class MorpheusPrivate implements IDisposable {
   }
 }
 
-class MorpheusPlugin implements IDisposable {
+class MorpheusPlugin implements Disposable {
   static void rewind(Vault vault, String unlockPassword) {
     final nativePwd = Utf8.toUtf8(unlockPassword);
     try {

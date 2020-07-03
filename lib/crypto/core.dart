@@ -1,58 +1,26 @@
+import 'package:morpheus_sdk/crypto/multicipher.dart';
+
 class Bip39 {
   static const String DEMO_PHRASE =
       'include pear escape sail spy orange cute despair witness trouble sleep torch wire burst unable brass expose fiction drift clock duck oxygen aerobic already';
 
   Bip39(String languageCode);
-
-  String generatePhrase() {
-    throw UnimplementedError();
-  }
-
-  bool validatePhrase(String phrase) {
-    throw UnimplementedError();
-  }
-
-  List<String> listWords(String wordPrefix) {
-    throw UnimplementedError();
-  }
 }
 
-abstract class KeyId {}
+class Authentication {
+  final KeyId keyId;
+  final PublicKey publicKey;
 
-abstract class Signature {
-  Signature.fromString(String signature);
+  Authentication._(this.keyId, this.publicKey);
 
-  @override
-  String toString();
+  factory Authentication.keyId(KeyId keyId) => Authentication._(keyId, null);
+
+  factory Authentication.publicKey(PublicKey publicKey) => Authentication._(
+        null,
+        publicKey,
+      );
+
+  bool get isKeyId => keyId != null;
+
+  bool get isPublicKey => publicKey != null;
 }
-
-abstract class PublicKey {
-  PublicKey.fromString(String publicKey);
-
-  @override
-  String toString();
-
-  KeyId keyId();
-}
-
-abstract class Did {
-  Did.fromString(String did);
-
-  @override
-  String toString();
-
-  PublicKey defaultKey();
-}
-
-abstract class SignedContent {
-  String content(); // TODO consider using a generic T or binary type here
-  PublicKey publicKey();
-
-  Signature signature();
-
-  bool validate();
-
-  bool validateWithKeyId(KeyId keyId);
-}
-
-abstract class Authentication {}

@@ -1,26 +1,5 @@
-import 'dart:async';
-
-abstract class IDisposable {
+// TODO: dart team is working on its finalizer solution here:
+// https://github.com/dart-lang/sdk/issues/35770
+abstract class Disposable {
   void dispose();
-}
-
-extension Disposable<T extends IDisposable> on T {
-  static List<IDisposable> stack;
-
-  FutureOr<R> use<R>(FutureOr<R> Function(T t) fn) {
-    var synchronous = true;
-    try {
-      final res = fn(this);
-      if (res is Future<R>) {
-        synchronous = false;
-        return res.whenComplete(() => dispose());
-      } else {
-        return res;
-      }
-    } finally {
-      if (synchronous) {
-        dispose();
-      }
-    }
-  }
 }

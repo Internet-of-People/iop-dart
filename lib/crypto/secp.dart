@@ -5,7 +5,7 @@ import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
 
-class SecpPublicKey implements IDisposable {
+class SecpPublicKey implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
