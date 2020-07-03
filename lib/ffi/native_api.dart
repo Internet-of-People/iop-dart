@@ -24,9 +24,16 @@ class NativeApi {
   final DHydraPluginPrivateGet hydra_private_get;
   final DFreeHydraPrivate free_hydra_private;
   final DHydraPrivateSignTx hydra_private_sign_tx;
+  final DHydraPrivateNeuter hydra_private_neuter;
   final DHydraPluginPublicGet hydra_public_get;
   final DFreeHydraPublic free_hydra_public;
-  final DHydraPublicAddress hydra_public_address;
+  final DHydraPublic_Key hydra_public_key;
+  final DHydraPublic_KeyByAddress hydra_public_key_by_address;
+  final DFreeBip44PublicKey free_bip44_public_key;
+  final DBip44PublicKey_PublicKeyGet bip44_public_key_pk_get;
+  final DBip44PublicKey_AddressGet bip44_public_key_address_get;
+  final DFreeSecpPublicKey free_secp_public_key;
+  final DSecpPublicKey_ToString secp_public_key_tostring;
 
   NativeApi(
     this.bip39_generate_phrase,
@@ -50,9 +57,16 @@ class NativeApi {
     this.hydra_private_get,
     this.free_hydra_private,
     this.hydra_private_sign_tx,
+    this.hydra_private_neuter,
     this.hydra_public_get,
     this.free_hydra_public,
-    this.hydra_public_address,
+    this.hydra_public_key,
+    this.hydra_public_key_by_address,
+    this.free_bip44_public_key,
+    this.bip44_public_key_pk_get,
+    this.bip44_public_key_address_get,
+    this.free_secp_public_key,
+    this.secp_public_key_tostring,
   );
 }
 
@@ -196,6 +210,9 @@ typedef DHydraPluginPrivateGet = Pointer<Result> Function(
 typedef NFreeHydraPrivate = Void Function(Pointer private);
 typedef DFreeHydraPrivate = void Function(Pointer private);
 
+typedef NHydraPrivateNeuter = Pointer<Result> Function(Pointer private);
+typedef DHydraPrivateNeuter = Pointer<Result> Function(Pointer private);
+
 typedef NHydraPrivateSignTx = Pointer<Result> Function(
   Pointer private,
   Pointer<Utf8> address,
@@ -207,19 +224,45 @@ typedef DHydraPrivateSignTx = Pointer<Result> Function(
   Pointer<Utf8> txJson,
 );
 
-typedef NHydraPluginPublicGet = Pointer<Result> Function(
-  Pointer hydra,
-);
+typedef NHydraPluginPublicGet = Pointer<Result> Function(Pointer hydra);
 typedef DHydraPluginPublicGet = Pointer<Result> Function(Pointer hydra);
 
 typedef NFreeHydraPublic = Void Function(Pointer public);
 typedef DFreeHydraPublic = void Function(Pointer public);
 
-typedef NHydraPublicAddress = Pointer<Result> Function(
+typedef NHydraPublic_Key = Pointer<Result> Function(
   Pointer hydra,
   Int32 idx,
 );
-typedef DHydraPublicAddress = Pointer<Result> Function(
+typedef DHydraPublic_Key = Pointer<Result> Function(
   Pointer hydra,
   int idx,
 );
+
+typedef NHydraPublic_KeyByAddress = Pointer<Result> Function(
+  Pointer public,
+  Pointer<Utf8> address,
+);
+typedef DHydraPublic_KeyByAddress = Pointer<Result> Function(
+  Pointer public,
+  Pointer<Utf8> address,
+);
+
+typedef NFreeBip44PublicKey = Void Function(Pointer bip44Pk);
+typedef DFreeBip44PublicKey = void Function(Pointer bip44Pk);
+
+typedef NBip44PublicKey_PublicKeyGet = Pointer<Result> Function(
+  Pointer bip44Pk,
+);
+typedef DBip44PublicKey_PublicKeyGet = Pointer<Result> Function(
+  Pointer bip44Pk,
+);
+
+typedef NBip44PublicKey_AddressGet = Pointer<Result> Function(Pointer bip44Pk);
+typedef DBip44PublicKey_AddressGet = Pointer<Result> Function(Pointer bip44Pk);
+
+typedef NFreeSecpPublicKey = Void Function(Pointer secpPk);
+typedef DFreeSecpPublicKey = void Function(Pointer secpPk);
+
+typedef NSecpPublicKey_ToString = Pointer<Result> Function(Pointer secpPk);
+typedef DSecpPublicKey_ToString = Pointer<Result> Function(Pointer secpPk);

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:morpheus_sdk/crypto/bip44.dart';
 import 'package:morpheus_sdk/crypto/hydra_plugin.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/utils/io.dart';
@@ -94,12 +95,12 @@ class Layer1Api {
     HydraPrivate hydraPrivate, {
     int nonce,
   }) async {
+    final senderBip44PubKey = hydraPrivate.neuter().keyByAddress(senderAddress);
     nonce ??= (await getWalletNonce(senderAddress)) + 1;
 
     final transferTx = DartApi.instance.hydraTransferTx(
       network.RustApiId,
-      // TODO use vault/hydra to get sender info
-      '02db11c07afd6ec05980284af58105329d41e9882947188022350219cca9baa3e7',
+      senderBip44PubKey.publicKey.toString(),
       targetAddress,
       amountInFlake,
       nonce,
@@ -129,7 +130,7 @@ class Layer1Api {
       ));
     }
 
-    if(txResp.accept.length > 1) {
+    if (txResp.accept.length > 1) {
       return Future.error(HttpResponseError(
         resp.statusCode,
         'sendTx expected 1 accepted tx, got ${txResp.accept.length}. Response: ${resp.body}',

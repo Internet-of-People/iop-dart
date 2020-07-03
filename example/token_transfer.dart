@@ -7,13 +7,13 @@ void main(List<String> arguments) async {
   final network = Network.TestNet;
   final targetAddress = 'tjseecxRmob5qBS2T3qc8frXDKz3YUGB8J'; // genesis
   final hydraAccount = 0;
-
   final unlockPassword = 'unlock';
+
   final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
   vault.rewindHydra(unlockPassword, network, hydraAccount);
 
   final hydraPlugin = vault.hydra(network, hydraAccount);
-  final senderAddress = hydraPlugin.public().address(0);
+  final senderAddress = hydraPlugin.public().key(0).address;
   final hydraPrivate = hydraPlugin.private(unlockPassword);
 
   final layer1Api = Layer1Api(network);
@@ -24,5 +24,5 @@ void main(List<String> arguments) async {
     amount,
     hydraPrivate,
   );
-  print('Transaction ID: $txId');
+  print('Transaction sent, ID: $txId');
 }

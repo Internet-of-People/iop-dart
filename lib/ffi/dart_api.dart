@@ -59,14 +59,38 @@ class DartApi {
         lib.lookupFunction<NHydraPrivateSignTx, DHydraPrivateSignTx>(
           'HydraPrivate_sign_hydra_tx',
         ),
+        lib.lookupFunction<NHydraPrivateNeuter, DHydraPrivateNeuter>(
+          'HydraPrivate_neuter',
+        ),
         lib.lookupFunction<NHydraPluginPublicGet, DHydraPluginPublicGet>(
           'HydraPlugin_public',
         ),
         lib.lookupFunction<NFreeHydraPublic, DFreeHydraPublic>(
           'delete_HydraPublic',
         ),
-        lib.lookupFunction<NHydraPublicAddress, DHydraPublicAddress>(
-          'HydraPublic_address',
+        lib.lookupFunction<NHydraPublic_Key, DHydraPublic_Key>(
+          'HydraPublic_key',
+        ),
+        lib.lookupFunction<NHydraPublic_KeyByAddress,
+            DHydraPublic_KeyByAddress>(
+          'HydraPublic_key_by_address',
+        ),
+        lib.lookupFunction<NFreeBip44PublicKey, DFreeBip44PublicKey>(
+          'delete_Bip44PublicKey',
+        ),
+        lib.lookupFunction<NBip44PublicKey_PublicKeyGet,
+            DBip44PublicKey_PublicKeyGet>(
+          'Bip44PublicKey_publicKey_get',
+        ),
+        lib.lookupFunction<NBip44PublicKey_AddressGet,
+            DBip44PublicKey_AddressGet>(
+          'Bip44PublicKey_address_get',
+        ),
+        lib.lookupFunction<NFreeSecpPublicKey, DFreeSecpPublicKey>(
+          'delete_Bip44PublicKey',
+        ),
+        lib.lookupFunction<NSecpPublicKey_ToString, DSecpPublicKey_ToString>(
+          'SecpPublicKey_toString',
         ),
       );
       _instance = DartApi._(api);
@@ -267,7 +291,7 @@ class DartApi {
     _native.free_hydra_plugin(hydra);
   }
 
-  Pointer<Void> hydraPrivate(Pointer hydra, String unlockPassword) {
+  Pointer<Void> hydraPrivatePart(Pointer hydra, String unlockPassword) {
     final nativePwd = Utf8.toUtf8(unlockPassword);
     try {
       return _native
@@ -278,11 +302,15 @@ class DartApi {
     }
   }
 
-  void freeHydraPrivate(Pointer<Void> private) {
+  void freeHydraPrivatePart(Pointer<Void> private) {
     _native.free_hydra_private(private);
   }
 
-  String signHydraTx(Pointer private, String address, String txJson) {
+  Pointer<Void> hydraPrivatePartNeuter(Pointer<Void> private) {
+    return _native.hydra_private_neuter(private).extract((res) => res.asPointer());
+  }
+
+  String hydraPrivatePartSignHydraTx(Pointer private, String address, String txJson) {
     final nativeAddr = Utf8.toUtf8(address);
     final nativeTx = Utf8.toUtf8(txJson);
     try {
@@ -295,17 +323,54 @@ class DartApi {
     }
   }
 
-  Pointer<Void> hydraPublic(Pointer hydra) {
+  Pointer<Void> hydraPublicPart(Pointer hydra) {
     return _native.hydra_public_get(hydra).extract((res) => res.asPointer());
   }
 
-  void freeHydraPublic(Pointer<Void> public) {
+  void freeHydraPublicPart(Pointer<Void> public) {
     _native.free_hydra_public(public);
   }
 
-  String hydraAddress(Pointer public, int idx) {
+  Pointer<Void> hydraPublicPartKey(Pointer public, int idx) {
     return _native
-        .hydra_public_address(public, idx)
+        .hydra_public_key(public, idx)
+        .extract((res) => res.asPointer());
+  }
+
+  Pointer<Void> hydraPublicPartKeyByAddress(Pointer public, String address) {
+    final nativeAddr = Utf8.toUtf8(address);
+    try {
+      return _native
+          .hydra_public_key_by_address(public, nativeAddr)
+          .extract((res) => res.asPointer());
+    } finally {
+      free(nativeAddr);
+    }
+  }
+
+  void freeBip44PublicKey(Pointer<Void> bip44PubKey) {
+    _native.free_bip44_public_key(bip44PubKey);
+  }
+
+  Pointer<Void> bip44PublicKeyGetPublicKey(Pointer bip44PubKey) {
+    return _native
+        .bip44_public_key_pk_get(bip44PubKey)
+        .extract((res) => res.asPointer());
+  }
+
+  String bip44PublicKeyGetAddress(Pointer bip44PubKey) {
+    return _native
+        .bip44_public_key_address_get(bip44PubKey)
+        .extract((res) => res.asString);
+  }
+
+  void freeSecpPublicKey(Pointer<Void> secpPubKey) {
+    _native.free_secp_public_key(secpPubKey);
+  }
+
+  String secpPublicKey_toString(Pointer secpPubKey) {
+    return _native
+        .secp_public_key_tostring(secpPubKey)
         .extract((res) => res.asString);
   }
 
