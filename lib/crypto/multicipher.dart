@@ -1,41 +1,73 @@
 import 'dart:core';
 import 'dart:ffi';
 
+import 'package:ffi/ffi.dart';
+import 'package:morpheus_sdk/ffi/ffi.dart';
+import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
-import 'package:morpheus_sdk/layer1/sdk.dart';
 
+class PublicKey implements IDisposable {
+  Pointer<Void> _ffi;
+  bool _owned;
 
-class MPublicKey {
-  // TODO call destructor somehow
-  final Pointer<Void> _ffiMPublicKey;
+  PublicKey(this._ffi, this._owned);
 
-  MPublicKey(this._ffiMPublicKey);
-
-  static MPublicKey fromString(String str) {
-    final _ffiMPublicKey = DartApi.instance.mPublicKeyFromString(str);
-    return MPublicKey(_ffiMPublicKey);
+  static PublicKey fromString(String str) {
+    final nativeStr = Utf8.toUtf8(str);
+    try {
+      final pk = DartApi.native
+          .mpublic_key_fromstring(nativeStr)
+          .extract((res) => res.asPointer());
+      return PublicKey(pk, true);
+    } finally {
+      free(nativeStr);
+    }
   }
 
   @override
   String toString() {
-    return DartApi.instance.mPublicKeyToString(_ffiMPublicKey);
+    return DartApi.native.mpublic_key_tostring(_ffi).intoString();
+  }
+
+  @override
+  void dispose() {
+    if (_owned) {
+      DartApi.native.free_mpublic_key(_ffi);
+      _ffi = nullptr;
+      _owned = false;
+    }
   }
 }
 
+class KeyId implements IDisposable {
+  Pointer<Void> _ffi;
+  bool _owned;
 
-class MKeyId {
-  // TODO call destructor somehow
-  final Pointer<Void> _ffiMKeyId;
+  KeyId(this._ffi, this._owned);
 
-  MKeyId(this._ffiMKeyId);
-
-  static MKeyId fromString(String str) {
-    final _ffiMKeyId = DartApi.instance.mKeyIdFromString(str);
-    return MKeyId(_ffiMKeyId);
+  static KeyId fromString(String str) {
+    final nativeStr = Utf8.toUtf8(str);
+    try {
+      final key = DartApi.native
+          .mkeyid_fromstring(nativeStr)
+          .extract((res) => res.asPointer());
+      return KeyId(key, true);
+    } finally {
+      free(nativeStr);
+    }
   }
 
   @override
   String toString() {
-    return DartApi.instance.mKeyIdToString(_ffiMKeyId);
+    return DartApi.native.mkeyid_tostring(_ffi).intoString();
+  }
+
+  @override
+  void dispose() {
+    if (_owned) {
+      DartApi.native.free_mkeyid(_ffi);
+      _ffi = nullptr;
+      _owned = false;
+    }
   }
 }

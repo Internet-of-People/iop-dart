@@ -11,4 +11,3 @@ class HttpResponseError {
     return '$content${'ErrorCode: $code\n Message: $message'}';
   }
 }
-

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart';
-import 'package:morpheus_sdk/crypto/bip44.dart';
 import 'package:morpheus_sdk/crypto/hydra_plugin.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/utils/io.dart';

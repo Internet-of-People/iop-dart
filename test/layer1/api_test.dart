@@ -17,14 +17,16 @@ void main() {
     });
 
     test('getTxnStatus', () async {
-      const id = '34cec59f7ce76ae8483f064ed92c7d6f791f0ddd7c89525dcf92c95f8800ec59';
+      const id =
+          '34cec59f7ce76ae8483f064ed92c7d6f791f0ddd7c89525dcf92c95f8800ec59';
       final status = await api.getTxnStatus(id);
       expect(status.isPresent, true);
       expect(status.value.id, id);
     });
 
     test('getTxnStatus - not existing', () async {
-      const id = '0000c59f7ce76ae8483f064ed92c7d6f791f0ddd7c89525dcf92c95f8800ec59';
+      const id =
+          '0000c59f7ce76ae8483f064ed92c7d6f791f0ddd7c89525dcf92c95f8800ec59';
       final status = await api.getTxnStatus(id);
       expect(status.isPresent, false);
     });

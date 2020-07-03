@@ -3,6 +3,8 @@ import 'package:ffi/ffi.dart';
 import 'ffi.dart';
 
 class NativeApi {
+  static DynamicLibrary lib;
+
   final DBip39GeneratePhrase bip39_generate_phrase;
   final DBip39ValidatePhrase bip39_validate_phrase;
   final DBip39ListWords bip39_list_words;
@@ -14,10 +16,21 @@ class NativeApi {
   final DVaultToJson vault_to_json;
   final DJsonToVault json_to_vault;
   final DVaultIsDirty vault_is_dirty;
-  final DMorpheusRewind morpheus_rewind;
-  final DMorpheusGet morpheus_get;
-  final DFreeMorpheus free_morpheus_plugin;
-  final DMorpheusPersona morpheus_persona;
+
+  final DMorpheusPluginRewind morpheus_plugin_rewind;
+  final DMorpheusPluginGet morpheus_plugin_get;
+  final DMorpheusPluginPublic morpheus_plugin_public;
+  final DMorpheusPluginPrivate morpheus_plugin_private;
+  final DDeleteMorpheusPlugin delete_morpheus_plugin;
+  final DMorpheusPublicPersonas morpheus_public_personas;
+  final DMorpheusPublicKeyById morpheus_public_key_by_id;
+  final DDeleteMorpheusPublic delete_morpheus_public;
+  final DDeleteMorpheusPrivate delete_morpheus_private;
+  final DMorpheusPublicKindLen morpheus_public_kind_len;
+  final DMorpheusPublicKindIsEmpty morpheus_public_kind_is_empty;
+  final DMorpheusPublicKindKey morpheus_public_kind_key;
+  final DDeleteMorpheusPublicKind delete_morpheus_public_kind;
+
   final DHydraPluginRewind hydra_plugin_rewind;
   final DHydraPluginGet hydra_plugin_get;
   final DFreeHydraPlugin free_hydra_plugin;
@@ -41,45 +54,62 @@ class NativeApi {
   final DMKeyId_FromString mkeyid_fromstring;
   final DMKeyId_ToString mkeyid_tostring;
 
-  NativeApi(
-    this.bip39_generate_phrase,
-    this.bip39_validate_phrase,
-    this.bip39_list_words,
-    this.mask_json,
-    this.generate_nonce,
-    this.hydra_transfer_tx,
-    this.create_vault,
-    this.free_vault,
-    this.vault_to_json,
-    this.json_to_vault,
-    this.vault_is_dirty,
-    this.morpheus_rewind,
-    this.morpheus_get,
-    this.free_morpheus_plugin,
-    this.morpheus_persona,
-    this.hydra_plugin_rewind,
-    this.hydra_plugin_get,
-    this.free_hydra_plugin,
-    this.hydra_private_get,
-    this.free_hydra_private,
-    this.hydra_private_sign_tx,
-    this.hydra_private_neuter,
-    this.hydra_public_get,
-    this.free_hydra_public,
-    this.hydra_public_key,
-    this.hydra_public_key_by_address,
-    this.free_bip44_public_key,
-    this.bip44_public_key_pk_get,
-    this.bip44_public_key_address_get,
-    this.free_secp_public_key,
-    this.secp_public_key_tostring,
-    this.free_mpublic_key,
-    this.mpublic_key_fromstring,
-    this.mpublic_key_tostring,
-    this.free_mkeyid,
-    this.mkeyid_fromstring,
-    this.mkeyid_tostring,
-  );
+  static NativeApi load(fileName) {
+      lib = DynamicLibrary.open(fileName);
+      try {
+        return NativeApi._();
+      } finally {
+        lib = null;
+      }
+  }
+
+  NativeApi._():
+    bip39_generate_phrase = lib.lookupFunction<NBip39GeneratePhrase, DBip39GeneratePhrase>('Bip39_generate_phrase'),
+    bip39_validate_phrase = lib.lookupFunction<NBip39ValidatePhrase, DBip39ValidatePhrase>('Bip39_validate_phrase'),
+    bip39_list_words = lib.lookupFunction<NBip39ListWords, DBip39ListWords>('Bip39_list_words'),
+    mask_json = lib.lookupFunction<NMaskJson, DMaskJson>('Json_selective_digest'),
+    generate_nonce = lib.lookupFunction<NGenerateNonce, DGenerateNonce>('Nonce_generate'),
+    hydra_transfer_tx = lib.lookupFunction<NHydraTransferTx, DHydraTransferTx>('TxBuilder_hydraTransferTx'),
+    create_vault = lib.lookupFunction<NCreateVault, DCreateVault>('Vault_create'),
+    free_vault = lib.lookupFunction<NFreeVault, DFreeVault>('delete_Vault'),
+    vault_to_json = lib.lookupFunction<NVaultToJson, DVaultToJson>('Vault_save'),
+    json_to_vault = lib.lookupFunction<NJsonToVault, DJsonToVault>('Vault_load'),
+    vault_is_dirty = lib.lookupFunction<NVaultIsDirty, DVaultIsDirty>('Vault_dirty_get'),
+    morpheus_plugin_rewind = lib.lookupFunction<NMorpheusPluginRewind, DMorpheusPluginRewind>('MorpheusPlugin_rewind'),
+    morpheus_plugin_get = lib.lookupFunction<NMorpheusPluginGet, DMorpheusPluginGet>('MorpheusPlugin_get'),
+    morpheus_plugin_public = lib.lookupFunction<NMorpheusPluginPublic, DMorpheusPluginPublic>('MorpheusPlugin_public'),
+    morpheus_plugin_private = lib.lookupFunction<NMorpheusPluginPrivate, DMorpheusPluginPrivate>('MorpheusPlugin_private'),
+    delete_morpheus_plugin = lib.lookupFunction<NDeleteMorpheusPlugin, DDeleteMorpheusPlugin>('delete_MorpheusPlugin'),
+    morpheus_public_personas = lib.lookupFunction<NMorpheusPublicPersonas, DMorpheusPublicPersonas>('MorpheusPublic_personas'),
+    morpheus_public_key_by_id = lib.lookupFunction<NMorpheusPublicKeyById, DMorpheusPublicKeyById>('MorpheusPublic_key_by_id'),
+    delete_morpheus_public = lib.lookupFunction<NDeleteMorpheusPublic, DDeleteMorpheusPublic>('delete_MorpheusPublic'),
+    delete_morpheus_private = lib.lookupFunction<NDeleteMorpheusPrivate, DDeleteMorpheusPrivate>('delete_MorpheusPrivate'),
+    morpheus_public_kind_len = lib.lookupFunction<NMorpheusPublicKindLen, DMorpheusPublicKindLen>('MorpheusPublicKind_len_get'),
+    morpheus_public_kind_is_empty = lib.lookupFunction<NMorpheusPublicKindIsEmpty, DMorpheusPublicKindIsEmpty>('MorpheusPublicKind_is_empty_get'),
+    morpheus_public_kind_key = lib.lookupFunction<NMorpheusPublicKindKey, DMorpheusPublicKindKey>('MorpheusPublicKind_key'),
+    delete_morpheus_public_kind = lib.lookupFunction<NDeleteMorpheusPublicKind, DDeleteMorpheusPublicKind>('delete_MorpheusPublicKind'),
+    hydra_plugin_rewind = lib.lookupFunction<NHydraPluginRewind, DHydraPluginRewind>('HydraPlugin_rewind'),
+    hydra_plugin_get = lib.lookupFunction<NHydraPluginGet, DHydraPluginGet>('HydraPlugin_get'),
+    free_hydra_plugin = lib.lookupFunction<NFreeHydraPlugin, DFreeHydraPlugin>('delete_HydraPlugin'),
+    hydra_private_get = lib.lookupFunction<NHydraPluginPrivateGet, DHydraPluginPrivateGet>('HydraPlugin_private'),
+    free_hydra_private = lib.lookupFunction<NFreeHydraPrivate, DFreeHydraPrivate>('delete_HydraPrivate'),
+    hydra_private_sign_tx = lib.lookupFunction<NHydraPrivateSignTx, DHydraPrivateSignTx>('HydraPrivate_sign_hydra_tx'),
+    hydra_private_neuter = lib.lookupFunction<NHydraPrivateNeuter, DHydraPrivateNeuter>('HydraPrivate_neuter'),
+    hydra_public_get = lib.lookupFunction<NHydraPluginPublicGet, DHydraPluginPublicGet>('HydraPlugin_public'),
+    free_hydra_public = lib.lookupFunction<NFreeHydraPublic, DFreeHydraPublic>('delete_HydraPublic'),
+    hydra_public_key = lib.lookupFunction<NHydraPublic_Key, DHydraPublic_Key>('HydraPublic_key'),
+    hydra_public_key_by_address = lib.lookupFunction<NHydraPublic_KeyByAddress, DHydraPublic_KeyByAddress>('HydraPublic_key_by_address'),
+    free_bip44_public_key = lib.lookupFunction<NFreeBip44PublicKey, DFreeBip44PublicKey>('delete_Bip44PublicKey'),
+    bip44_public_key_pk_get = lib.lookupFunction<NBip44PublicKey_PublicKeyGet, DBip44PublicKey_PublicKeyGet>('Bip44PublicKey_publicKey_get'),
+    bip44_public_key_address_get = lib.lookupFunction<NBip44PublicKey_AddressGet, DBip44PublicKey_AddressGet>('Bip44PublicKey_address_get'),
+    free_secp_public_key = lib.lookupFunction<NFreeSecpPublicKey, DFreeSecpPublicKey>('delete_SecpPublicKey'),
+    secp_public_key_tostring = lib.lookupFunction<NSecpPublicKey_ToString, DSecpPublicKey_ToString>('SecpPublicKey_toString'),
+    free_mpublic_key = lib.lookupFunction<NFreeMPublicKey, DFreeMPublicKey>('delete_MPublicKey'),
+    mpublic_key_fromstring = lib.lookupFunction<NMPublicKey_FromString, DMPublicKey_FromString>('MPublicKey_from_string'),
+    mpublic_key_tostring = lib.lookupFunction<NMPublicKey_ToString, DMPublicKey_ToString>('MPublicKey_to_string'),
+    free_mkeyid = lib.lookupFunction<NFreeMKeyId, DFreeMKeyId>('delete_MKeyId'),
+    mkeyid_fromstring = lib.lookupFunction<NMKeyId_FromString, DMKeyId_FromString>('MKeyId_from_string'),
+    mkeyid_tostring = lib.lookupFunction<NMKeyId_ToString, DMKeyId_ToString>('MKeyId_to_string');
 }
 
 typedef NBip39GeneratePhrase = Pointer<Result> Function(
@@ -147,91 +177,122 @@ typedef DCreateVault = Pointer<Result> Function(
   Pointer<Utf8> unlockPassword,
 );
 
-typedef NFreeVault = Void Function(Pointer vault);
-typedef DFreeVault = void Function(Pointer vault);
+typedef NFreeVault = Void Function(Pointer<Void> vault);
+typedef DFreeVault = void Function(Pointer<Void> vault);
 
-typedef NVaultIsDirty = Pointer<Result> Function(Pointer vault);
-typedef DVaultIsDirty = Pointer<Result> Function(Pointer vault);
+typedef NVaultIsDirty = Pointer<Result> Function(Pointer<Void> vault);
+typedef DVaultIsDirty = Pointer<Result> Function(Pointer<Void> vault);
 
-typedef NVaultToJson = Pointer<Result> Function(Pointer vault);
-typedef DVaultToJson = Pointer<Result> Function(Pointer vault);
+typedef NVaultToJson = Pointer<Result> Function(Pointer<Void> vault);
+typedef DVaultToJson = Pointer<Result> Function(Pointer<Void> vault);
 
 typedef NJsonToVault = Pointer<Result> Function(Pointer<Utf8> json);
 typedef DJsonToVault = Pointer<Result> Function(Pointer<Utf8> json);
 
-typedef NMorpheusRewind = Pointer<Result> Function(
-  Pointer vault,
+typedef NMorpheusPluginRewind = Pointer<Result> Function(
+  Pointer<Void> vault,
   Pointer<Utf8> unlockPwd,
 );
-typedef DMorpheusRewind = Pointer<Result> Function(
-  Pointer vault,
+typedef DMorpheusPluginRewind = Pointer<Result> Function(
+  Pointer<Void> vault,
   Pointer<Utf8> unlockPwd,
 );
 
-typedef NMorpheusGet = Pointer<Result> Function(Pointer vault);
-typedef DMorpheusGet = Pointer<Result> Function(Pointer vault);
+typedef NMorpheusPluginGet = Pointer<Result> Function(Pointer<Void> vault);
+typedef DMorpheusPluginGet = Pointer<Result> Function(Pointer<Void> vault);
 
-typedef NMorpheusPersona = Pointer<Result> Function(
-  Pointer morpheus,
-  Int32 idx,
-);
-typedef DMorpheusPersona = Pointer<Result> Function(
-  Pointer morpheus,
-  int idx,
-);
+typedef NMorpheusPluginPublic = Pointer<Result> Function(Pointer<Void> vault);
+typedef DMorpheusPluginPublic = Pointer<Result> Function(Pointer<Void> vault);
 
-typedef NFreeMorpheus = Void Function(Pointer morpheus);
-typedef DFreeMorpheus = void Function(Pointer morpheus);
+typedef NMorpheusPluginPrivate = Pointer<Result> Function(
+    Pointer<Void> vault, Pointer<Utf8> unlockPassword);
+typedef DMorpheusPluginPrivate = Pointer<Result> Function(
+    Pointer<Void> vault, Pointer<Utf8> unlockPassword);
+
+typedef NDeleteMorpheusPlugin = Void Function(Pointer<Void> morpheus);
+typedef DDeleteMorpheusPlugin = void Function(Pointer<Void> morpheus);
+
+typedef NMorpheusPublicPersonas = Pointer<Result> Function(
+    Pointer<Void> morpheusPublic);
+typedef DMorpheusPublicPersonas = Pointer<Result> Function(
+    Pointer<Void> morpheusPublic);
+
+typedef NMorpheusPublicKeyById = Pointer<Result> Function(
+    Pointer<Void> morpheusPublic, Pointer<Void> keyId);
+typedef DMorpheusPublicKeyById = Pointer<Result> Function(
+    Pointer<Void> morpheusPublic, Pointer<Void> keyId);
+
+typedef NDeleteMorpheusPublic = Void Function(Pointer<Void> public);
+typedef DDeleteMorpheusPublic = void Function(Pointer<Void> public);
+
+typedef NDeleteMorpheusPrivate = Void Function(Pointer<Void> private);
+typedef DDeleteMorpheusPrivate = void Function(Pointer<Void> private);
+
+typedef NMorpheusPublicKindLen = Pointer<Result> Function(Pointer<Void> kind);
+typedef DMorpheusPublicKindLen = Pointer<Result> Function(Pointer<Void> kind);
+
+typedef NMorpheusPublicKindIsEmpty = Pointer<Result> Function(
+    Pointer<Void> kind);
+typedef DMorpheusPublicKindIsEmpty = Pointer<Result> Function(
+    Pointer<Void> kind);
+
+typedef NMorpheusPublicKindKey = Pointer<Result> Function(
+    Pointer<Void> kind, Int32 idx);
+typedef DMorpheusPublicKindKey = Pointer<Result> Function(
+    Pointer<Void> kind, int idx);
+
+typedef NDeleteMorpheusPublicKind = Void Function(Pointer<Void> kind);
+typedef DDeleteMorpheusPublicKind = void Function(Pointer<Void> kind);
 
 typedef NHydraPluginRewind = Pointer<Result> Function(
-  Pointer vault,
+  Pointer<Void> vault,
   Pointer<Utf8> unlockPwd,
   Pointer<Utf8> network,
   Int32 idx,
 );
 typedef DHydraPluginRewind = Pointer<Result> Function(
-  Pointer vault,
+  Pointer<Void> vault,
   Pointer<Utf8> unlockPwd,
   Pointer<Utf8> network,
   int idx,
 );
 
 typedef NHydraPluginGet = Pointer<Result> Function(
-  Pointer vault,
+  Pointer<Void> vault,
   Pointer<Utf8> network,
   Int32 idx,
 );
 typedef DHydraPluginGet = Pointer<Result> Function(
-  Pointer vault,
+  Pointer<Void> vault,
   Pointer<Utf8> network,
   int idx,
 );
 
-typedef NFreeHydraPlugin = Void Function(Pointer hydra);
-typedef DFreeHydraPlugin = void Function(Pointer hydra);
+typedef NFreeHydraPlugin = Void Function(Pointer<Void> hydra);
+typedef DFreeHydraPlugin = void Function(Pointer<Void> hydra);
 
 typedef NHydraPluginPrivateGet = Pointer<Result> Function(
-  Pointer hydra,
+  Pointer<Void> hydra,
   Pointer<Utf8> unlockPassword,
 );
 typedef DHydraPluginPrivateGet = Pointer<Result> Function(
-  Pointer hydra,
+  Pointer<Void> hydra,
   Pointer<Utf8> unlockPassword,
 );
 
-typedef NFreeHydraPrivate = Void Function(Pointer private);
-typedef DFreeHydraPrivate = void Function(Pointer private);
+typedef NFreeHydraPrivate = Void Function(Pointer<Void> private);
+typedef DFreeHydraPrivate = void Function(Pointer<Void> private);
 
-typedef NHydraPrivateNeuter = Pointer<Result> Function(Pointer private);
-typedef DHydraPrivateNeuter = Pointer<Result> Function(Pointer private);
+typedef NHydraPrivateNeuter = Pointer<Result> Function(Pointer<Void> private);
+typedef DHydraPrivateNeuter = Pointer<Result> Function(Pointer<Void> private);
 
 typedef NHydraPrivateSignTx = Pointer<Result> Function(
-  Pointer private,
+  Pointer<Void> private,
   Pointer<Utf8> address,
   Pointer<Utf8> txJson,
 );
 typedef DHydraPrivateSignTx = Pointer<Result> Function(
-  Pointer private,
+  Pointer<Void> private,
   Pointer<Utf8> address,
   Pointer<Utf8> txJson,
 );
@@ -239,29 +300,29 @@ typedef DHydraPrivateSignTx = Pointer<Result> Function(
 typedef NHydraPluginPublicGet = Pointer<Result> Function(Pointer hydra);
 typedef DHydraPluginPublicGet = Pointer<Result> Function(Pointer hydra);
 
-typedef NFreeHydraPublic = Void Function(Pointer public);
-typedef DFreeHydraPublic = void Function(Pointer public);
+typedef NFreeHydraPublic = Void Function(Pointer<Void> public);
+typedef DFreeHydraPublic = void Function(Pointer<Void> public);
 
 typedef NHydraPublic_Key = Pointer<Result> Function(
-  Pointer hydra,
+  Pointer<Void> hydra,
   Int32 idx,
 );
 typedef DHydraPublic_Key = Pointer<Result> Function(
-  Pointer hydra,
+  Pointer<Void> hydra,
   int idx,
 );
 
 typedef NHydraPublic_KeyByAddress = Pointer<Result> Function(
-  Pointer public,
+  Pointer<Void> public,
   Pointer<Utf8> address,
 );
 typedef DHydraPublic_KeyByAddress = Pointer<Result> Function(
-  Pointer public,
+  Pointer<Void> public,
   Pointer<Utf8> address,
 );
 
-typedef NFreeBip44PublicKey = Void Function(Pointer bip44Pk);
-typedef DFreeBip44PublicKey = void Function(Pointer bip44Pk);
+typedef NFreeBip44PublicKey = Void Function(Pointer<Void> bip44Pk);
+typedef DFreeBip44PublicKey = void Function(Pointer<Void> bip44Pk);
 
 typedef NBip44PublicKey_PublicKeyGet = Pointer<Result> Function(
   Pointer bip44Pk,
@@ -270,11 +331,13 @@ typedef DBip44PublicKey_PublicKeyGet = Pointer<Result> Function(
   Pointer bip44Pk,
 );
 
-typedef NBip44PublicKey_AddressGet = Pointer<Result> Function(Pointer bip44Pk);
-typedef DBip44PublicKey_AddressGet = Pointer<Result> Function(Pointer bip44Pk);
+typedef NBip44PublicKey_AddressGet = Pointer<Result> Function(
+    Pointer<Void> bip44Pk);
+typedef DBip44PublicKey_AddressGet = Pointer<Result> Function(
+    Pointer<Void> bip44Pk);
 
-typedef NFreeSecpPublicKey = Void Function(Pointer secpPk);
-typedef DFreeSecpPublicKey = void Function(Pointer secpPk);
+typedef NFreeSecpPublicKey = Void Function(Pointer<Void> secpPk);
+typedef DFreeSecpPublicKey = void Function(Pointer<Void> secpPk);
 
 typedef NSecpPublicKey_ToString = Pointer<Result> Function(Pointer secpPk);
 typedef DSecpPublicKey_ToString = Pointer<Result> Function(Pointer secpPk);
