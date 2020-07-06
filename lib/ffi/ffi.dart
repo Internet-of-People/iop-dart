@@ -37,6 +37,16 @@ extension ResultPtr on Pointer<Result> {
   }
 }
 
+extension StringPtr on Pointer<Utf8> {
+  String intoString() {
+    try {
+      return Utf8.fromUtf8(cast());
+    } finally {
+      free(this);
+    }
+  }
+}
+
 class Result extends Struct {
   Pointer _success;
   Pointer<Utf8> _error;

@@ -87,10 +87,26 @@ class DartApi {
           'Bip44PublicKey_address_get',
         ),
         lib.lookupFunction<NFreeSecpPublicKey, DFreeSecpPublicKey>(
-          'delete_Bip44PublicKey',
+          'delete_SecpPublicKey',
         ),
         lib.lookupFunction<NSecpPublicKey_ToString, DSecpPublicKey_ToString>(
           'SecpPublicKey_toString',
+        ),
+        lib.lookupFunction<NFreeMPublicKey, DFreeMPublicKey>(
+          'delete_MPublicKey',
+        ),
+        lib.lookupFunction<NMPublicKey_FromString, DMPublicKey_FromString>(
+          'MPublicKey_from_string',
+        ),
+        lib.lookupFunction<NMPublicKey_ToString, DMPublicKey_ToString>(
+          'MPublicKey_to_string',
+        ),
+        lib.lookupFunction<NFreeMKeyId, DFreeMKeyId>('delete_MKeyId'),
+        lib.lookupFunction<NMKeyId_FromString, DMKeyId_FromString>(
+          'MKeyId_from_string',
+        ),
+        lib.lookupFunction<NMKeyId_ToString, DMKeyId_ToString>(
+          'MKeyId_to_string',
         ),
       );
       _instance = DartApi._(api);
@@ -307,10 +323,13 @@ class DartApi {
   }
 
   Pointer<Void> hydraPrivatePartNeuter(Pointer<Void> private) {
-    return _native.hydra_private_neuter(private).extract((res) => res.asPointer());
+    return _native
+        .hydra_private_neuter(private)
+        .extract((res) => res.asPointer());
   }
 
-  String hydraPrivatePartSignHydraTx(Pointer private, String address, String txJson) {
+  String hydraPrivatePartSignHydraTx(
+      Pointer private, String address, String txJson) {
     final nativeAddr = Utf8.toUtf8(address);
     final nativeTx = Utf8.toUtf8(txJson);
     try {
@@ -372,6 +391,44 @@ class DartApi {
     return _native
         .secp_public_key_tostring(secpPubKey)
         .extract((res) => res.asString);
+  }
+
+  void freeMPublicKey(Pointer<Void> mPubKey) {
+    _native.free_mpublic_key(mPubKey);
+  }
+
+  Pointer<Void> mPublicKeyFromString(String str) {
+    final nativeStr = Utf8.toUtf8(str);
+    try {
+      return _native
+          .mpublic_key_fromstring(nativeStr)
+          .extract((res) => res.asPointer());
+    } finally {
+      free(nativeStr);
+    }
+  }
+
+  String mPublicKeyToString(Pointer mPubKey) {
+    return _native.mpublic_key_tostring(mPubKey).intoString();
+  }
+
+  void freeMKeyId(Pointer<Void> mKeyId) {
+    _native.free_mkeyid(mKeyId);
+  }
+
+  Pointer<Void> mKeyIdFromString(String str) {
+    final nativeStr = Utf8.toUtf8(str);
+    try {
+      return _native
+          .mkeyid_fromstring(nativeStr)
+          .extract((res) => res.asPointer());
+    } finally {
+      free(nativeStr);
+    }
+  }
+
+  String mKeyIdToString(Pointer mKeyId) {
+    return _native.mkeyid_tostring(mKeyId).intoString();
   }
 
   void dispose() {}

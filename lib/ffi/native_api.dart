@@ -34,6 +34,12 @@ class NativeApi {
   final DBip44PublicKey_AddressGet bip44_public_key_address_get;
   final DFreeSecpPublicKey free_secp_public_key;
   final DSecpPublicKey_ToString secp_public_key_tostring;
+  final DFreeMPublicKey free_mpublic_key;
+  final DMPublicKey_FromString mpublic_key_fromstring;
+  final DMPublicKey_ToString mpublic_key_tostring;
+  final DFreeMKeyId free_mkeyid;
+  final DMKeyId_FromString mkeyid_fromstring;
+  final DMKeyId_ToString mkeyid_tostring;
 
   NativeApi(
     this.bip39_generate_phrase,
@@ -67,6 +73,12 @@ class NativeApi {
     this.bip44_public_key_address_get,
     this.free_secp_public_key,
     this.secp_public_key_tostring,
+    this.free_mpublic_key,
+    this.mpublic_key_fromstring,
+    this.mpublic_key_tostring,
+    this.free_mkeyid,
+    this.mkeyid_fromstring,
+    this.mkeyid_tostring,
   );
 }
 
@@ -266,3 +278,21 @@ typedef DFreeSecpPublicKey = void Function(Pointer secpPk);
 
 typedef NSecpPublicKey_ToString = Pointer<Result> Function(Pointer secpPk);
 typedef DSecpPublicKey_ToString = Pointer<Result> Function(Pointer secpPk);
+
+typedef NFreeMPublicKey = Void Function(Pointer mpk);
+typedef DFreeMPublicKey = void Function(Pointer mpk);
+
+typedef NMPublicKey_FromString = Pointer<Result> Function(Pointer<Utf8> str);
+typedef DMPublicKey_FromString = Pointer<Result> Function(Pointer<Utf8> str);
+
+typedef NMPublicKey_ToString = Pointer<Utf8> Function(Pointer mpk);
+typedef DMPublicKey_ToString = Pointer<Utf8> Function(Pointer mpk);
+
+typedef NFreeMKeyId = Void Function(Pointer mpk);
+typedef DFreeMKeyId = void Function(Pointer mpk);
+
+typedef NMKeyId_FromString = Pointer<Result> Function(Pointer<Utf8> str);
+typedef DMKeyId_FromString = Pointer<Result> Function(Pointer<Utf8> str);
+
+typedef NMKeyId_ToString = Pointer<Utf8> Function(Pointer mid);
+typedef DMKeyId_ToString = Pointer<Utf8> Function(Pointer mid);
