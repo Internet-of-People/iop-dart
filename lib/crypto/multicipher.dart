@@ -24,6 +24,15 @@ class PublicKey implements IDisposable {
     }
   }
 
+  bool validateId(KeyId keyId) {
+    return DartApi.native.mpublic_key_validate_id(_ffi, keyId._ffi) != 0;
+  }
+
+  // TODO
+  /*bool verify() {
+    return DartApi.native.mpublic_key_verify(_ffi, data, sig) != 0;
+  }*/
+
   @override
   String toString() {
     return DartApi.native.mpublic_key_tostring(_ffi).intoString();

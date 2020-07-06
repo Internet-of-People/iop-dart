@@ -2,6 +2,9 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'ffi.dart';
 
+/// Convention
+/// - Class naming: ClassName_MethodName
+/// - Keep the order of definitions at all the three blocks
 class NativeApi {
   static DynamicLibrary lib;
 
@@ -50,6 +53,8 @@ class NativeApi {
   final DDeleteMPublicKey delete_mpublic_key;
   final DMPublicKey_FromString mpublic_key_fromstring;
   final DMPublicKey_ToString mpublic_key_tostring;
+  final DMPublicKey_ValidateId mpublic_key_validate_id;
+  final DMPublicKey_Verify mpublic_key_verify;
   final DDeleteMKeyId delete_mkeyid;
   final DMKeyId_FromString mkeyid_fromstring;
   final DMKeyId_ToString mkeyid_tostring;
@@ -226,6 +231,14 @@ class NativeApi {
         mpublic_key_tostring =
             lib.lookupFunction<NMPublicKey_ToString, DMPublicKey_ToString>(
           'MPublicKey_to_string',
+        ),
+        mpublic_key_validate_id =
+            lib.lookupFunction<NMPublicKey_ValidateId, DMPublicKey_ValidateId>(
+          'MPublicKey_validate_id',
+        ),
+        mpublic_key_verify =
+            lib.lookupFunction<NMPublicKey_Verify, DMPublicKey_Verify>(
+          'MPublicKey_verify',
         ),
         delete_mkeyid = lib.lookupFunction<NDeleteMKeyId, DDeleteMKeyId>(
           'delete_MKeyId',
@@ -478,6 +491,26 @@ typedef DMPublicKey_FromString = Pointer<Result> Function(Pointer<Utf8> str);
 
 typedef NMPublicKey_ToString = Pointer<Utf8> Function(Pointer mpk);
 typedef DMPublicKey_ToString = Pointer<Utf8> Function(Pointer mpk);
+
+typedef NMPublicKey_ValidateId = Uint8 Function(
+    Pointer<Void> pk,
+    Pointer<Void> id,
+    );
+typedef DMPublicKey_ValidateId = int Function(
+    Pointer<Void> pk,
+    Pointer<Void> id,
+    );
+
+typedef NMPublicKey_Verify = Uint8 Function(
+    Pointer<Void> pk,
+    Pointer<NativeSlice> data,
+    Pointer<Void> sig,
+    );
+typedef DMPublicKey_Verify = int Function(
+    Pointer<Void> pk,
+    Pointer<NativeSlice> data,
+    Pointer<Void> sig,
+    );
 
 typedef NDeleteMKeyId = Void Function(Pointer mpk);
 typedef DDeleteMKeyId = void Function(Pointer mpk);
