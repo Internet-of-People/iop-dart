@@ -61,7 +61,7 @@ class HydraPlugin implements IDisposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.free_hydra_plugin(_ffi);
+      DartApi.native.delete_hydra_plugin(_ffi);
       _ffi = nullptr;
       _owned = false;
     }
@@ -97,7 +97,7 @@ class HydraPrivate implements IDisposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.free_hydra_private(_ffi);
+      DartApi.native.delete_hydra_private(_ffi);
       _ffi = nullptr;
       _owned = false;
     }
@@ -132,7 +132,7 @@ class HydraPublic implements IDisposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.free_hydra_public(_ffi);
+      DartApi.native.delete_hydra_public(_ffi);
       _ffi = nullptr;
       _owned = false;
     }

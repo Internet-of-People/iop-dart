@@ -27,7 +27,7 @@ class Bip44PublicKey implements IDisposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.free_bip44_public_key(_ffi);
+      DartApi.native.delete_bip44_public_key(_ffi);
       _ffi = nullptr;
       _owned = false;
     }

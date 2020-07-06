@@ -60,7 +60,7 @@ class Vault implements IDisposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.free_vault(_ffi);
+      DartApi.native.delete_vault(_ffi);
       _ffi = nullptr;
       _owned = false;
     }

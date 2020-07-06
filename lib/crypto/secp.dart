@@ -21,7 +21,7 @@ class SecpPublicKey implements IDisposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.free_secp_public_key(_ffi);
+      DartApi.native.delete_secp_public_key(_ffi);
       _ffi = nullptr;
       _owned = false;
     }

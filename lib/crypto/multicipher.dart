@@ -32,7 +32,7 @@ class PublicKey implements IDisposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.free_mpublic_key(_ffi);
+      DartApi.native.delete_mpublic_key(_ffi);
       _ffi = nullptr;
       _owned = false;
     }
@@ -65,7 +65,7 @@ class KeyId implements IDisposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.free_mkeyid(_ffi);
+      DartApi.native.delete_mkeyid(_ffi);
       _ffi = nullptr;
       _owned = false;
     }
