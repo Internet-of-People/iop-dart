@@ -51,8 +51,12 @@ class NativeApi {
   final DDeleteSecpPublicKey delete_secp_public_key;
   final DSecpPublicKey_ToString secp_public_key_tostring;
   final DDeleteMPublicKey delete_mpublic_key;
+  final DMPublicKey_FromSecp mpublic_key_fromsecp;
+  final DMPublicKey_FromBytes mpublic_key_frombytes;
   final DMPublicKey_FromString mpublic_key_fromstring;
+  final DMPublicKey_ToBytes mpublic_key_tobytes;
   final DMPublicKey_ToString mpublic_key_tostring;
+  final DMPublicKey_KeyId mpublic_key_keyid;
   final DMPublicKey_ValidateId mpublic_key_validate_id;
   final DMPublicKey_Verify mpublic_key_verify;
   final DDeleteMKeyId delete_mkeyid;
@@ -224,13 +228,29 @@ class NativeApi {
             lib.lookupFunction<NDeleteMPublicKey, DDeleteMPublicKey>(
           'delete_MPublicKey',
         ),
+        mpublic_key_fromsecp =
+            lib.lookupFunction<NMPublicKey_FromSecp, DMPublicKey_FromSecp>(
+          'MPublicKey_from_secp',
+        ),
+        mpublic_key_frombytes =
+            lib.lookupFunction<NMPublicKey_FromBytes, DMPublicKey_FromBytes>(
+          'MPublicKey_from_bytes',
+        ),
         mpublic_key_fromstring =
             lib.lookupFunction<NMPublicKey_FromString, DMPublicKey_FromString>(
           'MPublicKey_from_string',
         ),
+        mpublic_key_tobytes =
+            lib.lookupFunction<NMPublicKey_ToBytes, DMPublicKey_ToBytes>(
+          'MPublicKey_to_bytes',
+        ),
         mpublic_key_tostring =
             lib.lookupFunction<NMPublicKey_ToString, DMPublicKey_ToString>(
           'MPublicKey_to_string',
+        ),
+        mpublic_key_keyid =
+            lib.lookupFunction<NMPublicKey_KeyId, DMPublicKey_KeyId>(
+          'MPublicKey_key_id',
         ),
         mpublic_key_validate_id =
             lib.lookupFunction<NMPublicKey_ValidateId, DMPublicKey_ValidateId>(
@@ -483,34 +503,46 @@ typedef DDeleteSecpPublicKey = void Function(Pointer<Void> secpPk);
 typedef NSecpPublicKey_ToString = Pointer<Result> Function(Pointer secpPk);
 typedef DSecpPublicKey_ToString = Pointer<Result> Function(Pointer secpPk);
 
-typedef NDeleteMPublicKey = Void Function(Pointer mpk);
-typedef DDeleteMPublicKey = void Function(Pointer mpk);
+typedef NDeleteMPublicKey = Void Function(Pointer pk);
+typedef DDeleteMPublicKey = void Function(Pointer pk);
+
+typedef NMPublicKey_FromSecp = Pointer<Void> Function(Pointer<Void> secp);
+typedef DMPublicKey_FromSecp = Pointer<Void> Function(Pointer<Void> secp);
+
+typedef NMPublicKey_FromBytes = Pointer<Result> Function(Pointer<NativeSlice> data);
+typedef DMPublicKey_FromBytes = Pointer<Result> Function(Pointer<NativeSlice> data);
 
 typedef NMPublicKey_FromString = Pointer<Result> Function(Pointer<Utf8> str);
 typedef DMPublicKey_FromString = Pointer<Result> Function(Pointer<Utf8> str);
 
-typedef NMPublicKey_ToString = Pointer<Utf8> Function(Pointer mpk);
-typedef DMPublicKey_ToString = Pointer<Utf8> Function(Pointer mpk);
+typedef NMPublicKey_ToBytes = Pointer<NativeSlice> Function(Pointer<Void> pk);
+typedef DMPublicKey_ToBytes = Pointer<NativeSlice> Function(Pointer<Void> pk);
+
+typedef NMPublicKey_ToString = Pointer<Utf8> Function(Pointer pk);
+typedef DMPublicKey_ToString = Pointer<Utf8> Function(Pointer pk);
+
+typedef NMPublicKey_KeyId = Pointer<Void> Function(Pointer<Void> pk);
+typedef DMPublicKey_KeyId = Pointer<Void> Function(Pointer<Void> pk);
 
 typedef NMPublicKey_ValidateId = Uint8 Function(
-    Pointer<Void> pk,
-    Pointer<Void> id,
-    );
+  Pointer<Void> pk,
+  Pointer<Void> id,
+);
 typedef DMPublicKey_ValidateId = int Function(
-    Pointer<Void> pk,
-    Pointer<Void> id,
-    );
+  Pointer<Void> pk,
+  Pointer<Void> id,
+);
 
 typedef NMPublicKey_Verify = Uint8 Function(
-    Pointer<Void> pk,
-    Pointer<NativeSlice> data,
-    Pointer<Void> sig,
-    );
+  Pointer<Void> pk,
+  Pointer<NativeSlice> data,
+  Pointer<Void> sig,
+);
 typedef DMPublicKey_Verify = int Function(
-    Pointer<Void> pk,
-    Pointer<NativeSlice> data,
-    Pointer<Void> sig,
-    );
+  Pointer<Void> pk,
+  Pointer<NativeSlice> data,
+  Pointer<Void> sig,
+);
 
 typedef NDeleteMKeyId = Void Function(Pointer mpk);
 typedef DDeleteMKeyId = void Function(Pointer mpk);

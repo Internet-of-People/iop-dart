@@ -18,6 +18,9 @@ class SecpPublicKey implements IDisposable {
         .extract((res) => res.asString);
   }
 
+  // Only for fromSecp implementations
+  Pointer<Void> get ffi => _ffi;
+
   @override
   void dispose() {
     if (_owned) {

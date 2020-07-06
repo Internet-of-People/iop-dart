@@ -1,16 +1,15 @@
 import 'dart:ffi';
+import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
-
-typedef NativeFuncCallback = Void Function(Pointer result);
-typedef NativeFuncErrback = Void Function(Pointer<Utf8> result);
+import 'package:morpheus_sdk/crypto/disposable.dart';
 
 class NativeSlice extends Struct {
-  Pointer<Pointer> _ptr;
+  Pointer<Void> _ptr;
 
   @IntPtr()
   int _length;
 
-  factory NativeSlice.fromParts(Pointer<Pointer> ptr, int length) {
+  factory NativeSlice.fromParts(Pointer<Void> ptr, int length) {
     final result = allocate<NativeSlice>();
     return result.ref
       .._ptr = ptr
@@ -18,12 +17,54 @@ class NativeSlice extends Struct {
   }
 
   int get length => _length;
+}
 
-  Pointer<T> at<T extends NativeType>(int index) {
+class ByteSlice implements IDisposable {
+  NativeSlice _slice;
+
+  ByteSlice(this._slice);
+
+  factory ByteSlice.fromBytes(ByteData data) {
+    final length = data.lengthInBytes;
+    final ptr = allocate<Uint8>(count: length);
+    try {
+      final dartSlice = ptr.asTypedList(length);
+      dartSlice.setAll(0, data.buffer.asUint8List(data.offsetInBytes, length));
+      final nativeSlice = NativeSlice.fromParts(ptr.cast(), length);
+      return ByteSlice(nativeSlice);
+    } catch (e) {
+      free(ptr);
+      rethrow;
+    }
+  }
+
+  ByteData toBytes() {
+    final length = _slice.length;
+    final bytes = Uint8List(length);
+    final ptr = _slice.ptr.cast<Uint8>();
+    bytes.setAll(0, ptr.asTypedList(length));
+    return bytes.buffer.asByteData();
+  }
+
+  Pointer<NativeSlice> get addressOf => _slice.addressOf;
+
+  @override
+  void dispose() {
+    free(_slice.ptr);
+    free(_slice.addressOf);
+  }
+}
+
+extension ArraySlice<T extends NativeType> on NativeSlice {
+  Pointer<T> get ptr => _ptr.cast();
+}
+
+extension PointerSlice<T extends NativeType> on NativeSlice {
+  Pointer<T> at(int index) {
     if (index >= _length) {
       throw IndexError(index, this);
     }
-    return _ptr[index].cast();
+    return (_ptr as Pointer<Pointer<T>>)[index].cast();
   }
 }
 
@@ -72,7 +113,7 @@ class Result extends Struct {
     try {
       final slice = slicePtr.ref;
       return List.generate(slice.length, (i) {
-        final nativeStr = slice.at<Utf8>(i);
+        final Pointer<Utf8> nativeStr = slice.at(i);
         try {
           return Utf8.fromUtf8(nativeStr);
         } finally {
