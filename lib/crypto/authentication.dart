@@ -2,19 +2,16 @@ import 'package:morpheus_sdk/crypto/core.dart';
 import 'package:morpheus_sdk/crypto/multicipher.dart';
 
 bool isSameAuthentication(Authentication left, Authentication right) {
-  if(left.isPublicKey) {
-    if(right.isKeyId) {
+  if (left.isPublicKey) {
+    if (right.isKeyId) {
       return left.publicKey.validateId(right.keyId);
-    }
-    else {
+    } else {
       return left.publicKey.toString() == right.keyId.toString();
     }
-  }
-  else {
-    if(right.isKeyId) {
+  } else {
+    if (right.isKeyId) {
       return left.keyId.toString() == right.keyId.toString();
-    }
-    else {
+    } else {
       return right.publicKey.validateId(left.keyId);
     }
   }

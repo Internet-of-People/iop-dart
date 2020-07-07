@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/crypto/secp.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
@@ -14,7 +13,7 @@ class Bip44PublicKey implements Disposable {
   SecpPublicKey get publicKey {
     final secpPubKey = DartApi.native
         .bip44_public_key_pk_get(_ffi)
-        .extract((res) => res.asPointer());
+        .extract((res) => res.asPointer<Void>());
     return SecpPublicKey(secpPubKey, true);
   }
 

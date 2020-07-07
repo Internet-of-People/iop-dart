@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
@@ -67,12 +66,12 @@ class DartApi implements Disposable {
     }
   }
 
-  String maskJson(String json, String keepPaths) {
+  String selectiveDigestJson(String json, String keepPaths) {
     final nativeJson = Utf8.toUtf8(json);
     final nativeKeepPaths = Utf8.toUtf8(keepPaths);
     try {
       return _native
-          .mask_json(nativeJson, nativeKeepPaths)
+          .selective_digest_json(nativeJson, nativeKeepPaths)
           .extract((res) => res.asString);
     } finally {
       free(nativeJson);
@@ -80,10 +79,11 @@ class DartApi implements Disposable {
     }
   }
 
-  String generateNonce() {
-    return _native.generate_nonce().extract((res) => res.asString);
+  String nonce264() {
+    return _native.nonce264().extract((res) => res.asString);
   }
 
+  // TODO Temporary API for the transfer builder
   String hydraTransferTx(
     String network,
     String senderPubKey,
@@ -108,20 +108,6 @@ class DartApi implements Disposable {
       free(nativeRecipient);
       free(nativeSender);
       free(nativeNet);
-    }
-  }
-
-  String hydraPrivatePartSignHydraTx(
-      Pointer private, String address, String txJson) {
-    final nativeAddr = Utf8.toUtf8(address);
-    final nativeTx = Utf8.toUtf8(txJson);
-    try {
-      return _native
-          .hydra_private_sign_tx(private, nativeAddr, nativeTx)
-          .extract((res) => res.asString);
-    } finally {
-      free(nativeTx);
-      free(nativeAddr);
     }
   }
 

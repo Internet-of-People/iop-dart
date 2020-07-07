@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/crypto/multicipher.dart';
@@ -15,20 +14,20 @@ class MorpheusPublicKind implements Disposable {
 
   int get length {
     return DartApi.native
-        .morpheus_public_kind_len(_ffi)
+        .morpheus_public_kind_len_get(_ffi)
         .extract((res) => res.asUint64());
   }
 
   bool get isEmpty {
     return DartApi.native
-        .morpheus_public_kind_is_empty(_ffi)
+        .morpheus_public_kind_is_empty_get(_ffi)
         .extract((res) => res.asBool());
   }
 
   PublicKey key(int idx) {
     final pk = DartApi.native
         .morpheus_public_kind_key(_ffi, idx)
-        .extract((res) => res.asPointer());
+        .extract((res) => res.asPointer<Void>());
     return PublicKey(pk, true);
   }
 
@@ -48,17 +47,17 @@ class MorpheusPublic implements Disposable {
 
   MorpheusPublic._(this._ffi, this._owned);
 
-  MorpheusPublicKind personas() {
+  MorpheusPublicKind get personas {
     final kind = DartApi.native
-        .morpheus_public_personas(_ffi)
-        .extract((res) => res.asPointer());
+        .morpheus_public_personas_get(_ffi)
+        .extract((res) => res.asPointer<Void>());
     return MorpheusPublicKind._(kind, true);
   }
 
   PublicKey keyById(KeyId keyId) {
     final pk = DartApi.native
-        .morpheus_public_personas(_ffi)
-        .extract((res) => res.asPointer());
+        .morpheus_public_key_by_id(_ffi, keyId.ffi)
+        .extract((res) => res.asPointer<Void>());
     return PublicKey(pk, true);
   }
 
@@ -103,7 +102,7 @@ class MorpheusPlugin implements Disposable {
   static MorpheusPlugin get(Vault vault) {
     final plugin = DartApi.native
         .morpheus_plugin_get(vault.ffi)
-        .extract((res) => res.asPointer());
+        .extract((res) => res.asPointer<Void>());
     return MorpheusPlugin._(plugin, true);
   }
 
@@ -117,17 +116,17 @@ class MorpheusPlugin implements Disposable {
     try {
       final private = DartApi.native
           .morpheus_plugin_private(_ffi, nativePwd)
-          .extract((res) => res.asPointer());
+          .extract((res) => res.asPointer<Void>());
       return MorpheusPrivate._(private, true);
     } finally {
       free(nativePwd);
     }
   }
 
-  MorpheusPublic public() {
+  MorpheusPublic get public {
     final public = DartApi.native
         .morpheus_plugin_public(_ffi)
-        .extract((res) => res.asPointer());
+        .extract((res) => res.asPointer<Void>());
     return MorpheusPublic._(public, true);
   }
 

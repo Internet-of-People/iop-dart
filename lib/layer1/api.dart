@@ -1,14 +1,12 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:morpheus_sdk/crypto/bip44.dart';
 import 'package:morpheus_sdk/crypto/hydra_plugin.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/utils/api.dart';
 import 'package:morpheus_sdk/utils/io.dart';
+import 'package:morpheus_sdk/layer1/io.dart';
 import 'package:morpheus_sdk/network.dart';
 import 'package:optional/optional.dart';
-
-import 'io.dart';
 
 class Layer1Api extends LayerApi {
   Layer1Api(Network network) : super(network);
@@ -79,7 +77,7 @@ class Layer1Api extends LayerApi {
     HydraPrivate hydraPrivate, {
     int nonce,
   }) async {
-    final senderBip44PubKey = hydraPrivate.neuter().keyByAddress(senderAddress);
+    final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
     nonce ??= (await getWalletNonce(senderAddress)) + 1;
 
     final transferTx = DartApi.instance.hydraTransferTx(

@@ -15,7 +15,7 @@ void main(List<String> arguments) async {
 
   final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
 
-  final senderAddress = hydraPlugin.public().key(0).address;
+  final senderAddress = hydraPlugin.public.key(0).address;
   final hydraPrivate = hydraPlugin.private(unlockPassword);
 
   final layer1Api = Layer1Api(network);

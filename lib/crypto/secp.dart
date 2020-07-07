@@ -1,6 +1,5 @@
 import 'dart:core';
 import 'dart:ffi';
-
 import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';

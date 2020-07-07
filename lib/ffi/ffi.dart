@@ -19,7 +19,7 @@ class NativeSlice extends Struct {
   int get length => _length;
 }
 
-class ByteSlice implements IDisposable {
+class ByteSlice implements Disposable {
   NativeSlice _slice;
 
   ByteSlice(this._slice);

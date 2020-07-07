@@ -1,5 +1,4 @@
 import 'package:morpheus_sdk/crypto/authentication.dart';
-import 'package:morpheus_sdk/crypto/core.dart';
 import 'package:morpheus_sdk/layer2/did_document.dart';
 import 'package:test/test.dart';
 

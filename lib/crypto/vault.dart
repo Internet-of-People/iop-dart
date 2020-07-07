@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
@@ -17,14 +16,14 @@ class Vault implements Disposable {
     String unlockPassword, {
     String languageCode = 'en',
   }) {
-        final nativeLang = Utf8.toUtf8(languageCode);
+    final nativeLang = Utf8.toUtf8(languageCode);
     final nativeSeed = Utf8.toUtf8(seed);
     final nativeW25 = Utf8.toUtf8(word25);
     final nativePwd = Utf8.toUtf8(unlockPassword);
     try {
       final ffiVault = DartApi.native
-          .create_vault(nativeLang, nativeSeed, nativeW25, nativePwd)
-          .extract((res) => res.asPointer());
+          .vault_create(nativeLang, nativeSeed, nativeW25, nativePwd)
+          .extract((res) => res.asPointer<Void>());
       return Vault._(ffiVault, true);
     } finally {
       free(nativePwd);
@@ -38,8 +37,8 @@ class Vault implements Disposable {
     final nativeJson = Utf8.toUtf8(vaultJson);
     try {
       final ffiVault = DartApi.native
-          .json_to_vault(nativeJson)
-          .extract((res) => res.asPointer());
+          .vault_load(nativeJson)
+          .extract((res) => res.asPointer<Void>());
       return Vault._(ffiVault, true);
     } finally {
       free(nativeJson);
@@ -49,12 +48,12 @@ class Vault implements Disposable {
   // Only for MorpheusPlugin and HydraPlugin implementations
   Pointer<Void> get ffi => _ffi;
 
-  bool isDirty() {
-    return DartApi.native.vault_is_dirty(_ffi).extract((res) => res.asBool());
+  bool get dirty {
+    return DartApi.native.vault_dirty_get(_ffi).extract((res) => res.asBool());
   }
 
   String save() {
-    return DartApi.native.vault_to_json(_ffi).extract((res) => res.asString);
+    return DartApi.native.vault_save(_ffi).extract((res) => res.asString);
   }
 
   @override
