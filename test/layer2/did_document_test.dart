@@ -19,7 +19,7 @@ void main() {
         [KeyRightHistoryPoint(null, true)],
         true,
       );
-      final data = DidData(
+      final data = DidDocumentData(
         'did',
         [defaultKey],
         {

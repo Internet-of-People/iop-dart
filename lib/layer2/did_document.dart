@@ -56,7 +56,7 @@ class KeyRightHistory {
 }
 
 @JsonSerializable(explicitToJson: true)
-class DidData {
+class DidDocumentData {
   final String did;
   final List<KeyData> keys;
   final Map<String, List<KeyRightHistory>> rights;
@@ -64,7 +64,7 @@ class DidData {
   final int tombstonedAtHeight;
   final int queriedAtHeight;
 
-  DidData(
+  DidDocumentData(
     this.did,
     this.keys,
     this.rights,
@@ -73,14 +73,14 @@ class DidData {
     this.queriedAtHeight,
   );
 
-  factory DidData.fromJson(Map<String, dynamic> json) =>
-      _$DidDataFromJson(json);
+  factory DidDocumentData.fromJson(Map<String, dynamic> json) =>
+      _$DidDocumentDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DidDataToJson(this);
+  Map<String, dynamic> toJson() => _$DidDocumentDataToJson(this);
 }
 
 class DidDocument {
-  DidData _data;
+  DidDocumentData _data;
   List<Authentication> _keys = [];
 
   DidDocument(this._data) {
@@ -91,7 +91,7 @@ class DidDocument {
 
   String get did => _data.did;
 
-  void fromData(DidData data) {
+  void fromData(DidDocumentData data) {
     _data = data;
     _keys = data.keys
         .map(
@@ -133,7 +133,7 @@ class DidDocument {
     return false;
   }
 
-  DidData toData() => _data;
+  DidDocumentData toData() => _data;
 
   void _ensureHeightIsKnown(int height) {
     if (height > this.height) {

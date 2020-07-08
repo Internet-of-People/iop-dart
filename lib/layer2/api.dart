@@ -36,7 +36,7 @@ class Layer2Api extends LayerApi {
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
-      final didData = DidData.fromJson(body);
+      final didData = DidDocumentData.fromJson(body);
       return DidDocument(didData);
     }
 

@@ -1,9 +1,5 @@
 import 'dart:convert';
 
-abstract class ContentId {}
-
-class MorpheusSigned<T> {}
-
 class SignedHydraTransaction {
   final String _txContents;
 

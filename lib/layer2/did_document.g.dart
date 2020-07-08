@@ -57,8 +57,8 @@ Map<String, dynamic> _$KeyRightHistoryToJson(KeyRightHistory instance) =>
       'valid': instance.valid,
     };
 
-DidData _$DidDataFromJson(Map<String, dynamic> json) {
-  return DidData(
+DidDocumentData _$DidDocumentDataFromJson(Map<String, dynamic> json) {
+  return DidDocumentData(
     json['did'] as String,
     (json['keys'] as List)
         ?.map((e) =>
@@ -79,7 +79,8 @@ DidData _$DidDataFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$DidDataToJson(DidData instance) => <String, dynamic>{
+Map<String, dynamic> _$DidDocumentDataToJson(DidDocumentData instance) =>
+    <String, dynamic>{
       'did': instance.did,
       'keys': instance.keys?.map((e) => e?.toJson())?.toList(),
       'rights': instance.rights
