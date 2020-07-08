@@ -11,22 +11,22 @@ class Bip44PublicKey implements Disposable {
   Bip44PublicKey(this._ffi, this._owned);
 
   SecpPublicKey get publicKey {
-    final secpPubKey = DartApi.native
-        .bip44_public_key_pk_get(_ffi)
+    final secpPubKey = DartApi.native.bip44publicKey
+        .publicKeyGet(_ffi)
         .extract((res) => res.asPointer<Void>());
     return SecpPublicKey(secpPubKey, true);
   }
 
   String get address {
-    return DartApi.native
-        .bip44_public_key_address_get(_ffi)
+    return DartApi.native.bip44publicKey
+        .addressGet(_ffi)
         .extract((res) => res.asString);
   }
 
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.delete_bip44_public_key(_ffi);
+      DartApi.native.bip44publicKey.delete(_ffi);
       _ffi = nullptr;
       _owned = false;
     }

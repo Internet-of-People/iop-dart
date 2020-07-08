@@ -21,8 +21,8 @@ class Vault implements Disposable {
     final nativeW25 = Utf8.toUtf8(word25);
     final nativePwd = Utf8.toUtf8(unlockPassword);
     try {
-      final ffiVault = DartApi.native
-          .vault_create(nativeLang, nativeSeed, nativeW25, nativePwd)
+      final ffiVault = DartApi.native.vault
+          .create(nativeLang, nativeSeed, nativeW25, nativePwd)
           .extract((res) => res.asPointer<Void>());
       return Vault._(ffiVault, true);
     } finally {
@@ -36,8 +36,8 @@ class Vault implements Disposable {
   static Vault load(String vaultJson) {
     final nativeJson = Utf8.toUtf8(vaultJson);
     try {
-      final ffiVault = DartApi.native
-          .vault_load(nativeJson)
+      final ffiVault = DartApi.native.vault
+          .load(nativeJson)
           .extract((res) => res.asPointer<Void>());
       return Vault._(ffiVault, true);
     } finally {
@@ -49,17 +49,17 @@ class Vault implements Disposable {
   Pointer<Void> get ffi => _ffi;
 
   bool get dirty {
-    return DartApi.native.vault_dirty_get(_ffi).extract((res) => res.asBool());
+    return DartApi.native.vault.dirty_get(_ffi).extract((res) => res.asBool());
   }
 
   String save() {
-    return DartApi.native.vault_save(_ffi).extract((res) => res.asString);
+    return DartApi.native.vault.save(_ffi).extract((res) => res.asString);
   }
 
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.delete_vault(_ffi);
+      DartApi.native.vault.delete(_ffi);
       _ffi = nullptr;
       _owned = false;
     }

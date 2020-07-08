@@ -14,8 +14,8 @@ class HydraPlugin implements Disposable {
     final nativePwd = Utf8.toUtf8(unlockPassword);
     final nativeNet = Utf8.toUtf8(network.RustApiId);
     try {
-      return DartApi.native
-          .hydra_plugin_rewind(vault.ffi, nativePwd, nativeNet, account)
+      return DartApi.native.hydraPlugin
+          .rewind(vault.ffi, nativePwd, nativeNet, account)
           .extract((res) => res.asVoid);
     } finally {
       free(nativeNet);
@@ -26,8 +26,8 @@ class HydraPlugin implements Disposable {
   static HydraPlugin get(Vault vault, Network network, int account) {
     final nativeNet = Utf8.toUtf8(network.RustApiId);
     try {
-      final ffiPlugin = DartApi.native
-          .hydra_plugin_get(vault.ffi, nativeNet, account)
+      final ffiPlugin = DartApi.native.hydraPlugin
+          .get(vault.ffi, nativeNet, account)
           .extract((res) => res.asPointer<Void>());
       return HydraPlugin(ffiPlugin);
     } finally {
@@ -43,8 +43,8 @@ class HydraPlugin implements Disposable {
   HydraPrivate private(String unlockPassword) {
     final nativePwd = Utf8.toUtf8(unlockPassword);
     try {
-      final ffiPrivate = DartApi.native
-          .hydra_plugin_private(_ffi, nativePwd)
+      final ffiPrivate = DartApi.native.hydraPlugin
+          .private(_ffi, nativePwd)
           .extract((res) => res.asPointer<Void>());
       return HydraPrivate(ffiPrivate);
     } finally {
@@ -53,8 +53,8 @@ class HydraPlugin implements Disposable {
   }
 
   HydraPublic get public {
-    final ffiPublic = DartApi.native
-        .hydra_plugin_public_get(_ffi)
+    final ffiPublic = DartApi.native.hydraPlugin
+        .publicGet(_ffi)
         .extract((res) => res.asPointer<Void>());
     return HydraPublic(ffiPublic, true);
   }
@@ -62,7 +62,7 @@ class HydraPlugin implements Disposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.delete_hydra_plugin(_ffi);
+      DartApi.native.hydraPlugin.delete(_ffi);
       _ffi = nullptr;
       _owned = false;
     }
@@ -76,8 +76,8 @@ class HydraPrivate implements Disposable {
   HydraPrivate(this._ffi);
 
   HydraPublic get public {
-    final public = DartApi.native
-        .hydra_private_neuter(_ffi)
+    final public = DartApi.native.hydraPrivate
+        .publicGet(_ffi)
         .extract((res) => res.asPointer<Void>());
     return HydraPublic(public, true);
   }
@@ -89,8 +89,8 @@ class HydraPrivate implements Disposable {
     final nativeAddr = Utf8.toUtf8(address);
     final nativeTx = Utf8.toUtf8(tx);
     try {
-      final signedTx = DartApi.native
-          .hydra_private_sign_hydra_tx(_ffi, nativeAddr, nativeTx)
+      final signedTx = DartApi.native.hydraPrivate
+          .signHydraTx(_ffi, nativeAddr, nativeTx)
           .extract((res) => res.asString);
       return SignedHydraTransaction(signedTx);
     } finally {
@@ -102,7 +102,7 @@ class HydraPrivate implements Disposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.delete_hydra_private(_ffi);
+      DartApi.native.hydraPrivate.delete(_ffi);
       _ffi = nullptr;
       _owned = false;
     }
@@ -116,8 +116,8 @@ class HydraPublic implements Disposable {
   HydraPublic(this._ffi, this._owned);
 
   Bip44PublicKey key(int idx) {
-    final bip44PubKey = DartApi.native
-        .hydra_public_key(_ffi, idx)
+    final bip44PubKey = DartApi.native.hydraPublic
+        .key(_ffi, idx)
         .extract((res) => res.asPointer<Void>());
     return Bip44PublicKey(bip44PubKey, true);
   }
@@ -125,8 +125,8 @@ class HydraPublic implements Disposable {
   Bip44PublicKey keyByAddress(String address) {
     final nativeAddr = Utf8.toUtf8(address);
     try {
-      final bip44PubKey = DartApi.native
-          .hydra_public_key_by_address(_ffi, nativeAddr)
+      final bip44PubKey = DartApi.native.hydraPublic
+          .keyByAddress(_ffi, nativeAddr)
           .extract((res) => res.asPointer<Void>());
       return Bip44PublicKey(bip44PubKey, true);
     } finally {
@@ -137,7 +137,7 @@ class HydraPublic implements Disposable {
   @override
   void dispose() {
     if (_owned) {
-      DartApi.native.delete_hydra_public(_ffi);
+      DartApi.native.hydraPublic.delete(_ffi);
       _ffi = nullptr;
       _owned = false;
     }
