@@ -10,8 +10,7 @@ RequestEntry _$RequestEntryFromJson(Map<String, dynamic> json) {
   return RequestEntry(
     json['capabilityLink'] == null
         ? null
-        : CapabilityLink.fromJson(
-            json['capabilityLink'] as Map<String, dynamic>),
+        : CapabilityLink.fromJson(json['capabilityLink'] as String),
     json['requestId'] == null
         ? null
         : ContentId.fromJson(json['requestId'] as String),

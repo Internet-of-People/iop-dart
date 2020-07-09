@@ -32,8 +32,8 @@ class RequestEntry {
 class CapabilityLink extends ScalarBox<String> {
   CapabilityLink(String value) : super(value);
 
-  factory CapabilityLink.fromJson(Map<String, dynamic> json) =>
-      _$CapabilityLinkFromJson(json);
+  factory CapabilityLink.fromJson(String value) =>
+      _$CapabilityLinkFromJson({'value':value});
 
   String toJson() => _$CapabilityLinkToJson(this)['value'];
 }

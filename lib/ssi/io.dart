@@ -8,8 +8,8 @@ part 'io.g.dart';
 class KeyLink extends ScalarBox<String> {
   KeyLink(String value) : super(value);
 
-  factory KeyLink.fromJson(Map<String, dynamic> json) =>
-      _$KeyLinkFromJson(json);
+  factory KeyLink.fromJson(String value) =>
+      _$KeyLinkFromJson({'value':value});
 
   String toJson() => _$KeyLinkToJson(this)['value'];
 }
@@ -27,7 +27,7 @@ class ContentId extends ScalarBox<String> {
 @JsonSerializable(explicitToJson: true)
 class DynamicContent extends WithNonce {
   final Map<String, dynamic> content;
-  @JsonKey(nullable: false)
+  @JsonKey(nullable: true)
   final Content<DynamicContent> schema;
 
   DynamicContent(this.content, this.schema, Nonce nonce) : super(nonce);
@@ -73,7 +73,7 @@ class Signed<T> {
 
 @JsonSerializable(explicitToJson: true)
 class WithNonce {
-  @JsonKey(nullable: false)
+  @JsonKey(nullable: true)
   final Nonce nonce;
 
   WithNonce(this.nonce);
@@ -114,7 +114,7 @@ class WitnessRequest extends WithNonce {
   final Claim claim;
   final KeyLink claimant;
   final ContentId processId;
-  @JsonKey(nullable: false)
+  @JsonKey(nullable: true)
   final Content<DynamicContent> evidence;
 
   WitnessRequest(
@@ -134,13 +134,13 @@ class WitnessRequest extends WithNonce {
 
 @JsonSerializable(explicitToJson: true)
 class Constraint {
-  @JsonKey(nullable: false)
+  @JsonKey(nullable: true)
   final DateTime after;
-  @JsonKey(nullable: false)
+  @JsonKey(nullable: true)
   final DateTime before;
   final KeyLink witness;
   final DidData authority;
-  @JsonKey(nullable: false)
+  @JsonKey(nullable: true)
   final Content<DynamicContent> content;
 
   Constraint(

@@ -29,16 +29,18 @@ Map<String, dynamic> _$ContentIdToJson(ContentId instance) => <String, dynamic>{
 DynamicContent _$DynamicContentFromJson(Map<String, dynamic> json) {
   return DynamicContent(
     json['content'] as Map<String, dynamic>,
-    Content.fromJson(json['schema'] as Map<String, dynamic>),
-    Nonce.fromJson(json['nonce'] as Map<String, dynamic>),
+    json['schema'] == null
+        ? null
+        : Content.fromJson(json['schema'] as Map<String, dynamic>),
+    json['nonce'] == null ? null : Nonce.fromJson(json['nonce'] as String),
   );
 }
 
 Map<String, dynamic> _$DynamicContentToJson(DynamicContent instance) =>
     <String, dynamic>{
-      'nonce': instance.nonce.toJson(),
+      'nonce': instance.nonce?.toJson(),
       'content': instance.content,
-      'schema': instance.schema.toJson(),
+      'schema': instance.schema?.toJson(),
     };
 
 Content<T> _$ContentFromJson<T>(Map<String, dynamic> json) {
@@ -74,22 +76,22 @@ Map<String, dynamic> _$SignedToJson<T>(Signed<T> instance) => <String, dynamic>{
 
 WithNonce _$WithNonceFromJson(Map<String, dynamic> json) {
   return WithNonce(
-    Nonce.fromJson(json['nonce'] as Map<String, dynamic>),
+    json['nonce'] == null ? null : Nonce.fromJson(json['nonce'] as String),
   );
 }
 
 Map<String, dynamic> _$WithNonceToJson(WithNonce instance) => <String, dynamic>{
-      'nonce': instance.nonce.toJson(),
+      'nonce': instance.nonce?.toJson(),
     };
 
 Signature _$SignatureFromJson(Map<String, dynamic> json) {
   return Signature(
     json['publicKey'] == null
         ? null
-        : PublicKeyData.fromJson(json['publicKey'] as Map<String, dynamic>),
+        : PublicKeyData.fromJson(json['publicKey'] as String),
     json['bytes'] == null
         ? null
-        : SignatureData.fromJson(json['bytes'] as Map<String, dynamic>),
+        : SignatureData.fromJson(json['bytes'] as String),
   );
 }
 
@@ -102,7 +104,7 @@ Claim _$ClaimFromJson(Map<String, dynamic> json) {
   return Claim(
     json['subject'] == null
         ? null
-        : DidData.fromJson(json['subject'] as Map<String, dynamic>),
+        : DidData.fromJson(json['subject'] as String),
     json['content'] == null
         ? null
         : Content.fromJson(json['content'] as Map<String, dynamic>),
@@ -121,45 +123,49 @@ WitnessRequest _$WitnessRequestFromJson(Map<String, dynamic> json) {
         : Claim.fromJson(json['claim'] as Map<String, dynamic>),
     json['claimant'] == null
         ? null
-        : KeyLink.fromJson(json['claimant'] as Map<String, dynamic>),
+        : KeyLink.fromJson(json['claimant'] as String),
     json['processId'] == null
         ? null
         : ContentId.fromJson(json['processId'] as String),
-    Content.fromJson(json['evidence'] as Map<String, dynamic>),
-    Nonce.fromJson(json['nonce'] as Map<String, dynamic>),
+    json['evidence'] == null
+        ? null
+        : Content.fromJson(json['evidence'] as Map<String, dynamic>),
+    json['nonce'] == null ? null : Nonce.fromJson(json['nonce'] as String),
   );
 }
 
 Map<String, dynamic> _$WitnessRequestToJson(WitnessRequest instance) =>
     <String, dynamic>{
-      'nonce': instance.nonce.toJson(),
+      'nonce': instance.nonce?.toJson(),
       'claim': instance.claim?.toJson(),
       'claimant': instance.claimant?.toJson(),
       'processId': instance.processId?.toJson(),
-      'evidence': instance.evidence.toJson(),
+      'evidence': instance.evidence?.toJson(),
     };
 
 Constraint _$ConstraintFromJson(Map<String, dynamic> json) {
   return Constraint(
-    DateTime.parse(json['after'] as String),
-    DateTime.parse(json['before'] as String),
+    json['after'] == null ? null : DateTime.parse(json['after'] as String),
+    json['before'] == null ? null : DateTime.parse(json['before'] as String),
     json['witness'] == null
         ? null
-        : KeyLink.fromJson(json['witness'] as Map<String, dynamic>),
+        : KeyLink.fromJson(json['witness'] as String),
     json['authority'] == null
         ? null
-        : DidData.fromJson(json['authority'] as Map<String, dynamic>),
-    Content.fromJson(json['content'] as Map<String, dynamic>),
+        : DidData.fromJson(json['authority'] as String),
+    json['content'] == null
+        ? null
+        : Content.fromJson(json['content'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$ConstraintToJson(Constraint instance) =>
     <String, dynamic>{
-      'after': instance.after.toIso8601String(),
-      'before': instance.before.toIso8601String(),
+      'after': instance.after?.toIso8601String(),
+      'before': instance.before?.toIso8601String(),
       'witness': instance.witness?.toJson(),
       'authority': instance.authority?.toJson(),
-      'content': instance.content.toJson(),
+      'content': instance.content?.toJson(),
     };
 
 WitnessStatement _$WitnessStatementFromJson(Map<String, dynamic> json) {
@@ -173,13 +179,13 @@ WitnessStatement _$WitnessStatementFromJson(Map<String, dynamic> json) {
     json['constraints'] == null
         ? null
         : Constraint.fromJson(json['constraints'] as Map<String, dynamic>),
-    Nonce.fromJson(json['nonce'] as Map<String, dynamic>),
+    json['nonce'] == null ? null : Nonce.fromJson(json['nonce'] as String),
   );
 }
 
 Map<String, dynamic> _$WitnessStatementToJson(WitnessStatement instance) =>
     <String, dynamic>{
-      'nonce': instance.nonce.toJson(),
+      'nonce': instance.nonce?.toJson(),
       'claim': instance.claim?.toJson(),
       'processId': instance.processId?.toJson(),
       'constraints': instance.constraints?.toJson(),

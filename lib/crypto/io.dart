@@ -7,7 +7,7 @@ part 'io.g.dart';
 class Nonce extends ScalarBox<String> {
   Nonce(String value) : super(value);
 
-  factory Nonce.fromJson(Map<String, dynamic> json) => _$NonceFromJson(json);
+  factory Nonce.fromJson(String value) => _$NonceFromJson({'value':value});
 
   String toJson() => _$NonceToJson(this)['value'];
 }
@@ -16,8 +16,8 @@ class Nonce extends ScalarBox<String> {
 class DidData extends ScalarBox<String> {
   DidData(String value) : super(value);
 
-  factory DidData.fromJson(Map<String, dynamic> json) =>
-      _$DidDataFromJson(json);
+  factory DidData.fromJson(String value) =>
+      _$DidDataFromJson({'value':value});
 
   String toJson() => _$DidDataToJson(this)['value'];
 }
@@ -26,8 +26,8 @@ class DidData extends ScalarBox<String> {
 class PublicKeyData extends ScalarBox<String> {
   PublicKeyData(String value) : super(value);
 
-  factory PublicKeyData.fromJson(Map<String, dynamic> json) =>
-      _$PublicKeyDataFromJson(json);
+  factory PublicKeyData.fromJson(String value) =>
+      _$PublicKeyDataFromJson({'value':value});
 
   String toJson() => _$PublicKeyDataToJson(this)['value'];
 }
@@ -36,8 +36,8 @@ class PublicKeyData extends ScalarBox<String> {
 class SignatureData extends ScalarBox<String> {
   SignatureData(String value) : super(value);
 
-  factory SignatureData.fromJson(Map<String, dynamic> json) =>
-      _$SignatureDataFromJson(json);
+  factory SignatureData.fromJson(String value) =>
+      _$SignatureDataFromJson({'value':value});
 
   String toJson() => _$SignatureDataToJson(this)['value'];
 }
