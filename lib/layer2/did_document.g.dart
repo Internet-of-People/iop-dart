@@ -9,7 +9,9 @@ part of 'did_document.dart';
 KeyData _$KeyDataFromJson(Map<String, dynamic> json) {
   return KeyData(
     json['index'] as int,
-    json['auth'] as String,
+    json['auth'] == null
+        ? null
+        : AuthenticationData.fromJson(json['auth'] as String),
     json['validFromHeight'] as int,
     json['validUntilHeight'] as int,
     json['valid'] as bool,
@@ -18,7 +20,7 @@ KeyData _$KeyDataFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$KeyDataToJson(KeyData instance) => <String, dynamic>{
       'index': instance.index,
-      'auth': instance.auth,
+      'auth': instance.auth?.toJson(),
       'validFromHeight': instance.validFromHeight,
       'validUntilHeight': instance.validUntilHeight,
       'valid': instance.valid,
@@ -40,7 +42,9 @@ Map<String, dynamic> _$KeyRightHistoryPointToJson(
 
 KeyRightHistory _$KeyRightHistoryFromJson(Map<String, dynamic> json) {
   return KeyRightHistory(
-    json['keyLink'] as String,
+    json['keyLink'] == null
+        ? null
+        : KeyLink.fromJson(json['keyLink'] as String),
     (json['history'] as List)
         ?.map((e) => e == null
             ? null
@@ -52,14 +56,14 @@ KeyRightHistory _$KeyRightHistoryFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$KeyRightHistoryToJson(KeyRightHistory instance) =>
     <String, dynamic>{
-      'keyLink': instance.keyLink,
+      'keyLink': instance.keyLink?.toJson(),
       'history': instance.history?.map((e) => e?.toJson())?.toList(),
       'valid': instance.valid,
     };
 
 DidDocumentData _$DidDocumentDataFromJson(Map<String, dynamic> json) {
   return DidDocumentData(
-    json['did'] as String,
+    json['did'] == null ? null : DidData.fromJson(json['did'] as String),
     (json['keys'] as List)
         ?.map((e) =>
             e == null ? null : KeyData.fromJson(e as Map<String, dynamic>))
@@ -81,7 +85,7 @@ DidDocumentData _$DidDocumentDataFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$DidDocumentDataToJson(DidDocumentData instance) =>
     <String, dynamic>{
-      'did': instance.did,
+      'did': instance.did?.toJson(),
       'keys': instance.keys?.map((e) => e?.toJson())?.toList(),
       'rights': instance.rights
           ?.map((k, e) => MapEntry(k, e?.map((e) => e?.toJson())?.toList())),

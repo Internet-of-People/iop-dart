@@ -31,4 +31,12 @@ abstract class LayerApi {
       headers: _jsonHeaders,
     );
   }
+
+  Future<Response> layer2ApiPost(String path, dynamic body) async {
+    return _client.post(
+      '${network.layer2ApiUrl}$path',
+      headers: _jsonHeaders,
+      body: body,
+    );
+  }
 }

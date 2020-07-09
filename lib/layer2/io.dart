@@ -1,11 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:morpheus_sdk/layer1/operation_data.dart';
+import 'package:morpheus_sdk/ssi/io.dart';
 
 part 'io.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class BeforeProofHistoryResponse {
-  final String contentId;
+  final ContentId contentId;
   final int existsFromHeight;
   final int queriedAtHeight;
 
@@ -50,8 +51,9 @@ class DidOperation {
 }
 
 @JsonSerializable(explicitToJson: true)
-class DryRunOperationError {
-  final invalidOperationAttempt;
+class DryRunOperationError<T extends OperationData> {
+  @JsonKey(nullable: true, fromJson: _dataFromJson, toJson: _dataToJson)
+  final T invalidOperationAttempt;
   final String message;
 
   DryRunOperationError(this.invalidOperationAttempt, this.message);
@@ -61,3 +63,7 @@ class DryRunOperationError {
 
   Map<String, dynamic> toJson() => _$DryRunOperationErrorToJson(this);
 }
+
+T _dataFromJson<T>(Map<String, dynamic> input) => input['content'] as T;
+
+Map<String, dynamic> _dataToJson<T>(T input) => {'content': input};

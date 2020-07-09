@@ -9,7 +9,9 @@ part of 'io.dart';
 BeforeProofHistoryResponse _$BeforeProofHistoryResponseFromJson(
     Map<String, dynamic> json) {
   return BeforeProofHistoryResponse(
-    json['contentId'] as String,
+    json['contentId'] == null
+        ? null
+        : ContentId.fromJson(json['contentId'] as String),
     json['existsFromHeight'] as int,
     json['queriedAtHeight'] as int,
   );
@@ -18,7 +20,7 @@ BeforeProofHistoryResponse _$BeforeProofHistoryResponseFromJson(
 Map<String, dynamic> _$BeforeProofHistoryResponseToJson(
         BeforeProofHistoryResponse instance) =>
     <String, dynamic>{
-      'contentId': instance.contentId,
+      'contentId': instance.contentId?.toJson(),
       'existsFromHeight': instance.existsFromHeight,
       'queriedAtHeight': instance.queriedAtHeight,
     };
@@ -56,16 +58,17 @@ Map<String, dynamic> _$DidOperationToJson(DidOperation instance) =>
       'valid': instance.valid,
     };
 
-DryRunOperationError _$DryRunOperationErrorFromJson(Map<String, dynamic> json) {
-  return DryRunOperationError(
-    json['invalidOperationAttempt'],
+DryRunOperationError<T> _$DryRunOperationErrorFromJson<T extends OperationData>(
+    Map<String, dynamic> json) {
+  return DryRunOperationError<T>(
+    _dataFromJson(json['invalidOperationAttempt'] as Map<String, dynamic>),
     json['message'] as String,
   );
 }
 
-Map<String, dynamic> _$DryRunOperationErrorToJson(
-        DryRunOperationError instance) =>
+Map<String, dynamic> _$DryRunOperationErrorToJson<T extends OperationData>(
+        DryRunOperationError<T> instance) =>
     <String, dynamic>{
-      'invalidOperationAttempt': instance.invalidOperationAttempt,
+      'invalidOperationAttempt': _dataToJson(instance.invalidOperationAttempt),
       'message': instance.message,
     };

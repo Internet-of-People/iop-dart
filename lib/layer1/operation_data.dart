@@ -1,10 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:morpheus_sdk/crypto/io.dart';
+import 'package:morpheus_sdk/ssi/io.dart';
 
 part 'operation_data.g.dart';
 
 enum OperationType {
   signed,
   registerBeforeProof,
+}
+
+extension OperationTypeExt on OperationType {
+  String toJson() => toString().replaceAll('${runtimeType.toString()}.', '');
 }
 
 enum SignableOperationType {
@@ -15,18 +21,8 @@ enum SignableOperationType {
   tombstoneDid,
 }
 
-@JsonSerializable(explicitToJson: true)
-class SignableOperationData {
-  final String did;
-  final String lastTxId;
-  final SignableOperationType operation;
-
-  SignableOperationData(this.did, this.lastTxId, this.operation);
-
-  factory SignableOperationData.fromJson(Map<String, dynamic> json) =>
-      _$SignableOperationDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$SignableOperationDataToJson(this);
+extension SignableOperationTypeExt on SignableOperationType {
+  String toJson() => toString().replaceAll('${runtimeType.toString()}.', '');
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -42,10 +38,24 @@ class OperationData {
 }
 
 @JsonSerializable(explicitToJson: true)
+class SignableOperationData {
+  final DidData did;
+  final String lastTxId;
+  final SignableOperationType operation;
+
+  SignableOperationData(this.did, this.lastTxId, this.operation);
+
+  factory SignableOperationData.fromJson(Map<String, dynamic> json) =>
+      _$SignableOperationDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SignableOperationDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true, createToJson: false)
 class SignedOperationsData extends OperationData {
   final List<SignableOperationData> signables;
-  final String signerPublicKey;
-  final String signature;
+  final PublicKeyData signerPublicKey;
+  final SignatureData signature;
 
   SignedOperationsData(this.signables, this.signerPublicKey, this.signature)
       : super(OperationType.signed);
@@ -54,12 +64,17 @@ class SignedOperationsData extends OperationData {
       _$SignedOperationsDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$SignedOperationsDataToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'operation': operation.toJson(),
+        'signables': signables?.map((e) => e?.toJson())?.toList(),
+        'signerPublicKey': signerPublicKey?.toJson(),
+        'signature': signature?.toJson(),
+      };
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, createToJson: false)
 class RegisterBeforeProofData extends OperationData {
-  final String contentId;
+  final ContentId contentId;
 
   RegisterBeforeProofData(this.contentId)
       : super(OperationType.registerBeforeProof);
@@ -68,16 +83,19 @@ class RegisterBeforeProofData extends OperationData {
       _$RegisterBeforeProofDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$RegisterBeforeProofDataToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'operation': operation.toJson(),
+        'contentId': contentId?.toJson(),
+      };
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, createToJson: false)
 class AddKeyData extends SignableOperationData {
-  final String auth; // AuthenticationData in Ts
+  final AuthenticationData auth;
   final int expiresAtHeight;
 
   AddKeyData(
-    String did,
+    DidData did,
     String lastTxId,
     this.auth, {
     int expiresAtHeight,
@@ -88,15 +106,21 @@ class AddKeyData extends SignableOperationData {
       _$AddKeyDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$AddKeyDataToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'operation': operation.toJson(),
+        'did': did?.toJson(),
+        'lastTxId': lastTxId,
+        'auth': auth?.toJson(),
+        'expiresAtHeight': expiresAtHeight,
+      };
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, createToJson: false)
 class RevokeKeyData extends SignableOperationData {
-  final String auth; // AuthenticationData in Ts
+  final AuthenticationData auth;
 
   RevokeKeyData(
-    String did,
+    DidData did,
     String lastTxId,
     this.auth,
   ) : super(did, lastTxId, SignableOperationType.revokeKey);
@@ -105,16 +129,21 @@ class RevokeKeyData extends SignableOperationData {
       _$RevokeKeyDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$RevokeKeyDataToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'operation': operation.toJson(),
+        'did': did?.toJson(),
+        'lastTxId': lastTxId,
+        'auth': auth?.toJson(),
+      };
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, createToJson: false)
 class AddRightData extends SignableOperationData {
-  final String auth; // AuthenticationData in Ts
+  final AuthenticationData auth;
   final String right;
 
   AddRightData(
-    String did,
+    DidData did,
     String lastTxId,
     this.auth,
     this.right,
@@ -124,16 +153,22 @@ class AddRightData extends SignableOperationData {
       _$AddRightDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$AddRightDataToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'operation': operation.toJson(),
+        'did': did?.toJson(),
+        'lastTxId': lastTxId,
+        'auth': auth?.toJson(),
+        'right': right,
+      };
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, createToJson: false)
 class RevokeRightData extends SignableOperationData {
-  final String auth; // AuthenticationData in Ts
+  final AuthenticationData auth;
   final String right;
 
   RevokeRightData(
-    String did,
+    DidData did,
     String lastTxId,
     this.auth,
     this.right,
@@ -143,17 +178,27 @@ class RevokeRightData extends SignableOperationData {
       _$RevokeRightDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$RevokeRightDataToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'operation': operation.toJson(),
+        'did': did?.toJson(),
+        'lastTxId': lastTxId,
+        'auth': auth?.toJson(),
+        'right': right,
+      };
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, createToJson: false)
 class TombstoneDidData extends SignableOperationData {
-  TombstoneDidData(String did, String lastTxId)
+  TombstoneDidData(DidData did, String lastTxId)
       : super(did, lastTxId, SignableOperationType.tombstoneDid);
 
   factory TombstoneDidData.fromJson(Map<String, dynamic> json) =>
       _$TombstoneDidDataFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$TombstoneDidDataToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'operation': operation.toJson(),
+        'did': did?.toJson(),
+        'lastTxId': lastTxId,
+      };
 }

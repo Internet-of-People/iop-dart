@@ -1,15 +1,15 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:morpheus_sdk/crypto/authentication.dart';
 import 'package:morpheus_sdk/crypto/core.dart';
+import 'package:morpheus_sdk/crypto/io.dart';
+import 'package:morpheus_sdk/ssi/io.dart';
 
 part 'did_document.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class KeyData {
   final int index;
-
-  /// Crypto.Types.AuthenticationData in Typescript
-  final String auth;
+  final AuthenticationData auth;
   final int validFromHeight;
   final int validUntilHeight;
   final bool valid;
@@ -43,7 +43,7 @@ class KeyRightHistoryPoint {
 
 @JsonSerializable(explicitToJson: true)
 class KeyRightHistory {
-  final String keyLink;
+  final KeyLink keyLink;
   final List<KeyRightHistoryPoint> history;
   final bool valid;
 
@@ -57,7 +57,7 @@ class KeyRightHistory {
 
 @JsonSerializable(explicitToJson: true)
 class DidDocumentData {
-  final String did;
+  final DidData did;
   final List<KeyData> keys;
   final Map<String, List<KeyRightHistory>> rights;
   final bool tombstoned;
@@ -89,7 +89,7 @@ class DidDocument {
 
   int get height => _data.queriedAtHeight;
 
-  String get did => _data.did;
+  DidData get did => _data.did;
 
   void fromData(DidDocumentData data) {
     _data = data;
@@ -143,14 +143,14 @@ class DidDocument {
     }
   }
 
-  int _getKeyIdx(String keyLink) {
-    if (!keyLink.startsWith('#')) {
+  int _getKeyIdx(KeyLink keyLink) {
+    if (!keyLink.value.startsWith('#')) {
       throw Exception(
         'Only did-internal keyLinks are supported yet. Found $keyLink',
       );
     }
 
-    return int.parse(keyLink.substring(1));
+    return int.parse(keyLink.value.substring(1));
   }
 
   bool _isKeyValidAt(KeyData keyData, int height) {

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:morpheus_sdk/crypto/io.dart';
 import 'package:morpheus_sdk/layer1/operation_data.dart';
 import 'package:morpheus_sdk/layer2/did_document.dart';
 import 'package:morpheus_sdk/network.dart';
+import 'package:morpheus_sdk/ssi/io.dart';
 import 'package:morpheus_sdk/utils/api.dart';
 import 'package:morpheus_sdk/utils/io.dart';
 import 'package:morpheus_sdk/layer2/io.dart';
@@ -12,9 +14,9 @@ class Layer2Api extends LayerApi {
   Layer2Api(Network network) : super(network);
 
   Future<BeforeProofHistoryResponse> getBeforeProofHistory(
-    String contentId,
+    ContentId contentId,
   ) async {
-    final resp = await layer2ApiGet('/before-proof/$contentId/history');
+    final resp = await layer2ApiGet('/before-proof/${contentId.value}/history');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
@@ -24,15 +26,17 @@ class Layer2Api extends LayerApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<bool> beforeProofExists(String contentId, {int height}) async {
+  Future<bool> beforeProofExists(ContentId contentId, {int height}) async {
     final resp = await layer2ApiGet(
-      _widthHeight('/before-proof/${contentId}/exists', height),
+      _widthHeight('/before-proof/${contentId.value}/exists', height),
     );
     return json.decode(resp.body);
   }
 
-  Future<DidDocument> getDidDocument(String did, {int height}) async {
-    final resp = await layer2ApiGet(_widthHeight('/did/$did/document', height));
+  Future<DidDocument> getDidDocument(DidData did, {int height}) async {
+    final resp = await layer2ApiGet(
+      _widthHeight('/did/${did.value}/document', height),
+    );
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
@@ -55,8 +59,8 @@ class Layer2Api extends LayerApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<String> getLastTxId(String did) async {
-    final resp = await layer2ApiGet('/did/$did/transactions/last');
+  Future<String> getLastTxId(DidData did) async {
+    final resp = await layer2ApiGet('/did/${did.value}/transactions/last');
 
     if (resp.statusCode == HttpStatus.ok) {
       return json.decode(resp.body)['transactionId'];
@@ -68,7 +72,7 @@ class Layer2Api extends LayerApi {
   }
 
   Future<List<TransactionIdHeight>> getDidTransactionIds(
-    String did,
+    DidData did,
     int fromHeight, {
     int untilHeight,
   }) async {
@@ -81,7 +85,7 @@ class Layer2Api extends LayerApi {
   }
 
   Future<List<TransactionIdHeight>> getDidTransactionAttemptIds(
-    String did,
+    DidData did,
     int fromHeight, {
     int untilHeight,
   }) async {
@@ -94,7 +98,7 @@ class Layer2Api extends LayerApi {
   }
 
   Future<List<DidOperation>> getDidOperations(
-    String did,
+    DidData did,
     int fromHeight, {
     int untilHeight,
   }) async {
@@ -107,7 +111,7 @@ class Layer2Api extends LayerApi {
   }
 
   Future<List<DidOperation>> getDidOperationAttempts(
-    String did,
+    DidData did,
     int fromHeight, {
     int untilHeight,
   }) async {
@@ -120,16 +124,16 @@ class Layer2Api extends LayerApi {
   }
 
   Future<List<DryRunOperationError>> checkTransactionValidity(
-    OperationData data,
+    List<OperationData> operationAttempts,
   ) async {
-    final resp = await layer1ApiPost(
+    final resp = await layer2ApiPost(
       '/check-transaction-validity',
-      json.encode(data.toJson()),
+      json.encode(operationAttempts),
     );
 
     if (resp.statusCode == HttpStatus.ok) {
-      return (json.decode(resp.body) as List<Map<String, dynamic>>)
-          .map((e) => DryRunOperationError.fromJson(e))
+      return (json.decode(resp.body) as List<dynamic>)
+          .map((e) => DryRunOperationError.fromJson(e as Map<String, dynamic>))
           .toList();
     }
 
@@ -138,13 +142,13 @@ class Layer2Api extends LayerApi {
 
   Future<List<DidOperation>> _didOperationsQuery(
     bool includeAttempts,
-    String did,
+    DidData did,
     int fromHeight, {
     int untilHeight,
   }) async {
     final path = includeAttempts ? 'operation-attempts' : 'operations';
     final resp = await layer2ApiGet(
-      _widthHeight('/did/$did/$path/$fromHeight', untilHeight),
+      _widthHeight('/did/${did.value}/$path/$fromHeight', untilHeight),
     );
 
     if (resp.statusCode == HttpStatus.ok) {
@@ -160,13 +164,13 @@ class Layer2Api extends LayerApi {
 
   Future<List<TransactionIdHeight>> _didTransactionIdsQuery(
     bool includeAttempts,
-    String did,
+    DidData did,
     int fromHeight, {
     int untilHeight,
   }) async {
     final path = includeAttempts ? 'transaction-attempts' : 'transactions';
     final resp = await layer2ApiGet(
-      _widthHeight('/did/$did/$path/$fromHeight', untilHeight),
+      _widthHeight('/did/${did.value}/$path/$fromHeight', untilHeight),
     );
 
     if (resp.statusCode == HttpStatus.ok) {

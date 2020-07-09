@@ -98,9 +98,13 @@ class NodeCryptoConfigResponse {
 
 @JsonSerializable(explicitToJson: true)
 class NodeCryptoConfigExceptions {
+  @JsonKey(nullable: true)
   final List<String> blocks;
+  @JsonKey(nullable: true)
   final List<String> transactions;
+  @JsonKey(nullable: true)
   final Map<String, String> outlookTable;
+  @JsonKey(nullable: true)
   final Map<String, String> transactionIdFixTable;
 
   NodeCryptoConfigExceptions(
@@ -148,26 +152,42 @@ class NodeCryptoConfigNetwork {
 
 @JsonSerializable(explicitToJson: true)
 class TransactionStatusResponse {
+  @JsonKey(nullable: true)
   final int version;
+  @JsonKey(nullable: true)
   final int network;
+  @JsonKey(nullable: true)
   final int typeGroup;
   final int type;
+  @JsonKey(nullable: true)
   final Map<String, dynamic> timestamp;
+  @JsonKey(nullable: true)
   final String nonce;
   final String senderPublicKey;
   final String fee;
   final String amount;
+  @JsonKey(nullable: true)
   final int expiration;
+  @JsonKey(nullable: true)
   final String recipientId;
+  @JsonKey(nullable: true)
   final Map<String, dynamic> asset;
   final String vendorField;
+  @JsonKey(nullable: true)
   final String id;
+  @JsonKey(nullable: true)
   final String signature;
+  @JsonKey(nullable: true)
   final String secondSignature;
+  @JsonKey(nullable: true)
   final String signSignature;
+  @JsonKey(nullable: true)
   final List<String> signatures;
+  @JsonKey(nullable: true)
   final String blockId;
+  @JsonKey(nullable: true)
   final int sequence;
+  @JsonKey(nullable: true)
   final String ipfsHash;
 
   TransactionStatusResponse(

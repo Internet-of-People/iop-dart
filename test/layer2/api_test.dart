@@ -1,11 +1,16 @@
+import 'package:morpheus_sdk/crypto/io.dart';
+import 'package:morpheus_sdk/layer1/operation_data.dart';
 import 'package:morpheus_sdk/layer2/api.dart';
 import 'package:morpheus_sdk/network.dart';
+import 'package:morpheus_sdk/ssi/io.dart';
 import 'package:test/test.dart';
 
 void main() {
-  const existingDid = 'did:morpheus:ezqztJ6XX6GDxdSgdiySiT3J';
-  const nonExistingDid = 'did:morpheus:ezqztJ6XX6GDxdSgdiySiT3a';
-  const existingBeforeProof = 'cju6m5xQ-8oSsIY0k9qpOjFIFinmGTpdxw2siJnVPInLCg';
+  final existingDid = DidData('did:morpheus:ezqztJ6XX6GDxdSgdiySiT3J');
+  final nonExistingDid = DidData('did:morpheus:ezqztJ6XX6GDxdSgdiySiT3a');
+  final existingBeforeProof = ContentId(
+    'cju6m5xQ-8oSsIY0k9qpOjFIFinmGTpdxw2siJnVPInLCg',
+  );
   final api = Layer2Api(Network.TestNet);
 
   group('api', () {
@@ -17,8 +22,8 @@ void main() {
     });
 
     test('getBeforeProofHistory - non existing', () async {
-      final resp = await api.getBeforeProofHistory('not-existing');
-      expect(resp.contentId, 'not-existing');
+      final resp = await api.getBeforeProofHistory(ContentId('not-existing'));
+      expect(resp.contentId, ContentId('not-existing'));
       expect(resp.existsFromHeight, isNull);
       expect(resp.queriedAtHeight, isNotNull);
     });
@@ -41,7 +46,7 @@ void main() {
     });
 
     test('beforeProofExists - not existing', () async {
-      final resp = await api.beforeProofExists('not-existing');
+      final resp = await api.beforeProofExists(ContentId('not-existing'));
       expect(resp, false);
     });
 
@@ -122,12 +127,28 @@ void main() {
       expect(resp, isEmpty);
     });
 
-    test('checkTransactionValidity - valid tx', () async {
-      // TODO complete, when Hydra or Morpheus TX builders are available
+    test('checkTransactionValidity - valid tx / simple op', () async {
+      final beforeProofOp = RegisterBeforeProofData(ContentId('contentId'));
+      final resp = await api.checkTransactionValidity([beforeProofOp]);
+      expect(resp, isEmpty);
+    });
+
+    test('checkTransactionValidity - valid tx / signed ops', () async {
+      //final tombstoneOp = TombstoneDidData(DidData('as'), 'asd');
+      // TODO: right key and right signature is needed here
+      //final signedOp = SignedOperationsData([tombstoneOp], PublicKeyData('pubkey'), SignatureData('sig'));
+      //final resp = await api.checkTransactionValidity([signedOp]);
     });
 
     test('checkTransactionValidity - invalid tx', () async {
-      // TODO complete, when Hydra or Morpheus TX builders are available
+      final tombstoneOp = TombstoneDidData(DidData('invalid_did'), 'invalid');
+      final signedOp = SignedOperationsData(
+        [tombstoneOp],
+        PublicKeyData('invalid'),
+        SignatureData('invalid'),
+      );
+      final resp = await api.checkTransactionValidity([signedOp]);
+      expect(resp.length, 1);
     });
   });
 }

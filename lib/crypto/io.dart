@@ -13,6 +13,16 @@ class Nonce extends ScalarBox<String> {
 }
 
 @JsonSerializable(explicitToJson: true)
+class AuthenticationData extends ScalarBox<String> {
+  AuthenticationData(String value) : super(value);
+
+  factory AuthenticationData.fromJson(String value) =>
+      _$AuthenticationDataFromJson({'value':value});
+
+  String toJson() => _$AuthenticationDataToJson(this)['value'];
+}
+
+@JsonSerializable(explicitToJson: true)
 class DidData extends ScalarBox<String> {
   DidData(String value) : super(value);
 

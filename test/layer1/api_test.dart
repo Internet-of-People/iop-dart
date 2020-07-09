@@ -1,3 +1,6 @@
+import 'package:morpheus_sdk/crypto/core.dart';
+import 'package:morpheus_sdk/crypto/hydra_plugin.dart';
+import 'package:morpheus_sdk/crypto/vault.dart';
 import 'package:morpheus_sdk/layer1/api.dart';
 import 'package:morpheus_sdk/network.dart';
 import 'package:test/test.dart';
@@ -68,6 +71,41 @@ void main() {
       expect(balance, 0);
     });
 
-    // TODO: send transfer tests, when the api is finalized
+    test('sendTransfer', () async {
+      final network = Network.TestNet;
+      final targetAddress = 'tjseecxRmob5qBS2T3qc8frXDKz3YUGB8J'; // genesis
+      final hydraAccount = 0;
+      final unlockPassword = 'unlock';
+
+      final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
+      HydraPlugin.rewind(vault, unlockPassword, network, hydraAccount);
+
+      final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
+
+      final senderAddress = hydraPlugin.public.key(0).address;
+      final hydraPrivate = hydraPlugin.private(unlockPassword);
+
+      final amount = 100000; // 0.001HYD
+
+      final txId = await api.sendTransferTx(
+        senderAddress,
+        targetAddress,
+        amount,
+        hydraPrivate,
+      );
+
+      bool success;
+
+      for(var i=0; i<12; i++) {
+        await Future.delayed(const Duration(seconds: 1));
+        final status = await api.getTxnStatus(txId);
+        if(status.isPresent && status.value.id == txId) {
+          success = true;
+          break;
+        }
+      }
+
+      expect(success, true);
+    });
   });
 }

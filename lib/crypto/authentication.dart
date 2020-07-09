@@ -1,4 +1,5 @@
 import 'package:morpheus_sdk/crypto/core.dart';
+import 'package:morpheus_sdk/crypto/io.dart';
 import 'package:morpheus_sdk/crypto/multicipher.dart';
 
 bool isSameAuthentication(Authentication left, Authentication right) {
@@ -17,8 +18,8 @@ bool isSameAuthentication(Authentication left, Authentication right) {
   }
 }
 
-Authentication authenticationFromData(String auth) {
-  return auth.startsWith(KeyId.prefix())
-      ? Authentication.keyId(KeyId.fromString(auth))
-      : Authentication.publicKey(PublicKey.fromString(auth));
+Authentication authenticationFromData(AuthenticationData auth) {
+  return auth.value.startsWith(KeyId.prefix())
+      ? Authentication.keyId(KeyId.fromString(auth.value))
+      : Authentication.publicKey(PublicKey.fromString(auth.value));
 }

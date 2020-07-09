@@ -16,6 +16,17 @@ Map<String, dynamic> _$NonceToJson(Nonce instance) => <String, dynamic>{
       'value': instance.value,
     };
 
+AuthenticationData _$AuthenticationDataFromJson(Map<String, dynamic> json) {
+  return AuthenticationData(
+    json['value'] as String,
+  );
+}
+
+Map<String, dynamic> _$AuthenticationDataToJson(AuthenticationData instance) =>
+    <String, dynamic>{
+      'value': instance.value,
+    };
+
 DidData _$DidDataFromJson(Map<String, dynamic> json) {
   return DidData(
     json['value'] as String,
