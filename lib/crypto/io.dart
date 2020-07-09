@@ -9,7 +9,7 @@ class Nonce extends ScalarBox<String> {
 
   factory Nonce.fromJson(Map<String, dynamic> json) => _$NonceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$NonceToJson(this);
+  String toJson() => _$NonceToJson(this)['value'];
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -19,7 +19,7 @@ class DidData extends ScalarBox<String> {
   factory DidData.fromJson(Map<String, dynamic> json) =>
       _$DidDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DidDataToJson(this);
+  String toJson() => _$DidDataToJson(this)['value'];
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -29,7 +29,7 @@ class PublicKeyData extends ScalarBox<String> {
   factory PublicKeyData.fromJson(Map<String, dynamic> json) =>
       _$PublicKeyDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PublicKeyDataToJson(this);
+  String toJson() => _$PublicKeyDataToJson(this)['value'];
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -39,5 +39,5 @@ class SignatureData extends ScalarBox<String> {
   factory SignatureData.fromJson(Map<String, dynamic> json) =>
       _$SignatureDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$SignatureDataToJson(this);
+  String toJson() => _$SignatureDataToJson(this)['value'];
 }

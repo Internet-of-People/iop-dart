@@ -10,8 +10,7 @@ ListProcessesResponse _$ListProcessesResponseFromJson(
     Map<String, dynamic> json) {
   return ListProcessesResponse(
     (json['processes'] as List)
-        ?.map((e) =>
-            e == null ? null : ContentId.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => e == null ? null : ContentId.fromJson(e as String))
         ?.toList(),
   );
 }

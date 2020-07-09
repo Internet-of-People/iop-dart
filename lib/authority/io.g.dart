@@ -14,14 +14,14 @@ RequestEntry _$RequestEntryFromJson(Map<String, dynamic> json) {
             json['capabilityLink'] as Map<String, dynamic>),
     json['requestId'] == null
         ? null
-        : ContentId.fromJson(json['requestId'] as Map<String, dynamic>),
+        : ContentId.fromJson(json['requestId'] as String),
     json['dateOfRequest'] == null
         ? null
         : DateTime.parse(json['dateOfRequest'] as String),
     _$enumDecodeNullable(_$StatusEnumMap, json['status']),
     json['processId'] == null
         ? null
-        : ContentId.fromJson(json['processId'] as Map<String, dynamic>),
+        : ContentId.fromJson(json['processId'] as String),
     json['notes'] as String,
   );
 }
@@ -90,8 +90,7 @@ RequestStatus _$RequestStatusFromJson(Map<String, dynamic> json) {
     _$enumDecodeNullable(_$StatusEnumMap, json['status']),
     json['signedStatement'] == null
         ? null
-        : WitnessStatement.fromJson(
-            json['signedStatement'] as Map<String, dynamic>),
+        : Signed.fromJson(json['signedStatement'] as Map<String, dynamic>),
     json['rejectionReason'] as String,
   );
 }

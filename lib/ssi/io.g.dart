@@ -46,7 +46,7 @@ Content<T> _$ContentFromJson<T>(Map<String, dynamic> json) {
     _dataFromJson(json['content'] as Map<String, dynamic>),
     json['contentId'] == null
         ? null
-        : ContentId.fromJson(json['contentId'] as Map<String, dynamic>),
+        : ContentId.fromJson(json['contentId'] as String),
   );
 }
 
@@ -124,7 +124,7 @@ WitnessRequest _$WitnessRequestFromJson(Map<String, dynamic> json) {
         : KeyLink.fromJson(json['claimant'] as Map<String, dynamic>),
     json['processId'] == null
         ? null
-        : ContentId.fromJson(json['processId'] as Map<String, dynamic>),
+        : ContentId.fromJson(json['processId'] as String),
     Content.fromJson(json['evidence'] as Map<String, dynamic>),
     Nonce.fromJson(json['nonce'] as Map<String, dynamic>),
   );
@@ -169,7 +169,7 @@ WitnessStatement _$WitnessStatementFromJson(Map<String, dynamic> json) {
         : Content.fromJson(json['claim'] as Map<String, dynamic>),
     json['processId'] == null
         ? null
-        : ContentId.fromJson(json['processId'] as Map<String, dynamic>),
+        : ContentId.fromJson(json['processId'] as String),
     json['constraints'] == null
         ? null
         : Constraint.fromJson(json['constraints'] as Map<String, dynamic>),

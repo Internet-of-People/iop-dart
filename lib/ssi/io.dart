@@ -11,17 +11,17 @@ class KeyLink extends ScalarBox<String> {
   factory KeyLink.fromJson(Map<String, dynamic> json) =>
       _$KeyLinkFromJson(json);
 
-  Map<String, dynamic> toJson() => _$KeyLinkToJson(this);
+  String toJson() => _$KeyLinkToJson(this)['value'];
 }
 
 @JsonSerializable(explicitToJson: true)
 class ContentId extends ScalarBox<String> {
   ContentId(String value) : super(value);
 
-  factory ContentId.fromJson(Map<String, dynamic> json) =>
-      _$ContentIdFromJson(json);
+  factory ContentId.fromJson(String value) =>
+      _$ContentIdFromJson({'value':value});
 
-  Map<String, dynamic> toJson() => _$ContentIdToJson(this);
+  String toJson() => _$ContentIdToJson(this)['value'];
 }
 
 @JsonSerializable(explicitToJson: true)

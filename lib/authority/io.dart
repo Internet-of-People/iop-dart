@@ -35,7 +35,7 @@ class CapabilityLink extends ScalarBox<String> {
   factory CapabilityLink.fromJson(Map<String, dynamic> json) =>
       _$CapabilityLinkFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CapabilityLinkToJson(this);
+  String toJson() => _$CapabilityLinkToJson(this)['value'];
 }
 
 enum Status { pending, approved, rejected }
@@ -43,7 +43,7 @@ enum Status { pending, approved, rejected }
 @JsonSerializable(explicitToJson: true)
 class RequestStatus {
   final Status status;
-  @JsonKey(nullable: true) final WitnessStatement signedStatement;
+  @JsonKey(nullable: true) final Signed<WitnessStatement> signedStatement;
   @JsonKey(nullable: true) final String rejectionReason;
 
   RequestStatus(this.status, this.signedStatement, this.rejectionReason);
