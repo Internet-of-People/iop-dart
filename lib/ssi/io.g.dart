@@ -190,3 +190,77 @@ Map<String, dynamic> _$WitnessStatementToJson(WitnessStatement instance) =>
       'processId': instance.processId?.toJson(),
       'constraints': instance.constraints?.toJson(),
     };
+
+ProvenClaim _$ProvenClaimFromJson(Map<String, dynamic> json) {
+  return ProvenClaim(
+    json['claim'] == null
+        ? null
+        : Claim.fromJson(json['claim'] as Map<String, dynamic>),
+    (json['statements'] as List)
+        ?.map((e) =>
+            e == null ? null : Signed.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
+}
+
+Map<String, dynamic> _$ProvenClaimToJson(ProvenClaim instance) =>
+    <String, dynamic>{
+      'claim': instance.claim?.toJson(),
+      'statements': instance.statements?.map((e) => e?.toJson())?.toList(),
+    };
+
+License _$LicenseFromJson(Map<String, dynamic> json) {
+  return License(
+    json['issuedTo'] == null
+        ? null
+        : DidData.fromJson(json['issuedTo'] as String),
+    json['purpose'] as String,
+    json['validFrom'] == null
+        ? null
+        : DateTime.parse(json['validFrom'] as String),
+    json['validUntil'] == null
+        ? null
+        : DateTime.parse(json['validUntil'] as String),
+  );
+}
+
+Map<String, dynamic> _$LicenseToJson(License instance) => <String, dynamic>{
+      'issuedTo': instance.issuedTo?.toJson(),
+      'purpose': instance.purpose,
+      'validFrom': instance.validFrom?.toIso8601String(),
+      'validUntil': instance.validUntil?.toIso8601String(),
+    };
+
+Presentation _$PresentationFromJson(Map<String, dynamic> json) {
+  return Presentation(
+    (json['provenClaims'] as List)
+        ?.map((e) =>
+            e == null ? null : ProvenClaim.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    (json['licenses'] as List)
+        ?.map((e) =>
+            e == null ? null : License.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+    json['nonce'] == null ? null : Nonce.fromJson(json['nonce'] as String),
+  );
+}
+
+Map<String, dynamic> _$PresentationToJson(Presentation instance) =>
+    <String, dynamic>{
+      'nonce': instance.nonce?.toJson(),
+      'provenClaims': instance.provenClaims?.map((e) => e?.toJson())?.toList(),
+      'licenses': instance.licenses?.map((e) => e?.toJson())?.toList(),
+    };
+
+AfterProof _$AfterProofFromJson(Map<String, dynamic> json) {
+  return AfterProof(
+    json['blockHeight'] as int,
+    json['blockHash'] as String,
+  );
+}
+
+Map<String, dynamic> _$AfterProofToJson(AfterProof instance) =>
+    <String, dynamic>{
+      'blockHeight': instance.blockHeight,
+      'blockHash': instance.blockHash,
+    };

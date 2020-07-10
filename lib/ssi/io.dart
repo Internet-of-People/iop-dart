@@ -8,8 +8,7 @@ part 'io.g.dart';
 class KeyLink extends ScalarBox<String> {
   KeyLink(String value) : super(value);
 
-  factory KeyLink.fromJson(String value) =>
-      _$KeyLinkFromJson({'value':value});
+  factory KeyLink.fromJson(String value) => _$KeyLinkFromJson({'value': value});
 
   String toJson() => _$KeyLinkToJson(this)['value'];
 }
@@ -19,7 +18,7 @@ class ContentId extends ScalarBox<String> {
   ContentId(String value) : super(value);
 
   factory ContentId.fromJson(String value) =>
-      _$ContentIdFromJson({'value':value});
+      _$ContentIdFromJson({'value': value});
 
   String toJson() => _$ContentIdToJson(this)['value'];
 }
@@ -175,4 +174,59 @@ class WitnessStatement extends WithNonce {
 
   @override
   Map<String, dynamic> toJson() => _$WitnessStatementToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ProvenClaim {
+  final Claim claim;
+  final List<Signed<WitnessStatement>> statements;
+
+  ProvenClaim(this.claim, this.statements);
+
+  factory ProvenClaim.fromJson(Map<String, dynamic> json) =>
+      _$ProvenClaimFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProvenClaimToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class License {
+  final DidData issuedTo;
+  final String purpose;
+  final DateTime validFrom;
+  final DateTime validUntil;
+
+  License(this.issuedTo, this.purpose, this.validFrom, this.validUntil);
+
+  factory License.fromJson(Map<String, dynamic> json) =>
+      _$LicenseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LicenseToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Presentation extends WithNonce {
+  final List<ProvenClaim> provenClaims;
+  final List<License> licenses;
+
+  Presentation(this.provenClaims, this.licenses, Nonce nonce) : super(nonce);
+
+  factory Presentation.fromJson(Map<String, dynamic> json) =>
+      _$PresentationFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$PresentationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AfterProof {
+  final int blockHeight;
+  final String blockHash;
+
+  AfterProof(this.blockHeight, this.blockHash);
+
+  factory AfterProof.fromJson(Map<String, dynamic> json) =>
+      _$AfterProofFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AfterProofToJson(this);
 }

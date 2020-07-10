@@ -1,11 +1,12 @@
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:morpheus_sdk/authority/api.dart';
 import 'package:morpheus_sdk/authority/io.dart';
 import 'package:morpheus_sdk/authority/public_api.dart';
+import 'package:morpheus_sdk/src/io.dart';
 import 'package:morpheus_sdk/ssi/io.dart';
-import 'package:morpheus_sdk/utils/io.dart';
 import 'package:test/test.dart';
+
+import '../util.dart';
 
 final processesResponse = '''{
   "processes": [
@@ -16,17 +17,13 @@ final processesResponse = '''{
 }
 ''';
 
-class MockAuthorityConfig extends Mock implements AuthorityConfig {}
+class MockApiConfig extends Mock implements ApiConfig {}
 
 class MockClient extends Mock implements Client {}
 
-Response resp(String body, {int code = 200}) {
-  return Response(body, code);
-}
-
 void main() {
   final client = MockClient();
-  final config = MockAuthorityConfig();
+  final config = MockApiConfig();
   when(config.client).thenReturn(client);
   when(config.host).thenReturn('http://host');
   when(config.port).thenReturn(80);

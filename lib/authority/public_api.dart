@@ -2,16 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:morpheus_sdk/authority/api.dart';
 import 'package:morpheus_sdk/authority/io.dart';
+import 'package:morpheus_sdk/src/io.dart';
 import 'package:morpheus_sdk/ssi/io.dart';
-import 'package:morpheus_sdk/utils/io.dart';
 import 'package:optional/optional.dart';
 
 part 'public_api.g.dart';
 
-class AuthorityPublicApi extends AuthorityApi {
-  AuthorityPublicApi(AuthorityConfig config) : super(config);
+class AuthorityPublicApi extends Api {
+  AuthorityPublicApi(ApiConfig config) : super(config);
 
   Future<List<ContentId>> listProcesses() async {
     final resp = await get('/processes');
