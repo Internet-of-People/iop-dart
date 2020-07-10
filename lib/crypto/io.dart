@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:morpheus_sdk/src/scalar_box.dart';
+import 'package:morpheus_sdk/scalar_box.dart';
 
 part 'io.g.dart';
 

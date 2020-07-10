@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:morpheus_sdk/crypto/io.dart';
+import 'package:morpheus_sdk/entities/io.dart';
 import 'package:morpheus_sdk/layer1/operation_data.dart';
 import 'package:morpheus_sdk/layer2/did_document.dart';
 import 'package:morpheus_sdk/network.dart';
-import 'package:morpheus_sdk/src/io.dart';
 import 'package:morpheus_sdk/ssi/io.dart';
 import 'package:morpheus_sdk/utils/api.dart';
 import 'package:morpheus_sdk/layer2/io.dart';

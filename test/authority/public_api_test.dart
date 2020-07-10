@@ -1,8 +1,8 @@
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:morpheus_sdk/authority/io.dart';
-import 'package:morpheus_sdk/authority/public_api.dart';
-import 'package:morpheus_sdk/src/io.dart';
+import 'package:morpheus_sdk/entities/authority/io.dart';
+import 'package:morpheus_sdk/entities/authority/public_api.dart';
+import 'package:morpheus_sdk/entities/io.dart';
 import 'package:morpheus_sdk/ssi/io.dart';
 import 'package:test/test.dart';
 
@@ -96,6 +96,26 @@ void main() {
         (_) => Future.value(resp('link', code: 202)),
       );
 
+      /*final unlockPassword = 'unlock';
+      final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
+      MorpheusPlugin.rewind(vault, unlockPassword);
+      final morpheusPlugin = MorpheusPlugin.get(vault);
+      final morpheusPrivate = morpheusPlugin.private(unlockPassword);
+
+      final claim = Claim(DidData('did'), ...);
+      final claimant = KeyLink();
+      final evidence = Content<DynamicContent>(...);
+      final nonce = nonce264();
+      final request = WitnessRequest(
+        claim,
+        claimant,
+        ContentId('processId'),
+        evidence,
+        nonce,
+      );
+
+      morpheusPrivate.keyByPk(pk).privateKey().sign();*/
+
       // TODO: finish, when we can create Signed<WitnessRequest>
       /*final r = await api.sendRequest(witnessRequest);
       expect(r, CapabilityLink('link'));*/
@@ -107,7 +127,7 @@ void main() {
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
-        (_) => Future.value(resp('', code: 500)),
+            (_) => Future.value(resp('', code: 500)),
       );
 
       // TODO: finish, when we can create Signed<WitnessRequest>

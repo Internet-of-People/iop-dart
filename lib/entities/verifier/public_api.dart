@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:morpheus_sdk/src/io.dart';
+import 'package:morpheus_sdk/entities/io.dart';
+import 'package:morpheus_sdk/entities/verifier/io.dart';
 import 'package:morpheus_sdk/ssi/io.dart';
-import 'package:morpheus_sdk/verifier/io.dart';
 
 class VerifierPublicApi extends Api {
   VerifierPublicApi(ApiConfig config) : super(config);

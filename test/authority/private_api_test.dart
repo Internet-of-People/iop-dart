@@ -1,8 +1,8 @@
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:morpheus_sdk/authority/io.dart';
-import 'package:morpheus_sdk/authority/private_api.dart';
-import 'package:morpheus_sdk/src/io.dart';
+import 'package:morpheus_sdk/entities/authority/io.dart';
+import 'package:morpheus_sdk/entities/authority/private_api.dart';
+import 'package:morpheus_sdk/entities/io.dart';
 import 'package:morpheus_sdk/ssi/io.dart';
 import 'package:test/test.dart';
 

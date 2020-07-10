@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:morpheus_sdk/crypto/hydra_plugin.dart';
+import 'package:morpheus_sdk/entities/io.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
-import 'package:morpheus_sdk/src/io.dart';
 import 'package:morpheus_sdk/utils/api.dart';
 import 'package:morpheus_sdk/layer1/io.dart';
 import 'package:morpheus_sdk/network.dart';
