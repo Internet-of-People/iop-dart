@@ -39,7 +39,7 @@ class AuthorityPrivateApi extends AuthorityApi {
     Signed<WitnessStatement> signedWitnessStatement,
   ) async {
     final resp = await post(
-      '/requests/$capabilityLink/approve',
+      '/requests/${capabilityLink.value}/approve',
       signedWitnessStatement.toJson(),
     );
 
@@ -53,7 +53,7 @@ class AuthorityPrivateApi extends AuthorityApi {
     String rejectionReason,
   ) async {
     final resp = await post(
-      '/requests/$capabilityLink/reject',
+      '/requests/${capabilityLink.value}/reject',
       {'rejectionReason': rejectionReason},
     );
 

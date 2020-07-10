@@ -27,14 +27,17 @@ Response resp(String body, {int code = 200}) {
 void main() {
   final client = MockClient();
   final config = MockAuthorityConfig();
-  final api = AuthorityPublicApi(config);
   when(config.client).thenReturn(client);
+  when(config.host).thenReturn('http://host');
+  when(config.port).thenReturn(80);
+  final api = AuthorityPublicApi(config);
+  final baseUrl = 'http://host:80';
 
   group('AuthorityPublicApi', () {
     test('listProcesses', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp(processesResponse)),
-      );
+      when(
+        client.get('$baseUrl/processes', headers: anyNamed('headers')),
+      ).thenAnswer((_) => Future.value(resp(processesResponse)));
 
       final r = await api.listProcesses();
       expect(r.length, 3);
@@ -44,9 +47,9 @@ void main() {
     });
 
     test('listProcesses - not http200', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('', code: 500)),
-      );
+      when(
+        client.get('$baseUrl/processes', headers: anyNamed('headers')),
+      ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
         api.listProcesses(),
@@ -55,38 +58,41 @@ void main() {
     });
 
     test('getPublicBlob', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('BLOB')),
-      );
+      final id = ContentId('contentId');
+      when(
+        client.get('$baseUrl/blob/${id.value}', headers: anyNamed('headers')),
+      ).thenAnswer((_) => Future.value(resp('BLOB')));
 
-      final r = await api.getPublicBlob(ContentId('contentId'));
+      final r = await api.getPublicBlob(id);
       expect(r.isPresent, true);
       expect(r.value, 'BLOB');
     });
 
     test('getPublicBlob - http404', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('', code: 404)),
-      );
+      final id = ContentId('contentId');
+      when(
+        client.get('$baseUrl/blob/${id.value}', headers: anyNamed('headers')),
+      ).thenAnswer((_) => Future.value(resp('', code: 404)));
 
-      final r = await api.getPublicBlob(ContentId('contentId'));
+      final r = await api.getPublicBlob(id);
       expect(r.isPresent, false);
     });
 
     test('getPublicBlob - not http200/404', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('', code: 500)),
-      );
+      final id = ContentId('contentId');
+      when(
+        client.get('$baseUrl/blob/${id.value}', headers: anyNamed('headers')),
+      ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
-        api.getPublicBlob(ContentId('contentId')),
+        api.getPublicBlob(id),
         throwsA(const TypeMatcher<HttpResponseError>()),
       );
     });
 
     test('sendRequest', () async {
       when(client.post(
-        any,
+        '$baseUrl/requests',
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -100,7 +106,7 @@ void main() {
 
     test('sendRequest - not http202', () async {
       when(client.post(
-        any,
+        '$baseUrl/requests',
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -120,24 +126,27 @@ void main() {
     });
 
     test('getRequestStatus - http404', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('', code: 404)),
-      );
+      final link = CapabilityLink('link');
+      when(client.get(
+        '$baseUrl/requests/${link.value}/status',
+        headers: anyNamed('headers'),
+      )).thenAnswer((_) => Future.value(resp('', code: 404)));
 
-      final r = await api.getRequestStatus(CapabilityLink('link'));
+      final r = await api.getRequestStatus(link);
       expect(r.isPresent, false);
     });
 
     test('getRequestStatus - not http200/404', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('', code: 500)),
-      );
+      final link = CapabilityLink('link');
+      when(client.get(
+        '$baseUrl/requests/${link.value}/status',
+        headers: anyNamed('headers'),
+      )).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
-        api.getRequestStatus(CapabilityLink('link')),
+        api.getRequestStatus(link),
         throwsA(const TypeMatcher<HttpResponseError>()),
       );
-      ;
     });
   });
 }

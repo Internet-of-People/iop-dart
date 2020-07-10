@@ -48,7 +48,7 @@ class AuthorityPublicApi extends AuthorityApi {
   Future<Optional<RequestStatus>> getRequestStatus(
     CapabilityLink capabilityLink,
   ) async {
-    final resp = await get('/requests/$capabilityLink/status');
+    final resp = await get('/requests/${capabilityLink.value}/status');
 
     if (resp.statusCode == HttpStatus.ok) {
       return Optional.of(RequestStatus.fromJson(json.decode(resp.body)));

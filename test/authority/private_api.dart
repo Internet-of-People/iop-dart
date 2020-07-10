@@ -41,14 +41,17 @@ Response resp(String body, {int code = 200}) {
 void main() {
   final client = MockClient();
   final config = MockAuthorityConfig();
-  final api = AuthorityPrivateApi(config);
   when(config.client).thenReturn(client);
+  when(config.host).thenReturn('http://host');
+  when(config.port).thenReturn(80);
+  final api = AuthorityPrivateApi(config);
+  final baseUrl = 'http://host:80';
 
   group('AuthorityPrivateApi', () {
     test('listRequests', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp(requestsResponse)),
-      );
+      when(
+        client.get('$baseUrl/requests', headers: anyNamed('headers')),
+      ).thenAnswer((_) => Future.value(resp(requestsResponse)));
 
       final r = await api.listRequests();
       expect(r.length, 2);
@@ -86,9 +89,9 @@ void main() {
     });
 
     test('listRequests - not http200', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('', code: 500)),
-      );
+      when(
+        client.get('$baseUrl/requests', headers: anyNamed('headers')),
+      ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
         api.listRequests(),
@@ -97,38 +100,45 @@ void main() {
     });
 
     test('getPrivateBlob', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('BLOB')),
-      );
+      final id = ContentId('contentId');
+      when(client.get(
+        '$baseUrl/private-blob/${id.value}',
+        headers: anyNamed('headers'),
+      )).thenAnswer((_) => Future.value(resp('BLOB')));
 
-      final r = await api.getPrivateBlob(ContentId('contentId'));
+      final r = await api.getPrivateBlob(id);
       expect(r.isPresent, true);
       expect(r.value, 'BLOB');
     });
 
     test('getPrivateBlob - http404', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('', code: 404)),
-      );
+      final id = ContentId('contentId');
+      when(client.get(
+        '$baseUrl/private-blob/${id.value}',
+        headers: anyNamed('headers'),
+      )).thenAnswer((_) => Future.value(resp('', code: 404)));
 
-      final r = await api.getPrivateBlob(ContentId('contentId'));
+      final r = await api.getPrivateBlob(id);
       expect(r.isPresent, false);
     });
 
     test('getPrivateBlob - not http200/404', () async {
-      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-        (_) => Future.value(resp('', code: 500)),
-      );
+      final id = ContentId('contentId');
+      when(client.get(
+        '$baseUrl/private-blob/${id.value}',
+        headers: anyNamed('headers'),
+      )).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
-        api.getPrivateBlob(ContentId('contentId')),
+        api.getPrivateBlob(id),
         throwsA(const TypeMatcher<HttpResponseError>()),
       );
     });
 
     test('approveRequest', () async {
+      final link = CapabilityLink('link');
       when(client.post(
-        any,
+        '$baseUrl/requests/${link.value}/approve',
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -136,12 +146,13 @@ void main() {
       );
 
       // TODO: finish, when we can create Signed<WitnessStatement>
-      // await api.approveRequest(CapabilityLink('link'),statement);
+      // await api.approveRequest(link,statement);
     });
 
     test('approveRequest - not http200', () async {
+      final link = CapabilityLink('link');
       when(client.post(
-        any,
+        '$baseUrl/requests/${link.value}/approve',
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -149,24 +160,26 @@ void main() {
       );
 
       // TODO: finish, when we can create Signed<WitnessStatement>
-      // await api.approveRequest(CapabilityLink('link'),statement);
+      // await api.approveRequest(link,statement);
     });
 
     test('rejectRequest', () async {
+      final link = CapabilityLink('link');
       when(client.post(
-        any,
+        '$baseUrl/requests/${link.value}/reject',
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
         (_) => Future.value(resp('', code: 200)),
       );
 
-      await api.rejectRequest(CapabilityLink('link'), '?');
+      await api.rejectRequest(link, '?');
     });
 
     test('rejectRequest - not http200', () async {
+      final link = CapabilityLink('link');
       when(client.post(
-        any,
+        '$baseUrl/requests/${link.value}/reject',
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -174,7 +187,7 @@ void main() {
       );
 
       expect(
-        api.rejectRequest(CapabilityLink('link'), '?'),
+        api.rejectRequest(link, '?'),
         throwsA(const TypeMatcher<HttpResponseError>()),
       );
     });
