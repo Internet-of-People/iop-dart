@@ -9,10 +9,31 @@ typedef DDelete_HydraPrivate = void Function(
   Pointer<Void> private,
 );
 
-typedef NHydraPrivate_Neuter = Pointer<Result> Function(
+typedef NHydraPrivate_Public_Get = Pointer<Result> Function(
   Pointer<Void> private,
 );
-typedef DHydraPrivate_Neuter = Pointer<Result> Function(
+typedef DHydraPrivate_Public_Get = Pointer<Result> Function(
+  Pointer<Void> private,
+);
+
+typedef NHydraPrivate_Xpub_Get = Pointer<Utf8> Function(
+  Pointer<Void> private,
+);
+typedef DHydraPrivate_Xpub_Get = Pointer<Utf8> Function(
+  Pointer<Void> private,
+);
+
+typedef NHydraPrivate_ReceiveKeys_Get = Uint32 Function(
+  Pointer<Void> private,
+);
+typedef DHydraPrivate_ReceiveKeys_Get = int Function(
+  Pointer<Void> private,
+);
+
+typedef NHydraPrivate_ChangeKeys_Get = Uint32 Function(
+  Pointer<Void> private,
+);
+typedef DHydraPrivate_ChangeKeys_Get = int Function(
   Pointer<Void> private,
 );
 
@@ -27,27 +48,63 @@ typedef DHydraPrivate_SignHydraTx = Pointer<Result> Function(
   Pointer<Utf8> txJson,
 );
 
+typedef NHydraPrivate_Key = Pointer<Result> Function(
+  Pointer<Void> private,
+  Int32 idx,
+);
+typedef DHydraPrivate_Key = Pointer<Result> Function(
+  Pointer<Void> private,
+  int idx,
+);
+
+typedef NHydraPrivate_KeyByPk = Pointer<Result> Function(
+  Pointer<Void> private,
+  Pointer<Void> secpPk,
+);
+typedef DHydraPrivate_KeyByPk = Pointer<Result> Function(
+  Pointer<Void> private,
+  Pointer<Void> secpPk,
+);
+
 class NativeHydraPrivate {
   final DDelete_HydraPrivate delete;
+  final DHydraPrivate_Public_Get publicGet;
+  final DHydraPrivate_Xpub_Get xpubGet;
+  final DHydraPrivate_ReceiveKeys_Get receiveKeysGet;
+  final DHydraPrivate_ChangeKeys_Get changeKeysGet;
   final DHydraPrivate_SignHydraTx signHydraTx;
-  final DHydraPrivate_Neuter publicGet;
+  final DHydraPrivate_Key key;
+  final DHydraPrivate_KeyByPk keyByPk;
 
   NativeHydraPrivate(DynamicLibrary lib)
       : delete = lib.lookupFunction<NDelete_HydraPrivate, DDelete_HydraPrivate>(
           'delete_HydraPrivate',
         ),
+        publicGet =
+            lib.lookupFunction<NHydraPrivate_Public_Get, DHydraPrivate_Public_Get>(
+          'HydraPrivate_public_get',
+        ),
+        xpubGet =
+            lib.lookupFunction<NHydraPrivate_Xpub_Get, DHydraPrivate_Xpub_Get>(
+          'HydraPrivate_xpub_get',
+        ),
+        receiveKeysGet = lib.lookupFunction<NHydraPrivate_ReceiveKeys_Get,
+            DHydraPrivate_ReceiveKeys_Get>(
+          'HydraPrivate_receive_keys_get',
+        ),
+        changeKeysGet = lib.lookupFunction<NHydraPrivate_ChangeKeys_Get,
+            DHydraPrivate_ChangeKeys_Get>(
+          'HydraPrivate_change_keys_get',
+        ),
         signHydraTx = lib.lookupFunction<NHydraPrivate_SignHydraTx,
             DHydraPrivate_SignHydraTx>(
           'HydraPrivate_sign_hydra_tx',
         ),
-        publicGet =
-            lib.lookupFunction<NHydraPrivate_Neuter, DHydraPrivate_Neuter>(
-          'HydraPrivate_public_get',
+        key = lib.lookupFunction<NHydraPrivate_Key, DHydraPrivate_Key>(
+          'HydraPrivate_key',
+        ),
+        keyByPk =
+            lib.lookupFunction<NHydraPrivate_KeyByPk, DHydraPrivate_KeyByPk>(
+          'HydraPrivate_key_by_pk',
         );
-
-  // TODO HydraPrivate_xpub_get
-  // TODO HydraPrivate_receive_keys_get
-  // TODO HydraPrivate_change_keys_get
-  // TODO HydraPrivate_key
-  // TODO HydraPrivate_key_by_pk
 }

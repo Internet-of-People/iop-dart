@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/bip44.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
+import 'package:morpheus_sdk/crypto/secp.dart';
 import 'package:morpheus_sdk/crypto/vault.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
@@ -82,6 +83,18 @@ class HydraPrivate implements Disposable {
     return HydraPublic(public, true);
   }
 
+  String get xpub {
+    return DartApi.native.hydraPrivate.xpubGet(_ffi).intoString();
+  }
+
+  int get changeKeys {
+    return DartApi.native.hydraPrivate.changeKeysGet(_ffi);
+  }
+
+  int get receiveKeys {
+    return DartApi.native.hydraPrivate.receiveKeysGet(_ffi);
+  }
+
   // TODO should be strongly typed, e.g. receiving HydraTransferTransaction,
   //      returning SignedContent and maybe extracting signer address from tx or using HydraAddress
   SignedHydraTransaction signHydraTransaction(String address, String tx) {
@@ -99,6 +112,20 @@ class HydraPrivate implements Disposable {
     }
   }
 
+  Bip44Key key(int idx) {
+    final ffiKey = DartApi.native.hydraPrivate
+        .key(_ffi, idx)
+        .extract((resp) => resp.asPointer<Void>());
+    return Bip44Key(ffiKey, true);
+  }
+
+  Bip44Key keyByPk(SecpPublicKey secpPk) {
+    final ffiKey = DartApi.native.hydraPrivate
+        .keyByPk(_ffi, secpPk.ffi)
+        .extract((resp) => resp.asPointer<Void>());
+    return Bip44Key(ffiKey, true);
+  }
+
   @override
   void dispose() {
     if (_owned) {
@@ -114,6 +141,18 @@ class HydraPublic implements Disposable {
   bool _owned;
 
   HydraPublic(this._ffi, this._owned);
+
+  String get xpub {
+    return DartApi.native.hydraPublic.xpubGet(_ffi).intoString();
+  }
+
+  int get changeKeys {
+    return DartApi.native.hydraPublic.changeKeysGet(_ffi);
+  }
+
+  int get receiveKeys {
+    return DartApi.native.hydraPublic.receiveKeysGet(_ffi);
+  }
 
   Bip44PublicKey key(int idx) {
     final bip44PubKey = DartApi.native.hydraPublic

@@ -82,7 +82,7 @@ class Layer1Api extends LayerApi {
 
     final transferTx = DartApi.instance.hydraTransferTx(
       network.RustApiId,
-      senderBip44PubKey.publicKey.toString(),
+      senderBip44PubKey.publicKey().toString(),
       targetAddress,
       amountInFlake,
       nonce,
