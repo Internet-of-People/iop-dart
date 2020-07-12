@@ -3,6 +3,7 @@ import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
 import 'package:morpheus_sdk/ffi/native_bip44_key.dart';
 import 'package:morpheus_sdk/ffi/native_bip44_public_key.dart';
+import 'package:morpheus_sdk/ffi/native_did.dart';
 import 'package:morpheus_sdk/ffi/native_hydra_plugin.dart';
 import 'package:morpheus_sdk/ffi/native_hydra_private.dart';
 import 'package:morpheus_sdk/ffi/native_hydra_public.dart';
@@ -35,6 +36,7 @@ import 'package:morpheus_sdk/ffi/native_vault.dart';
 class NativeApi {
   final NativeBip44Key bip44Key;
   final NativeBip44PublicKey bip44PublicKey;
+  final NativeDid did;
   final NativeHydraPlugin hydraPlugin;
   final NativeHydraPrivate hydraPrivate;
   final NativeHydraPublic hydraPublic;
@@ -71,6 +73,7 @@ class NativeApi {
   NativeApi._(DynamicLibrary lib)
       : bip44Key = NativeBip44Key(lib),
         bip44PublicKey = NativeBip44PublicKey(lib),
+        did = NativeDid(lib),
         hydraPlugin = NativeHydraPlugin(lib),
         hydraPrivate = NativeHydraPrivate(lib),
         hydraPublic = NativeHydraPublic(lib),

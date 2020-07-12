@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
+import 'package:morpheus_sdk/crypto/did.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/crypto/multicipher.dart';
 import 'package:morpheus_sdk/crypto/vault.dart';
@@ -177,14 +178,12 @@ class MorpheusPrivateKind implements Disposable {
     return MorpheusPrivateKey._(ffiMorpheusSk, true);
   }
 
-  /* TODO Did
   Did did(int idx) {
     final ffiDid = DartApi.native.morpheusPrivateKind
         .did(_ffi, idx)
         .extract((res) => res.asPointer<Void>());
-    return Did._(ffiDid, true);
+    return Did(ffiDid, true);
   }
-  */
 
   @override
   void dispose() {
