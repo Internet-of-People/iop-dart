@@ -80,8 +80,8 @@ class NativeHydraPrivate {
       : delete = lib.lookupFunction<NDelete_HydraPrivate, DDelete_HydraPrivate>(
           'delete_HydraPrivate',
         ),
-        publicGet =
-            lib.lookupFunction<NHydraPrivate_Public_Get, DHydraPrivate_Public_Get>(
+        publicGet = lib
+            .lookupFunction<NHydraPrivate_Public_Get, DHydraPrivate_Public_Get>(
           'HydraPrivate_public_get',
         ),
         xpubGet =

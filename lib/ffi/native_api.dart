@@ -22,6 +22,10 @@ import 'package:morpheus_sdk/ffi/native_secp_key_id.dart';
 import 'package:morpheus_sdk/ffi/native_secp_private_key.dart';
 import 'package:morpheus_sdk/ffi/native_secp_public_key.dart';
 import 'package:morpheus_sdk/ffi/native_secp_signature.dart';
+import 'package:morpheus_sdk/ffi/native_signed_bytes.dart';
+import 'package:morpheus_sdk/ffi/native_signed_json.dart';
+import 'package:morpheus_sdk/ffi/native_validation_issue.dart';
+import 'package:morpheus_sdk/ffi/native_validation_result.dart';
 import 'package:morpheus_sdk/ffi/native_vault.dart';
 
 /// Conventions to minimize merge conflicts
@@ -55,6 +59,10 @@ class NativeApi {
   final NativeSecpPrivateKey secpPrivateKey;
   final NativeSecpPublicKey secpPublicKey;
   final NativeSecpSignature secpSignature;
+  final NativeSignedBytes signedBytes;
+  final NativeSignedJson signedJson;
+  final NativeValidationIssue validationIssue;
+  final NativeValidationResult validationResult;
   final NativeVault vault;
 
   final DBip39_GeneratePhrase bip39_generate_phrase;
@@ -92,6 +100,10 @@ class NativeApi {
         secpPrivateKey = NativeSecpPrivateKey(lib),
         secpPublicKey = NativeSecpPublicKey(lib),
         secpSignature = NativeSecpSignature(lib),
+        signedBytes = NativeSignedBytes(lib),
+        signedJson = NativeSignedJson(lib),
+        validationIssue = NativeValidationIssue(lib),
+        validationResult = NativeValidationResult(lib),
         vault = NativeVault(lib),
         bip39_generate_phrase =
             lib.lookupFunction<NBip39_GeneratePhrase, DBip39_GeneratePhrase>(

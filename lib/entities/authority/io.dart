@@ -11,7 +11,8 @@ class RequestEntry {
   final DateTime dateOfRequest;
   final Status status;
   final ContentId processId;
-  @JsonKey(nullable: true) final String notes;
+  @JsonKey(nullable: true)
+  final String notes;
 
   RequestEntry(
     this.capabilityLink,
@@ -33,7 +34,7 @@ class CapabilityLink extends ScalarBox<String> {
   CapabilityLink(String value) : super(value);
 
   factory CapabilityLink.fromJson(String value) =>
-      _$CapabilityLinkFromJson({'value':value});
+      _$CapabilityLinkFromJson({'value': value});
 
   String toJson() => _$CapabilityLinkToJson(this)['value'];
 }
@@ -43,8 +44,10 @@ enum Status { pending, approved, rejected }
 @JsonSerializable(explicitToJson: true)
 class RequestStatus {
   final Status status;
-  @JsonKey(nullable: true) final Signed<WitnessStatement> signedStatement;
-  @JsonKey(nullable: true) final String rejectionReason;
+  @JsonKey(nullable: true)
+  final Signed<WitnessStatement> signedStatement;
+  @JsonKey(nullable: true)
+  final String rejectionReason;
 
   RequestStatus(this.status, this.signedStatement, this.rejectionReason);
 

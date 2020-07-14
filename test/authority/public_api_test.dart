@@ -127,7 +127,7 @@ void main() {
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
-            (_) => Future.value(resp('', code: 500)),
+        (_) => Future.value(resp('', code: 500)),
       );
 
       // TODO: finish, when we can create Signed<WitnessRequest>

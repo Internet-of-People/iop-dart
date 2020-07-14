@@ -96,10 +96,10 @@ void main() {
 
       bool success;
 
-      for(var i=0; i<12; i++) {
+      for (var i = 0; i < 12; i++) {
         await Future.delayed(const Duration(seconds: 2));
         final status = await api.getTxnStatus(txId);
-        if(status.isPresent && status.value.id == txId) {
+        if (status.isPresent && status.value.id == txId) {
           success = true;
           break;
         }

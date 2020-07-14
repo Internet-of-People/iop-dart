@@ -3,6 +3,17 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
 
+extension Optional on int {
+  Pointer<IntPtr> asOptional() {
+    Pointer<IntPtr> result = nullptr;
+    if (this != null) {
+      result = allocate<IntPtr>();
+      result.value = this;
+    }
+    return result;
+  }
+}
+
 class NativeSlice extends Struct {
   Pointer<Void> _ptr;
 
@@ -108,21 +119,29 @@ class Result extends Struct {
     return result.cast();
   }
 
-  List<String> asStringList() {
+  /// Make sure itemFactory releases the native pointer received.
+  List<T> asList<T>(T Function(Pointer<NativeType> raw) itemFactory) {
     final slicePtr = asPointer<NativeSlice>();
     try {
       final slice = slicePtr.ref;
-      return List.generate(slice.length, (i) {
-        final Pointer<Utf8> nativeStr = slice.at(i);
-        try {
-          return Utf8.fromUtf8(nativeStr);
-        } finally {
-          free(nativeStr);
-        }
-      }, growable: false);
+      return List.generate(
+        slice.length,
+        (i) => itemFactory(slice.at(i)),
+        growable: false,
+      );
     } finally {
       free(slicePtr);
     }
+  }
+
+  List<String> asStringList() {
+    return asList((raw) {
+      try {
+        return Utf8.fromUtf8(raw);
+      } finally {
+        free(raw);
+      }
+    });
   }
 
   void get asVoid => _value;
