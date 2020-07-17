@@ -1,8 +1,16 @@
+import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
+import 'package:morpheus_sdk/crypto/core.dart';
+import 'package:morpheus_sdk/crypto/did.dart';
+import 'package:morpheus_sdk/crypto/io.dart';
+import 'package:morpheus_sdk/crypto/morpheus_plugin.dart';
+import 'package:morpheus_sdk/crypto/multicipher.dart';
+import 'package:morpheus_sdk/crypto/vault.dart';
 import 'package:morpheus_sdk/entities/authority/io.dart';
 import 'package:morpheus_sdk/entities/authority/public_api.dart';
 import 'package:morpheus_sdk/entities/io.dart';
+import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/ssi/io.dart';
 import 'package:test/test.dart';
 
@@ -88,40 +96,25 @@ void main() {
     });
 
     test('sendRequest', () async {
+      final signedWitnessRequest =
+          Fixture.create().createSignedWitnessRequest();
+      final link = CapabilityLink('link');
       when(client.post(
         '$baseUrl/requests',
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
-        (_) => Future.value(resp('link', code: 202)),
+        (_) => Future.value(resp(link.value, code: 202)),
       );
 
-      /*final unlockPassword = 'unlock';
-      final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
-      MorpheusPlugin.rewind(vault, unlockPassword);
-      final morpheusPlugin = MorpheusPlugin.get(vault);
-      final morpheusPrivate = morpheusPlugin.private(unlockPassword);
+      final r = await api.sendRequest(signedWitnessRequest);
 
-      final claim = Claim(DidData('did'), ...);
-      final claimant = KeyLink();
-      final evidence = Content<DynamicContent>(...);
-      final nonce = nonce264();
-      final request = WitnessRequest(
-        claim,
-        claimant,
-        ContentId('processId'),
-        evidence,
-        nonce,
-      );
-
-      morpheusPrivate.keyByPk(pk).privateKey().sign();*/
-
-      // TODO: finish, when we can create Signed<WitnessRequest>
-      /*final r = await api.sendRequest(witnessRequest);
-      expect(r, CapabilityLink('link'));*/
+      expect(r, link);
     });
 
     test('sendRequest - not http202', () async {
+      final signedWitnessRequest =
+          Fixture.create().createSignedWitnessRequest();
       when(client.post(
         '$baseUrl/requests',
         headers: anyNamed('headers'),
@@ -130,16 +123,48 @@ void main() {
         (_) => Future.value(resp('', code: 500)),
       );
 
-      // TODO: finish, when we can create Signed<WitnessRequest>
-      //final r = await api.sendRequest(witnessRequest);
+      final rFut = api.sendRequest(signedWitnessRequest);
+
+      await expectLater(rFut, throwsA(const TypeMatcher<HttpResponseError>()));
     });
 
-    test('getRequestStatus', () async {
-      // TODO: finish, when we can create Signed<WitenssStatement>
-      /*final status = RequestStatus(Status.approved, signedStatement, ...);
+    test('getRequestStatus - pending', () async {
+      final status = RequestStatus(Status.pending, null, null);
+      final link = CapabilityLink('link');
       when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
-            (_) => Future.value(resp(json.encode(status.toJson()), code: 200)),
-      );*/
+        (_) => Future.value(resp(json.encode(status.toJson()), code: 200)),
+      );
+
+      final r = await api.getRequestStatus(link);
+
+      expect(r.isPresent, true);
+    });
+
+    test('getRequestStatus - approved', () async {
+      final signedWitnessStatement =
+          Fixture.create().createSignedWitnessStatement();
+      final link = CapabilityLink('link');
+      final status =
+          RequestStatus(Status.approved, signedWitnessStatement, null);
+      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
+        (_) => Future.value(resp(json.encode(status.toJson()), code: 200)),
+      );
+
+      final r = await api.getRequestStatus(link);
+
+      expect(r.isPresent, true);
+    });
+
+    test('getRequestStatus - rejected', () async {
+      final link = CapabilityLink('link');
+      final status = RequestStatus(Status.rejected, null, 'blurred image');
+      when(client.get(any, headers: anyNamed('headers'))).thenAnswer(
+        (_) => Future.value(resp(json.encode(status.toJson()), code: 200)),
+      );
+
+      final r = await api.getRequestStatus(link);
+
+      expect(r.isPresent, true);
     });
 
     test('getRequestStatus - http404', () async {
@@ -150,6 +175,7 @@ void main() {
       )).thenAnswer((_) => Future.value(resp('', code: 404)));
 
       final r = await api.getRequestStatus(link);
+
       expect(r.isPresent, false);
     });
 
@@ -166,4 +192,56 @@ void main() {
       );
     });
   });
+}
+
+class Fixture {
+  final MorpheusPrivate morpheusPrivate;
+  final Did did;
+  final KeyId id;
+
+  Fixture._(this.morpheusPrivate, this.did, this.id);
+
+  static Fixture create() {
+    final unlockPassword = 'unlock';
+    final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
+    MorpheusPlugin.rewind(vault, unlockPassword);
+    final morpheusPlugin = MorpheusPlugin.get(vault);
+    final morpheusPrivate = morpheusPlugin.private(unlockPassword);
+    final did = morpheusPrivate.personas.did(0);
+    expect(did.toString(), 'did:morpheus:ezqztJ6XX6GDxdSgdiySiT3J');
+    final id = did.defaultKeyId();
+    expect(id.toString(), 'iezqztJ6XX6GDxdSgdiySiT3J');
+    return Fixture._(morpheusPrivate, did, id);
+  }
+
+  Signed<WitnessRequest> createSignedWitnessRequest() {
+    final claimString = '{"apple":{}}';
+    final evidenceString = '{"banana":{}}';
+    final claim = Claim(DidData(did.toString()),
+        Content<DynamicContent>.fromJson(json.decode(claimString)));
+    final claimant = KeyLink('#0');
+    final evidence =
+        Content<DynamicContent>.fromJson(json.decode(evidenceString));
+    final nonce = Nonce(DartApi.instance.nonce264());
+    final request = WitnessRequest(
+      claim,
+      claimant,
+      ContentId('processId'),
+      evidence,
+      nonce,
+    );
+
+    return morpheusPrivate.signWitnessRequest(id, request);
+  }
+
+  Signed<WitnessStatement> createSignedWitnessStatement() {
+    final signedWitnessRequest = createSignedWitnessRequest();
+    final claim = signedWitnessRequest.content.content.claim;
+    final processId = signedWitnessRequest.content.content.processId;
+    final constraint =
+        Constraint(null, null, KeyLink('#0'), DidData(did.toString()), null);
+    final statement =
+        WitnessStatement(Content(claim, null), processId, constraint, null);
+    return morpheusPrivate.signWitnessStatement(id, statement);
+  }
 }

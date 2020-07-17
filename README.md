@@ -9,6 +9,16 @@ This SDK will improve over time to be able to use it more easily.
 - [Prerequisites](#prerequisites)
 - [Install](#install)
 - [Modules](#modules)
+  - [Authority](#authority)
+    - [Public API](#public-api)
+    - [Private API](#private-api)
+  - [Crypto](#crypto)
+  - [Inspector](#inspector)
+  - [Layer1](#layer1)
+  - [Layer2](#layer2)
+  - [Sdk](#sdk)
+  - [Verifier](#verifier)
+- [Development](#development)
 
 ## Prerequisites
 
@@ -29,7 +39,7 @@ dependencies:
 ### Authority
 
 All interfaces and types that needed to be able to communicate with an Authority endpoint. Authorities have two type of APIs.
-A public and a private, described below. 
+A public and a private, described below.
 
 #### Public API
 
@@ -41,12 +51,9 @@ import 'package:morpheus_sdk/entities/io.dart';
 
 final config = ApiConfig('https://authority', 443);
 final api = AuthorityPublicApi(config);
-``` 
-
+```
 
 #### Private API
-
- 
 
 ### Crypto
 
@@ -73,7 +80,6 @@ All interfaces that describes the DAC (Morpheus) protocol including all particip
 ### Verifier
 
 All interfaces and types that needed to be able to communicate with a Verifier endpoint. Currently our verifier is implemented in the inspector package, hence to see more about the Verifier's API, please visit [this page](https://github.com/Internet-of-People/morpheus-ts/tree/master/packages/inspector-service).
-
 
 ## Development
 

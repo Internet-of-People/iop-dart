@@ -25,15 +25,24 @@ RequestEntry _$RequestEntryFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$RequestEntryToJson(RequestEntry instance) =>
-    <String, dynamic>{
-      'capabilityLink': instance.capabilityLink?.toJson(),
-      'requestId': instance.requestId?.toJson(),
-      'dateOfRequest': instance.dateOfRequest?.toIso8601String(),
-      'status': _$StatusEnumMap[instance.status],
-      'processId': instance.processId?.toJson(),
-      'notes': instance.notes,
-    };
+Map<String, dynamic> _$RequestEntryToJson(RequestEntry instance) {
+  final val = <String, dynamic>{
+    'capabilityLink': instance.capabilityLink?.toJson(),
+    'requestId': instance.requestId?.toJson(),
+    'dateOfRequest': instance.dateOfRequest?.toIso8601String(),
+    'status': _$StatusEnumMap[instance.status],
+    'processId': instance.processId?.toJson(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('notes', instance.notes);
+  return val;
+}
 
 T _$enumDecode<T>(
   Map<T, dynamic> enumValues,

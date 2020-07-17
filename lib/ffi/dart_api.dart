@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
@@ -14,7 +15,17 @@ class DartApi implements Disposable {
 
   static DartApi get instance {
     if (_instance == null) {
-      final api = NativeApi.load('./libmorpheus_core.so');
+      String ext;
+      if(Platform.isMacOS) {
+        ext = 'dylib';
+      }
+      else if(Platform.isLinux) {
+        ext = 'so';
+      }
+      else {
+        throw Exception('Not supported OS');
+      }
+      final api = NativeApi.load('${Directory.current.path}/libmorpheus_core.$ext');
       _instance = DartApi._(api);
     }
 

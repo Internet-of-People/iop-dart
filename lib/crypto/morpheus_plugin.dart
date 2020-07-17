@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/did.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
-import 'package:morpheus_sdk/crypto/multicipher.dart';
+import 'package:morpheus_sdk/crypto/io.dart';
+import 'package:morpheus_sdk/crypto/multicipher.dart' hide Signature;
+import 'package:morpheus_sdk/crypto/signed.dart';
 import 'package:morpheus_sdk/crypto/vault.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
+import 'package:morpheus_sdk/ssi/io.dart';
 
 class MorpheusPublicKey implements Disposable {
   Pointer<Void> _ffi;
@@ -201,11 +205,11 @@ class MorpheusPrivate implements Disposable {
 
   MorpheusPrivate._(this._ffi, this._owned);
 
-  MorpheusPublicKind get personas {
+  MorpheusPrivateKind get personas {
     final ffiKind = DartApi.native.morpheusPrivate
         .personasGet(_ffi)
         .extract((res) => res.asPointer<Void>());
-    return MorpheusPublicKind._(ffiKind, true);
+    return MorpheusPrivateKind._(ffiKind, true);
   }
 
   MorpheusPrivateKey keyByPk(PublicKey pk) {
@@ -213,6 +217,63 @@ class MorpheusPrivate implements Disposable {
         .keyByPk(_ffi, pk.ffi)
         .extract((res) => res.asPointer<Void>());
     return MorpheusPrivateKey._(ffiMorpheusSk, true);
+  }
+
+  Signed<WitnessRequest> signWitnessRequest(KeyId id, WitnessRequest request) {
+    final requestString = json.encode(request.toJson());
+    final nativeRequest = Utf8.toUtf8(requestString);
+    try {
+      final signedFfi = DartApi.native.morpheusPrivate
+          .signWitnessRequest(_ffi, id.ffi, nativeRequest)
+          .extract((resp) => resp.asPointer<Void>());
+      return _toTyped(signedFfi, request);
+    } finally {
+      free(nativeRequest);
+    }
+  }
+
+  Signed<WitnessStatement> signWitnessStatement(
+      KeyId id, WitnessStatement statement) {
+    final statementString = json.encode(statement.toJson());
+    final nativeStatement = Utf8.toUtf8(statementString);
+    try {
+      final signedFfi = DartApi.native.morpheusPrivate
+          .signWitnessStatement(_ffi, id.ffi, nativeStatement)
+          .extract((resp) => resp.asPointer<Void>());
+      return _toTyped(signedFfi, statement);
+    } finally {
+      free(nativeStatement);
+    }
+  }
+
+  Signed<Presentation> signClaimPresentation(
+      KeyId id, Presentation presentation) {
+    final presentationString = json.encode(presentation.toJson());
+    final nativePresentation = Utf8.toUtf8(presentationString);
+    try {
+      final signedFfi = DartApi.native.morpheusPrivate
+          .signClaimPresentation(_ffi, id.ffi, nativePresentation)
+          .extract((resp) => resp.asPointer<Void>());
+      return _toTyped(signedFfi, presentation);
+    } finally {
+      free(nativePresentation);
+    }
+  }
+
+  Signed<T> _toTyped<T>(Pointer<Void> signedFfi, T content) {
+    final signedJson = SignedJson(signedFfi, true);
+    final rustPublicKey = signedJson.publicKey;
+    final rustSignature = signedJson.signature;
+    try {
+      final publicKeyData = PublicKeyData(rustPublicKey.toString());
+      final signatureBytes = SignatureData(rustSignature.toString());
+      final signature = Signature(publicKeyData, signatureBytes);
+      return Signed<T>(signature, Content(content, null));
+    } finally {
+      rustSignature.dispose();
+      rustPublicKey.dispose();
+      signedJson.dispose();
+    }
   }
 
   @override

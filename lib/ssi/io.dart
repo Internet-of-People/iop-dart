@@ -1,3 +1,4 @@
+import 'dart:mirrors';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:morpheus_sdk/crypto/io.dart';
 import 'package:morpheus_sdk/scalar_box.dart';
@@ -25,38 +26,64 @@ class ContentId extends ScalarBox<String> {
 
 @JsonSerializable(explicitToJson: true)
 class DynamicContent extends WithNonce {
+  static List<String> topLevelKeys = ['schema', 'nonce'];
+
   final Map<String, dynamic> content;
-  @JsonKey(nullable: true)
+  @JsonKey(nullable: true, includeIfNull: false)
   final Content<DynamicContent> schema;
 
   DynamicContent(this.content, this.schema, Nonce nonce) : super(nonce);
 
-  factory DynamicContent.fromJson(Map<String, dynamic> json) =>
-      _$DynamicContentFromJson(json);
+  factory DynamicContent.fromJson(Map<String, dynamic> json) {
+    final content = Map.fromEntries(
+        json.entries.where((e) => !topLevelKeys.contains(e.key)));
+    final transformed = Map.fromEntries(
+        json.entries.where((e) => topLevelKeys.contains(e.key)));
+    transformed['content'] = content;
+    return _$DynamicContentFromJson(transformed);
+  }
 
   @override
-  Map<String, dynamic> toJson() => _$DynamicContentToJson(this);
+  Map<String, dynamic> toJson() {
+    final transformed = _$DynamicContentToJson(this);
+    final content = transformed.remove('content');
+    return Map.fromEntries(transformed.entries.followedBy(content.entries));
+  }
 }
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, createToJson: false)
 class Content<T> {
-  // TODO: https://stackoverflow.com/questions/60659078/flutter-deserialisation-using-generics-error
-  // TODO: will this work?
-  @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
+  @JsonKey(fromJson: _genericFromJson)
   final T content;
   final ContentId contentId;
 
   Content(this.content, this.contentId);
 
-  factory Content.fromJson(Map<String, dynamic> json) =>
-      _$ContentFromJson(json);
+  factory Content.fromJson(dynamic json) {
+    final transformed = <String, dynamic>{};
+    if (json is Map) {
+      transformed['content'] = json;
+    } else if (json is String) {
+      transformed['contentId'] = json;
+    }
+    return _$ContentFromJson(transformed);
+  }
 
-  Map<String, dynamic> toJson() => _$ContentToJson(this);
+  dynamic toJson() {
+    if (content != null) {
+      return (content as dynamic).toJson();
+    } else {
+      return contentId?.value;
+    }
+  }
 }
 
-T _dataFromJson<T>(Map<String, dynamic> input) => input['content'] as T;
-
-Map<String, dynamic> _dataToJson<T>(T input) => {'content': input};
+T _genericFromJson<T>(Map<String, dynamic> input) {
+  final refT = reflectClass(T);
+  // fromJson is not a static method, so this does not work:
+  // return refT.invoke(#fromJson, [input]).reflectee;
+  return refT.newInstance(#fromJson, [input]).reflectee;
+}
 
 @JsonSerializable(explicitToJson: true)
 class Signed<T> {
@@ -72,7 +99,7 @@ class Signed<T> {
 
 @JsonSerializable(explicitToJson: true)
 class WithNonce {
-  @JsonKey(nullable: true)
+  @JsonKey(nullable: true, includeIfNull: false)
   final Nonce nonce;
 
   WithNonce(this.nonce);

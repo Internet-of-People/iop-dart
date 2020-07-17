@@ -32,45 +32,45 @@ typedef DMorpheusPrivate_KeyByPk = Pointer<Result> Function(
   Pointer<Void> pk,
 );
 
-typedef NMorpheusPrivate_SignDidOperations = Pointer<Void> Function(
+typedef NMorpheusPrivate_SignDidOperations = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
   Pointer<Void> id,
   Pointer<NativeSlice> data,
 );
-typedef DMorpheusPrivate_SignDidOperations = Pointer<Void> Function(
+typedef DMorpheusPrivate_SignDidOperations = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
   Pointer<Void> id,
   Pointer<NativeSlice> data,
 );
 
-typedef NMorpheusPrivate_SignWitnessRequest = Pointer<Void> Function(
+typedef NMorpheusPrivate_SignWitnessRequest = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
   Pointer<Void> id,
   Pointer<Utf8> request,
 );
-typedef DMorpheusPrivate_SignWitnessRequest = Pointer<Void> Function(
+typedef DMorpheusPrivate_SignWitnessRequest = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
   Pointer<Void> id,
   Pointer<Utf8> request,
 );
 
-typedef NMorpheusPrivate_SignWitnessStatement = Pointer<Void> Function(
+typedef NMorpheusPrivate_SignWitnessStatement = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
   Pointer<Void> id,
   Pointer<Utf8> statement,
 );
-typedef DMorpheusPrivate_SignWitnessStatement = Pointer<Void> Function(
+typedef DMorpheusPrivate_SignWitnessStatement = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
   Pointer<Void> id,
   Pointer<Utf8> statement,
 );
 
-typedef NMorpheusPrivate_SignClaimPresentation = Pointer<Void> Function(
+typedef NMorpheusPrivate_SignClaimPresentation = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
   Pointer<Void> id,
   Pointer<Utf8> presentation,
 );
-typedef DMorpheusPrivate_SignClaimPresentation = Pointer<Void> Function(
+typedef DMorpheusPrivate_SignClaimPresentation = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
   Pointer<Void> id,
   Pointer<Utf8> presentation,

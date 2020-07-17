@@ -37,7 +37,7 @@ class InspectorPublicApi extends Api {
     final resp = await post('/presentation', presentation.toJson());
 
     if (resp.statusCode == HttpStatus.accepted) {
-      return ContentId.fromJson(json.decode(resp.body));
+      return ContentId.fromJson(resp.body);
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
