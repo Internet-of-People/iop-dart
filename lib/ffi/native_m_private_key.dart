@@ -1,5 +1,5 @@
 import 'dart:ffi';
-import 'package:morpheus_sdk/ffi/ffi.dart';
+import 'package:iop_sdk/ffi/ffi.dart';
 
 typedef NDelete_MPrivateKey = Void Function(
   Pointer<Void> sk,

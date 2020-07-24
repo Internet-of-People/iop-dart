@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:morpheus_sdk/entities/io.dart';
-import 'package:morpheus_sdk/ssi/io.dart';
+import 'package:iop_sdk/entities/io.dart';
+import 'package:iop_sdk/ssi/io.dart';
 import 'package:optional/optional.dart';
 
 part 'public_api.g.dart';

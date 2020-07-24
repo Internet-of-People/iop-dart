@@ -1,6 +1,6 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'package:morpheus_sdk/ffi/ffi.dart';
+import 'package:iop_sdk/ffi/ffi.dart';
 
 typedef NDelete_SignedJson = Void Function(
   Pointer<Void> signedJson,

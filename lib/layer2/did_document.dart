@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:morpheus_sdk/crypto/authentication.dart';
-import 'package:morpheus_sdk/crypto/core.dart';
-import 'package:morpheus_sdk/crypto/io.dart';
-import 'package:morpheus_sdk/ssi/io.dart';
+import 'package:iop_sdk/crypto/authentication.dart';
+import 'package:iop_sdk/crypto/core.dart';
+import 'package:iop_sdk/crypto/io.dart';
+import 'package:iop_sdk/ssi/io.dart';
 
 part 'did_document.g.dart';
 

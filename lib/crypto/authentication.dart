@@ -1,6 +1,6 @@
-import 'package:morpheus_sdk/crypto/core.dart';
-import 'package:morpheus_sdk/crypto/io.dart';
-import 'package:morpheus_sdk/crypto/multicipher.dart';
+import 'package:iop_sdk/crypto/core.dart';
+import 'package:iop_sdk/crypto/io.dart';
+import 'package:iop_sdk/crypto/multicipher.dart';
 
 bool isSameAuthentication(Authentication left, Authentication right) {
   if (left.isPublicKey) {

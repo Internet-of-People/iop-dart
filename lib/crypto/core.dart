@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:morpheus_sdk/crypto/io.dart';
-import 'package:morpheus_sdk/crypto/multicipher.dart';
-import 'package:morpheus_sdk/ffi/dart_api.dart';
-import 'package:morpheus_sdk/ssi/io.dart';
+import 'package:iop_sdk/crypto/io.dart';
+import 'package:iop_sdk/crypto/multicipher.dart';
+import 'package:iop_sdk/ffi/dart_api.dart';
+import 'package:iop_sdk/ssi/io.dart';
 
 class Bip39 {
   static const String DEMO_PHRASE =

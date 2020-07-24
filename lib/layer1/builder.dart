@@ -1,6 +1,6 @@
-import 'package:morpheus_sdk/crypto/morpheus_plugin.dart';
-import 'package:morpheus_sdk/crypto/multicipher.dart';
-import 'package:morpheus_sdk/layer1/operation_data.dart';
+import 'package:iop_sdk/crypto/morpheus_plugin.dart';
+import 'package:iop_sdk/crypto/multicipher.dart';
+import 'package:iop_sdk/layer1/operation_data.dart';
 
 class SignedOperationAttemptsBuilder {
   static SignedOperationsData tempSign(

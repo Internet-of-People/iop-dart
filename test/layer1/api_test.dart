@@ -1,8 +1,8 @@
-import 'package:morpheus_sdk/crypto/core.dart';
-import 'package:morpheus_sdk/crypto/hydra_plugin.dart';
-import 'package:morpheus_sdk/crypto/vault.dart';
-import 'package:morpheus_sdk/layer1/api.dart';
-import 'package:morpheus_sdk/network.dart';
+import 'package:iop_sdk/crypto/core.dart';
+import 'package:iop_sdk/crypto/hydra_plugin.dart';
+import 'package:iop_sdk/crypto/vault.dart';
+import 'package:iop_sdk/layer1/api.dart';
+import 'package:iop_sdk/network.dart';
 import 'package:test/test.dart';
 
 void main() {

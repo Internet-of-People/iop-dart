@@ -1,8 +1,8 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'package:morpheus_sdk/crypto/disposable.dart';
-import 'package:morpheus_sdk/ffi/ffi.dart';
-import 'package:morpheus_sdk/ffi/native_api.dart';
+import 'package:iop_sdk/crypto/disposable.dart';
+import 'package:iop_sdk/ffi/ffi.dart';
+import 'package:iop_sdk/ffi/native_api.dart';
 
 class DartApi implements Disposable {
   static DartApi _instance;

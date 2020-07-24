@@ -1,10 +1,10 @@
 import 'dart:core';
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'package:morpheus_sdk/crypto/disposable.dart';
-import 'package:morpheus_sdk/crypto/multicipher.dart';
-import 'package:morpheus_sdk/ffi/dart_api.dart';
-import 'package:morpheus_sdk/ffi/ffi.dart';
+import 'package:iop_sdk/crypto/disposable.dart';
+import 'package:iop_sdk/crypto/multicipher.dart';
+import 'package:iop_sdk/ffi/dart_api.dart';
+import 'package:iop_sdk/ffi/ffi.dart';
 
 class Did implements Disposable {
   Pointer<Void> _ffi;

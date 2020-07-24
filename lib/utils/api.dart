@@ -1,5 +1,5 @@
 import 'package:http/http.dart';
-import 'package:morpheus_sdk/network.dart';
+import 'package:iop_sdk/network.dart';
 
 abstract class LayerApi {
   static final Map<String, String> _jsonHeaders = {

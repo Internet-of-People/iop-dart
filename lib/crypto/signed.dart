@@ -1,11 +1,11 @@
 import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
-import 'package:morpheus_sdk/crypto/disposable.dart';
-import 'package:morpheus_sdk/crypto/multicipher.dart';
-import 'package:morpheus_sdk/crypto/validation.dart';
-import 'package:morpheus_sdk/ffi/dart_api.dart';
-import 'package:morpheus_sdk/ffi/ffi.dart';
+import 'package:iop_sdk/crypto/disposable.dart';
+import 'package:iop_sdk/crypto/multicipher.dart';
+import 'package:iop_sdk/crypto/validation.dart';
+import 'package:iop_sdk/ffi/dart_api.dart';
+import 'package:iop_sdk/ffi/ffi.dart';
 
 class SignedBytes implements Disposable {
   Pointer<Void> _ffi;

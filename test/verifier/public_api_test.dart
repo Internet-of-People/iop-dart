@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:morpheus_sdk/entities/io.dart';
-import 'package:morpheus_sdk/entities/verifier/public_api.dart';
+import 'package:iop_sdk/entities/io.dart';
+import 'package:iop_sdk/entities/verifier/public_api.dart';
 import 'package:test/test.dart';
 
 import '../util.dart';

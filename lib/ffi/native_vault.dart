@@ -1,6 +1,6 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'package:morpheus_sdk/ffi/ffi.dart';
+import 'package:iop_sdk/ffi/ffi.dart';
 
 typedef NVault_Create = Pointer<Result> Function(
   Pointer<Utf8> lang,

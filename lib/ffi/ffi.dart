@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
-import 'package:morpheus_sdk/crypto/disposable.dart';
+import 'package:iop_sdk/crypto/disposable.dart';
 
 extension Optional on int {
   Pointer<IntPtr> asOptional() {

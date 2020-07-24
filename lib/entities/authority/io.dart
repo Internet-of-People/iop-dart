@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:morpheus_sdk/scalar_box.dart';
-import 'package:morpheus_sdk/ssi/io.dart';
+import 'package:iop_sdk/scalar_box.dart';
+import 'package:iop_sdk/ssi/io.dart';
 
 part 'io.g.dart';
 

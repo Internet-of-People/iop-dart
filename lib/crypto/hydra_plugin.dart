@@ -1,14 +1,14 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
-import 'package:morpheus_sdk/crypto/bip44.dart';
-import 'package:morpheus_sdk/crypto/disposable.dart';
-import 'package:morpheus_sdk/crypto/secp.dart';
-import 'package:morpheus_sdk/crypto/vault.dart';
-import 'package:morpheus_sdk/ffi/dart_api.dart';
-import 'package:morpheus_sdk/ffi/ffi.dart';
-import 'package:morpheus_sdk/layer1/sdk.dart';
-import 'package:morpheus_sdk/network.dart';
+import 'package:iop_sdk/crypto/bip44.dart';
+import 'package:iop_sdk/crypto/disposable.dart';
+import 'package:iop_sdk/crypto/secp.dart';
+import 'package:iop_sdk/crypto/vault.dart';
+import 'package:iop_sdk/ffi/dart_api.dart';
+import 'package:iop_sdk/ffi/ffi.dart';
+import 'package:iop_sdk/layer1/sdk.dart';
+import 'package:iop_sdk/network.dart';
 
 class HydraPlugin implements Disposable {
   static void rewind(

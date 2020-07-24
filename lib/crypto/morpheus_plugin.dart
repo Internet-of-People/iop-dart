@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
-import 'package:morpheus_sdk/crypto/did.dart';
-import 'package:morpheus_sdk/crypto/disposable.dart';
-import 'package:morpheus_sdk/crypto/io.dart';
-import 'package:morpheus_sdk/crypto/multicipher.dart';
-import 'package:morpheus_sdk/crypto/signed.dart';
-import 'package:morpheus_sdk/crypto/vault.dart';
-import 'package:morpheus_sdk/ffi/dart_api.dart';
-import 'package:morpheus_sdk/ffi/ffi.dart';
+import 'package:iop_sdk/crypto/did.dart';
+import 'package:iop_sdk/crypto/disposable.dart';
+import 'package:iop_sdk/crypto/io.dart';
+import 'package:iop_sdk/crypto/multicipher.dart';
+import 'package:iop_sdk/crypto/signed.dart';
+import 'package:iop_sdk/crypto/vault.dart';
+import 'package:iop_sdk/ffi/dart_api.dart';
+import 'package:iop_sdk/ffi/ffi.dart';
 // ignore: library_prefixes
-import 'package:morpheus_sdk/ssi/io.dart' as Ssi;
+import 'package:iop_sdk/ssi/io.dart' as Ssi;
 
 class MorpheusPublicKey implements Disposable {
   Pointer<Void> _ffi;
