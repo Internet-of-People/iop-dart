@@ -1,4 +1,3 @@
-import 'dart:mirrors';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:morpheus_sdk/crypto/io.dart';
 import 'package:morpheus_sdk/scalar_box.dart';
@@ -79,10 +78,20 @@ class Content<T> {
 }
 
 T _genericFromJson<T>(Map<String, dynamic> input) {
-  final refT = reflectClass(T);
-  // fromJson is not a static method, so this does not work:
-  // return refT.invoke(#fromJson, [input]).reflectee;
-  return refT.newInstance(#fromJson, [input]).reflectee;
+  if (T == DynamicContent) {
+    return DynamicContent.fromJson(input) as T;
+  } else if (T == Claim) {
+    return Claim.fromJson(input) as T;
+  } else if (T == WitnessRequest) {
+    return WitnessRequest.fromJson(input) as T;
+  } else if (T == WitnessStatement) {
+    return WitnessStatement.fromJson(input) as T;
+  } else if (T == Presentation) {
+    return Presentation.fromJson(input) as T;
+  }
+
+  // TODO: if possible, we need to support all possible cases dynamically
+  throw Exception('Content<$T>.fromJson is not supported for now');
 }
 
 @JsonSerializable(explicitToJson: true)

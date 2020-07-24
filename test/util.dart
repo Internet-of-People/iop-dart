@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:http/http.dart';
 import 'package:morpheus_sdk/crypto/core.dart';
 import 'package:morpheus_sdk/crypto/did.dart';
@@ -43,6 +44,7 @@ class TestVault {
       didData,
       Content<DynamicContent>.fromJson(json.decode(claimString)),
     );
+    expect(claim.content.content.content.containsKey('apple'), true);
     final claimant = KeyLink('#0');
     final evidence = Content<DynamicContent>.fromJson(
       json.decode(evidenceString),
