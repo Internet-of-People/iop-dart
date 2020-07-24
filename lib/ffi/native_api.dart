@@ -69,9 +69,11 @@ class NativeApi {
   final DBip39_ValidatePhrase bip39_validate_phrase;
   final DBip39_ListWords bip39_list_words;
 
-  final DSelectiveDigestJson selective_digest_json;
+  final DSelectiveDigestJson selectiveDigestJson;
+  final DDigestJson digestJson;
+  final DStringifyJson stringifyJson;
   final DNonce264 nonce264;
-  final DHydraTransferTx hydra_transfer_tx;
+  final DHydraTransferTx hydraTransferTx;
 
   static NativeApi load(fileName) {
     final lib = DynamicLibrary.open(fileName);
@@ -117,14 +119,20 @@ class NativeApi {
             lib.lookupFunction<NBip39_ListWords, DBip39_ListWords>(
           'Bip39_list_words',
         ),
-        selective_digest_json =
+        selectiveDigestJson =
             lib.lookupFunction<NSelectiveDigestJson, DSelectiveDigestJson>(
           'selective_digest_json',
+        ),
+        digestJson = lib.lookupFunction<NDigestJson, DDigestJson>(
+          'digest_json',
+        ),
+        stringifyJson = lib.lookupFunction<NStringifyJson, DStringifyJson>(
+          'stringify_json',
         ),
         nonce264 = lib.lookupFunction<NNonce264, DNonce264>(
           'nonce264',
         ),
-        hydra_transfer_tx =
+        hydraTransferTx =
             lib.lookupFunction<NHydraTransferTx, DHydraTransferTx>(
           'TxBuilder_hydraTransferTx',
         );
@@ -162,6 +170,20 @@ typedef NSelectiveDigestJson = Pointer<Result> Function(
 typedef DSelectiveDigestJson = Pointer<Result> Function(
   Pointer<Utf8> json,
   Pointer<Utf8> keepPaths,
+);
+
+typedef NDigestJson = Pointer<Result> Function(
+  Pointer<Utf8> json,
+);
+typedef DDigestJson = Pointer<Result> Function(
+  Pointer<Utf8> json,
+);
+
+typedef NStringifyJson = Pointer<Result> Function(
+  Pointer<Utf8> json,
+);
+typedef DStringifyJson = Pointer<Result> Function(
+  Pointer<Utf8> json,
 );
 
 typedef NNonce264 = Pointer<Result> Function();

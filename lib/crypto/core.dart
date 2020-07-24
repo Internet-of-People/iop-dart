@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:morpheus_sdk/crypto/io.dart';
 import 'package:morpheus_sdk/crypto/multicipher.dart';
+import 'package:morpheus_sdk/ffi/dart_api.dart';
+import 'package:morpheus_sdk/ssi/io.dart';
 
 class Bip39 {
   static const String DEMO_PHRASE =
@@ -23,4 +28,26 @@ class Authentication {
   bool get isKeyId => keyId != null;
 
   bool get isPublicKey => publicKey != null;
+}
+
+ContentId selectiveDigestJson(
+  Map<String, dynamic> data,
+  String keepPropertiesList,
+) {
+  return ContentId(DartApi.instance.selectiveDigestJson(
+    json.encode(data),
+    keepPropertiesList,
+  ));
+}
+
+ContentId digestJson(dynamic data) {
+  return ContentId(DartApi.instance.digestJson(json.encode(data)));
+}
+
+String stringifyJson(dynamic data) {
+  return DartApi.instance.stringifyJson(json.encode(data));
+}
+
+Nonce nonce264() {
+  return Nonce(DartApi.instance.nonce264());
 }

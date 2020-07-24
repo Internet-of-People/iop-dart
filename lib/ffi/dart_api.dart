@@ -16,16 +16,15 @@ class DartApi implements Disposable {
   static DartApi get instance {
     if (_instance == null) {
       String ext;
-      if(Platform.isMacOS) {
+      if (Platform.isMacOS) {
         ext = 'dylib';
-      }
-      else if(Platform.isLinux) {
+      } else if (Platform.isLinux) {
         ext = 'so';
-      }
-      else {
+      } else {
         throw Exception('Not supported OS');
       }
-      final api = NativeApi.load('${Directory.current.path}/libmorpheus_core.$ext');
+      final api =
+          NativeApi.load('${Directory.current.path}/libmorpheus_core.$ext');
       _instance = DartApi._(api);
     }
 
@@ -82,11 +81,29 @@ class DartApi implements Disposable {
     final nativeKeepPaths = Utf8.toUtf8(keepPaths);
     try {
       return _native
-          .selective_digest_json(nativeJson, nativeKeepPaths)
+          .selectiveDigestJson(nativeJson, nativeKeepPaths)
           .extract((res) => res.asString);
     } finally {
       free(nativeJson);
       free(nativeKeepPaths);
+    }
+  }
+
+  String digestJson(String json) {
+    final nativeJson = Utf8.toUtf8(json);
+    try {
+      return _native.digestJson(nativeJson).extract((res) => res.asString);
+    } finally {
+      free(nativeJson);
+    }
+  }
+
+  String stringifyJson(String json) {
+    final nativeJson = Utf8.toUtf8(json);
+    try {
+      return _native.stringifyJson(nativeJson).extract((res) => res.asString);
+    } finally {
+      free(nativeJson);
     }
   }
 
@@ -107,7 +124,7 @@ class DartApi implements Disposable {
     final nativeRecipient = Utf8.toUtf8(recipient);
     try {
       return _native
-          .hydra_transfer_tx(
+          .hydraTransferTx(
             nativeNet,
             nativeSender,
             nativeRecipient,

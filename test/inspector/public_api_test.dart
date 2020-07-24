@@ -84,6 +84,7 @@ void main() {
     });
 
     test('uploadPresentation', () async {
+      final presentation = TestVault.create().createSignedPresentation();
       when(client.post(
         '$baseUrl/presentation',
         headers: anyNamed('headers'),
@@ -92,11 +93,12 @@ void main() {
         (_) => Future.value(resp('contentId', code: 202)),
       );
 
-      // TODO: finish, when we can create Signed<Presentation>
-      // final r = await api.uploadPresentation(presentation);
+      final r = await api.uploadPresentation(presentation);
+      expect(r.value, 'contentId');
     });
 
     test('uploadPresentation - not http202', () async {
+      final presentation = TestVault.create().createSignedPresentation();
       when(client.post(
         '$baseUrl/presentation',
         headers: anyNamed('headers'),
@@ -105,8 +107,8 @@ void main() {
         (_) => Future.value(resp('', code: 500)),
       );
 
-      // TODO: finish, when we can create Signed<Presentation>
-      //final r = await api.uploadPresentation(presentation);
+      final rFut = api.uploadPresentation(presentation);
+      await expectLater(rFut, throwsA(const TypeMatcher<HttpResponseError>()));
     });
   });
 }

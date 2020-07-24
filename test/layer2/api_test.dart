@@ -1,9 +1,12 @@
 import 'package:morpheus_sdk/crypto/io.dart';
+import 'package:morpheus_sdk/layer1/builder.dart';
 import 'package:morpheus_sdk/layer1/operation_data.dart';
 import 'package:morpheus_sdk/layer2/api.dart';
 import 'package:morpheus_sdk/network.dart';
 import 'package:morpheus_sdk/ssi/io.dart';
 import 'package:test/test.dart';
+
+import '../util.dart';
 
 void main() {
   final existingDid = DidData('did:morpheus:ezqztJ6XX6GDxdSgdiySiT3J');
@@ -134,10 +137,16 @@ void main() {
     });
 
     test('checkTransactionValidity - valid tx / signed ops', () async {
-      //final tombstoneOp = TombstoneDidData(DidData('as'), 'asd');
-      // TODO: right key and right signature is needed here
-      //final signedOp = SignedOperationsData([tombstoneOp], PublicKeyData('pubkey'), SignatureData('sig'));
-      //final resp = await api.checkTransactionValidity([signedOp]);
+      final vault = TestVault.create();
+      final lastTxId = await api.getLastTxId(existingDid);
+      final tombstoneOp = TombstoneDidData(existingDid, lastTxId);
+      final signedOp = SignedOperationAttemptsBuilder.tempSign(
+        vault.morpheusPrivate,
+        vault.id,
+        [tombstoneOp],
+      );
+      final r = await api.checkTransactionValidity([signedOp]);
+      expect(r, isEmpty);
     });
 
     test('checkTransactionValidity - invalid tx', () async {

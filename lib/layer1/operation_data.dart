@@ -1,5 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:json_annotation/json_annotation.dart';
+import 'package:morpheus_sdk/crypto/core.dart';
 import 'package:morpheus_sdk/crypto/io.dart';
+import 'package:morpheus_sdk/layer1/serde.dart' as serde;
 import 'package:morpheus_sdk/ssi/io.dart';
 
 part 'operation_data.g.dart';
@@ -62,6 +66,13 @@ class SignedOperationsData extends OperationData {
 
   factory SignedOperationsData.fromJson(Map<String, dynamic> json) =>
       _$SignedOperationsDataFromJson(json);
+
+  static ByteData serialize(List<SignableOperationData> signables) {
+    final canonicalJsonString = stringifyJson(
+      signables.map((op) => op.toJson()).toList(),
+    );
+    return serde.serialize(canonicalJsonString);
+  }
 
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{

@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/did.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
 import 'package:morpheus_sdk/crypto/io.dart';
-import 'package:morpheus_sdk/crypto/multicipher.dart' hide Signature;
+import 'package:morpheus_sdk/crypto/multicipher.dart';
 import 'package:morpheus_sdk/crypto/signed.dart';
 import 'package:morpheus_sdk/crypto/vault.dart';
 import 'package:morpheus_sdk/ffi/dart_api.dart';
 import 'package:morpheus_sdk/ffi/ffi.dart';
-import 'package:morpheus_sdk/ssi/io.dart';
+// ignore: library_prefixes
+import 'package:morpheus_sdk/ssi/io.dart' as Ssi;
 
 class MorpheusPublicKey implements Disposable {
   Pointer<Void> _ffi;
@@ -219,59 +221,94 @@ class MorpheusPrivate implements Disposable {
     return MorpheusPrivateKey._(ffiMorpheusSk, true);
   }
 
-  Signed<WitnessRequest> signWitnessRequest(KeyId id, WitnessRequest request) {
+  Ssi.Signed<ByteData> signDidOperations(KeyId id, ByteData data) {
+    final nativeData = ByteSlice.fromBytes(data);
+    try {
+      final signedFfi = DartApi.native.morpheusPrivate
+          .signDidOperations(_ffi, id.ffi, nativeData.addressOf)
+          .extract((resp) => resp.asPointer<Void>());
+      return _toSsiSignedBytes(signedFfi, data);
+    } finally {
+      nativeData.dispose();
+    }
+  }
+
+  Ssi.Signed<Ssi.WitnessRequest> signWitnessRequest(
+      KeyId id, Ssi.WitnessRequest request) {
     final requestString = json.encode(request.toJson());
     final nativeRequest = Utf8.toUtf8(requestString);
     try {
       final signedFfi = DartApi.native.morpheusPrivate
           .signWitnessRequest(_ffi, id.ffi, nativeRequest)
           .extract((resp) => resp.asPointer<Void>());
-      return _toTyped(signedFfi, request);
+      return _toSsiSignedTyped(signedFfi, request);
     } finally {
       free(nativeRequest);
     }
   }
 
-  Signed<WitnessStatement> signWitnessStatement(
-      KeyId id, WitnessStatement statement) {
+  Ssi.Signed<Ssi.WitnessStatement> signWitnessStatement(
+      KeyId id, Ssi.WitnessStatement statement) {
     final statementString = json.encode(statement.toJson());
     final nativeStatement = Utf8.toUtf8(statementString);
     try {
       final signedFfi = DartApi.native.morpheusPrivate
           .signWitnessStatement(_ffi, id.ffi, nativeStatement)
           .extract((resp) => resp.asPointer<Void>());
-      return _toTyped(signedFfi, statement);
+      return _toSsiSignedTyped(signedFfi, statement);
     } finally {
       free(nativeStatement);
     }
   }
 
-  Signed<Presentation> signClaimPresentation(
-      KeyId id, Presentation presentation) {
+  Ssi.Signed<Ssi.Presentation> signClaimPresentation(
+      KeyId id, Ssi.Presentation presentation) {
     final presentationString = json.encode(presentation.toJson());
     final nativePresentation = Utf8.toUtf8(presentationString);
     try {
       final signedFfi = DartApi.native.morpheusPrivate
           .signClaimPresentation(_ffi, id.ffi, nativePresentation)
           .extract((resp) => resp.asPointer<Void>());
-      return _toTyped(signedFfi, presentation);
+      return _toSsiSignedTyped(signedFfi, presentation);
     } finally {
       free(nativePresentation);
     }
   }
 
-  Signed<T> _toTyped<T>(Pointer<Void> signedFfi, T content) {
-    final signedJson = SignedJson(signedFfi, true);
-    final rustPublicKey = signedJson.publicKey;
-    final rustSignature = signedJson.signature;
+  Ssi.Signature _toSsiSignature(PublicKey pk, Signature sig) {
     try {
-      final publicKeyData = PublicKeyData(rustPublicKey.toString());
-      final signatureBytes = SignatureData(rustSignature.toString());
-      final signature = Signature(publicKeyData, signatureBytes);
-      return Signed<T>(signature, Content(content, null));
+      final publicKeyData = PublicKeyData(pk.toString());
+      final signatureBytes = SignatureData(sig.toString());
+      return Ssi.Signature(publicKeyData, signatureBytes);
     } finally {
-      rustSignature.dispose();
-      rustPublicKey.dispose();
+      sig.dispose();
+      pk.dispose();
+    }
+  }
+
+  Ssi.Signed<ByteData> _toSsiSignedBytes(
+      Pointer<Void> signedFfi, ByteData content) {
+    final signedBytes = SignedBytes(signedFfi, true);
+    try {
+      final signature = _toSsiSignature(
+        signedBytes.publicKey,
+        signedBytes.signature,
+      );
+      return Ssi.Signed<ByteData>(signature, Ssi.Content(content, null));
+    } finally {
+      signedBytes.dispose();
+    }
+  }
+
+  Ssi.Signed<T> _toSsiSignedTyped<T>(Pointer<Void> signedFfi, T content) {
+    final signedJson = SignedJson(signedFfi, true);
+    try {
+      final signature = _toSsiSignature(
+        signedJson.publicKey,
+        signedJson.signature,
+      );
+      return Ssi.Signed<T>(signature, Ssi.Content(content, null));
+    } finally {
       signedJson.dispose();
     }
   }

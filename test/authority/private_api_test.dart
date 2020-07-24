@@ -134,20 +134,22 @@ void main() {
 
     test('approveRequest', () async {
       final link = CapabilityLink('link');
+      final statement = TestVault.create().createSignedWitnessStatement();
       when(client.post(
         '$baseUrl/requests/${link.value}/approve',
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
-        (_) => Future.value(resp('', code: 200)),
+        (_) => Future.value(resp('{"success": true}', code: 200)),
       );
 
-      // TODO: finish, when we can create Signed<WitnessStatement>
-      // await api.approveRequest(link,statement);
+      final rFut = api.approveRequest(link, statement);
+      await expectLater(rFut, completes);
     });
 
     test('approveRequest - not http200', () async {
       final link = CapabilityLink('link');
+      final statement = TestVault.create().createSignedWitnessStatement();
       when(client.post(
         '$baseUrl/requests/${link.value}/approve',
         headers: anyNamed('headers'),
@@ -156,8 +158,8 @@ void main() {
         (_) => Future.value(resp('', code: 500)),
       );
 
-      // TODO: finish, when we can create Signed<WitnessStatement>
-      // await api.approveRequest(link,statement);
+      final rFut = api.approveRequest(link, statement);
+      await expectLater(rFut, throwsA(const TypeMatcher<HttpResponseError>()));
     });
 
     test('rejectRequest', () async {

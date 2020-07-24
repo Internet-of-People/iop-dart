@@ -46,6 +46,7 @@ void main() {
     });
 
     test('validate', () async {
+      final request = TestVault.create().createValidationRequest();
       when(client.post(
         '$baseUrl/validate',
         headers: anyNamed('headers'),
@@ -54,11 +55,13 @@ void main() {
         (_) => Future.value(resp(json.encode({'errors': [], 'warnings': []}))),
       );
 
-      // TODO: finish, when we can create ValidationRequest
-      // final r = await api.validate(request);
+      final r = await api.validate(request);
+      expect(r.warnings, isEmpty);
+      expect(r.errors, isEmpty);
     });
 
     test('validate - not http200', () async {
+      final request = TestVault.create().createValidationRequest();
       when(client.post(
         '$baseUrl/validate',
         headers: anyNamed('headers'),
@@ -67,11 +70,10 @@ void main() {
         (_) => Future.value(resp('', code: 500)),
       );
 
-      // TODO: finish, when we can create ValidationRequest
-      /*expect(
+      expect(
         api.validate(request),
         throwsA(const TypeMatcher<HttpResponseError>()),
-      );*/
+      );
     });
   });
 }
