@@ -1,4 +1,5 @@
 import 'dart:ffi';
+
 import 'package:ffi/ffi.dart';
 import 'package:morpheus_sdk/crypto/bip44.dart';
 import 'package:morpheus_sdk/crypto/disposable.dart';
@@ -30,7 +31,7 @@ class HydraPlugin implements Disposable {
       final ffiPlugin = DartApi.native.hydraPlugin
           .get(vault.ffi, nativeNet, account)
           .extract((res) => res.asPointer<Void>());
-      return HydraPlugin(ffiPlugin);
+      return HydraPlugin(ffiPlugin, true);
     } finally {
       free(nativeNet);
     }
@@ -39,7 +40,7 @@ class HydraPlugin implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
-  HydraPlugin(this._ffi);
+  HydraPlugin(this._ffi, this._owned);
 
   HydraPrivate private(String unlockPassword) {
     final nativePwd = Utf8.toUtf8(unlockPassword);
@@ -47,7 +48,7 @@ class HydraPlugin implements Disposable {
       final ffiPrivate = DartApi.native.hydraPlugin
           .private(_ffi, nativePwd)
           .extract((res) => res.asPointer<Void>());
-      return HydraPrivate(ffiPrivate);
+      return HydraPrivate(ffiPrivate, _owned);
     } finally {
       free(nativePwd);
     }
@@ -74,7 +75,7 @@ class HydraPrivate implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
-  HydraPrivate(this._ffi);
+  HydraPrivate(this._ffi, this._owned);
 
   HydraPublic get public {
     final public = DartApi.native.hydraPrivate
