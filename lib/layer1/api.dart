@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:iop_sdk/crypto/hydra_plugin.dart';
+import 'package:iop_sdk/crypto/secp.dart';
 import 'package:iop_sdk/entities/io.dart';
 import 'package:iop_sdk/ffi/dart_api.dart';
+import 'package:iop_sdk/layer1/operation_data.dart';
 import 'package:iop_sdk/utils/api.dart';
 import 'package:iop_sdk/layer1/io.dart';
 import 'package:iop_sdk/network.dart';
@@ -88,12 +90,77 @@ class Layer1Api extends LayerApi {
       nonce,
     );
 
-    final signedTx = hydraPrivate.signHydraTransaction(
-      senderAddress,
-      transferTx,
+    final signedTx = hydraPrivate.signHydraTransaction(senderAddress, transferTx);
+
+    final resp = await sendSignedTx(signedTx.toString());
+    return resp;
+  }
+
+  Future<String> sendTransferTxWithPassphrase(
+    String passphrase,
+    String targetAddress,
+    int amountInFlake, {
+    int nonce,
+  }) async {
+    final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
+    final senderPubKey = secpPrivKey.publicKey().toString();
+    nonce ??= (await getWalletNonce(senderPubKey)) + 1;
+
+    final transferTx = DartApi.instance
+        .hydraTransferTx(network.RustApiId, senderPubKey, targetAddress, amountInFlake, nonce);
+
+    final signedTx = secpPrivKey.signHydraTransaction(transferTx);
+
+    final resp = await sendSignedTx(signedTx.toString());
+    return resp;
+  }
+
+  Future<String> sendMorpheusTx(
+    String senderAddress,
+    List<OperationData> attempts,
+    HydraPrivate hydraPrivate, {
+    int nonce,
+  }) async {
+    final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
+    nonce ??= (await getWalletNonce(senderAddress)) + 1;
+
+    final transferTx = DartApi.instance.morpheusTx(
+      network.RustApiId,
+      senderBip44PubKey.publicKey().toString(),
+      attempts,
+      nonce,
     );
 
-    final resp = await layer1ApiPost('/transactions', signedTx.toString());
+    final signedTx = hydraPrivate.signHydraTransaction(senderAddress, transferTx);
+
+    final resp = await sendSignedTx(signedTx.toString());
+    return resp;
+  }
+
+  Future<String> sendMorpheusTxWithPassphrase(
+    List<OperationData> attempts,
+    String passphrase, {
+    int nonce,
+  }) async {
+    final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
+    final senderPubKey = secpPrivKey.publicKey().toString();
+    nonce ??= (await getWalletNonce(senderPubKey)) + 1;
+
+    final transferTx = DartApi.instance.morpheusTx(
+      network.RustApiId,
+      senderPubKey,
+      attempts,
+      nonce,
+    );
+
+    final signedTx = secpPrivKey.signHydraTransaction(transferTx);
+
+    final resp = await sendSignedTx(signedTx.toString());
+    return resp;
+  }
+
+  Future<String> sendSignedTx(String signedTx) async {
+    final resp = await layer1ApiPost('/transactions', signedTx);
 
     if (resp.statusCode != HttpStatus.ok) {
       return Future.error(HttpResponseError(resp.statusCode, resp.body));

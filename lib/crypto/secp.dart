@@ -5,6 +5,7 @@ import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/crypto/disposable.dart';
 import 'package:iop_sdk/ffi/dart_api.dart';
 import 'package:iop_sdk/ffi/ffi.dart';
+import 'package:iop_sdk/layer1/sdk.dart';
 
 class SecpKeyId implements Disposable {
   Pointer<Void> _ffi;
@@ -67,6 +68,18 @@ class SecpPrivateKey implements Disposable {
       return SecpSignature(ffiSig, true);
     } finally {
       nativeData.dispose();
+    }
+  }
+
+  SignedHydraTransaction signHydraTransaction(String txJson) {
+    final nativeTx = Utf8.toUtf8(txJson);
+    try {
+      final signedTx = DartApi.native.secpPrivateKey
+          .signHydraTx(_ffi, nativeTx)
+          .extract((resp) => resp.asString);
+      return SignedHydraTransaction(signedTx);
+    } finally {
+      free(nativeTx);
     }
   }
 

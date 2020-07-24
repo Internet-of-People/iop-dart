@@ -71,6 +71,13 @@ class MorpheusPublicKind implements Disposable {
     return PublicKey(pk, true);
   }
 
+  Did did(int idx) {
+    final ffiDid = DartApi.native.morpheusPublicKind
+        .did(_ffi, idx)
+        .extract((res) => res.asPointer<Void>());
+    return Did(ffiDid, true);
+  }
+
   @override
   void dispose() {
     if (_owned) {

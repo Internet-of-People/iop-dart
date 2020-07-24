@@ -24,6 +24,15 @@ typedef DMorpheusPublicKind_Key = Pointer<Result> Function(
   int idx,
 );
 
+typedef NMorpheusPublicKind_Did = Pointer<Result> Function(
+  Pointer<Void> morpheusPublicKind,
+  Int32 idx,
+);
+typedef DMorpheusPublicKind_Did = Pointer<Result> Function(
+  Pointer<Void> morpheusPublicKind,
+  int idx,
+);
+
 typedef NDelete_MorpheusPublicKind = Void Function(
   Pointer<Void> morpheusPublicKind,
 );
@@ -35,6 +44,7 @@ class NativeMorpheusPublicKind {
   final DMorpheusPublicKind_Len_Get lenGet;
   final DMorpheusPublicKind_IsEmpty_Get isEmptyGet;
   final DMorpheusPublicKind_Key key;
+  final DMorpheusPublicKind_Did did;
   final DDelete_MorpheusPublicKind delete;
 
   NativeMorpheusPublicKind(DynamicLibrary lib)
@@ -49,6 +59,10 @@ class NativeMorpheusPublicKind {
         key = lib
             .lookupFunction<NMorpheusPublicKind_Key, DMorpheusPublicKind_Key>(
           'MorpheusPublicKind_key',
+        ),
+        did = lib
+            .lookupFunction<NMorpheusPublicKind_Did, DMorpheusPublicKind_Did>(
+          'MorpheusPublicKind_did',
         ),
         delete = lib.lookupFunction<NDelete_MorpheusPublicKind,
             DDelete_MorpheusPublicKind>(

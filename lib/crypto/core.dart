@@ -6,10 +6,24 @@ import 'package:iop_sdk/ffi/dart_api.dart';
 import 'package:iop_sdk/ssi/io.dart';
 
 class Bip39 {
+  final String _languageCode;
+
   static const String DEMO_PHRASE =
       'include pear escape sail spy orange cute despair witness trouble sleep torch wire burst unable brass expose fiction drift clock duck oxygen aerobic already';
 
-  Bip39(String languageCode);
+  Bip39(this._languageCode);
+
+  String generatePhrase() {
+    return DartApi.instance.bip39GeneratePhrase(_languageCode);
+  }
+
+  List<String> listWords(String prefix) {
+    return DartApi.instance.bip39ListWords(_languageCode, prefix);
+  }
+
+  void validatePhrase(String phrase) {
+    return DartApi.instance.bip39ValidatePhrase(_languageCode, phrase);
+  }
 }
 
 class Authentication {

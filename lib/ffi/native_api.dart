@@ -74,6 +74,7 @@ class NativeApi {
   final DStringifyJson stringifyJson;
   final DNonce264 nonce264;
   final DHydraTransferTx hydraTransferTx;
+  final DMorpheusTx morpheusTx;
 
   static NativeApi load(fileName) {
     final lib = DynamicLibrary.open(fileName);
@@ -107,20 +108,16 @@ class NativeApi {
         validationIssue = NativeValidationIssue(lib),
         validationResult = NativeValidationResult(lib),
         vault = NativeVault(lib),
-        bip39_generate_phrase =
-            lib.lookupFunction<NBip39_GeneratePhrase, DBip39_GeneratePhrase>(
+        bip39_generate_phrase = lib.lookupFunction<NBip39_GeneratePhrase, DBip39_GeneratePhrase>(
           'Bip39_generate_phrase',
         ),
-        bip39_validate_phrase =
-            lib.lookupFunction<NBip39_ValidatePhrase, DBip39_ValidatePhrase>(
+        bip39_validate_phrase = lib.lookupFunction<NBip39_ValidatePhrase, DBip39_ValidatePhrase>(
           'Bip39_validate_phrase',
         ),
-        bip39_list_words =
-            lib.lookupFunction<NBip39_ListWords, DBip39_ListWords>(
+        bip39_list_words = lib.lookupFunction<NBip39_ListWords, DBip39_ListWords>(
           'Bip39_list_words',
         ),
-        selectiveDigestJson =
-            lib.lookupFunction<NSelectiveDigestJson, DSelectiveDigestJson>(
+        selectiveDigestJson = lib.lookupFunction<NSelectiveDigestJson, DSelectiveDigestJson>(
           'selective_digest_json',
         ),
         digestJson = lib.lookupFunction<NDigestJson, DDigestJson>(
@@ -132,9 +129,11 @@ class NativeApi {
         nonce264 = lib.lookupFunction<NNonce264, DNonce264>(
           'nonce264',
         ),
-        hydraTransferTx =
-            lib.lookupFunction<NHydraTransferTx, DHydraTransferTx>(
+        hydraTransferTx = lib.lookupFunction<NHydraTransferTx, DHydraTransferTx>(
           'TxBuilder_hydraTransferTx',
+        ),
+        morpheusTx = lib.lookupFunction<NMorpheusTx, DMorpheusTx>(
+          'TxBuilder_morpheusTx',
         );
 }
 
@@ -201,5 +200,18 @@ typedef DHydraTransferTx = Pointer<Result> Function(
   Pointer<Utf8> senderPubKey,
   Pointer<Utf8> recipient,
   int amount,
+  int nonce,
+);
+
+typedef NMorpheusTx = Pointer<Result> Function(
+  Pointer<Utf8> network,
+  Pointer<Utf8> senderPubKey,
+  Pointer<Utf8> opAttemptsJson,
+  Int64 nonce,
+);
+typedef DMorpheusTx = Pointer<Result> Function(
+  Pointer<Utf8> network,
+  Pointer<Utf8> senderPubKey,
+  Pointer<Utf8> opAttemptsJson,
   int nonce,
 );

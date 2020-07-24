@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/crypto/disposable.dart';
 import 'package:iop_sdk/ffi/ffi.dart';
 import 'package:iop_sdk/ffi/native_api.dart';
+import 'package:iop_sdk/layer1/operation_data.dart';
 
 class DartApi implements Disposable {
   static DartApi _instance;
@@ -31,9 +33,7 @@ class DartApi implements Disposable {
   String bip39GeneratePhrase(String langCode) {
     final nativeLangCode = Utf8.toUtf8(langCode);
     try {
-      return _native
-          .bip39_generate_phrase(nativeLangCode)
-          .extract((res) => res.asString);
+      return _native.bip39_generate_phrase(nativeLangCode).extract((res) => res.asString);
     } finally {
       free(nativeLangCode);
     }
@@ -124,6 +124,27 @@ class DartApi implements Disposable {
           .extract((res) => res.asString);
     } finally {
       free(nativeRecipient);
+      free(nativeSender);
+      free(nativeNet);
+    }
+  }
+
+  // TODO Temporary API for the transfer builder
+  String morpheusTx(
+    String network,
+    String senderPubKey,
+    List<OperationData> opAttempts,
+    int nonce,
+  ) {
+    final nativeNet = Utf8.toUtf8(network);
+    final nativeSender = Utf8.toUtf8(senderPubKey);
+    final nativeOps = Utf8.toUtf8(json.encode(opAttempts));
+    try {
+      return _native
+          .morpheusTx(nativeNet, nativeSender, nativeOps, nonce)
+          .extract((res) => res.asString);
+    } finally {
+      free(nativeOps);
       free(nativeSender);
       free(nativeNet);
     }
