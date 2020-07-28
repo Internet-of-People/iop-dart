@@ -1,9 +1,9 @@
 import 'package:http/http.dart';
+import 'package:iop_sdk/entities.dart';
+import 'package:iop_sdk/utils.dart';
 import 'package:mockito/mockito.dart';
-import 'package:iop_sdk/entities/authority/io.dart';
-import 'package:iop_sdk/entities/authority/private_api.dart';
-import 'package:iop_sdk/entities/io.dart';
-import 'package:iop_sdk/ssi/io.dart';
+import 'package:iop_sdk/authority.dart';
+import 'package:iop_sdk/ssi.dart';
 import 'package:test/test.dart';
 
 import '../util.dart';

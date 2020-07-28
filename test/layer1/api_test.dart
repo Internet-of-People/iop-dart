@@ -1,7 +1,5 @@
-import 'package:iop_sdk/crypto/core.dart';
-import 'package:iop_sdk/crypto/hydra_plugin.dart';
-import 'package:iop_sdk/crypto/vault.dart';
-import 'package:iop_sdk/layer1/api.dart';
+import 'package:iop_sdk/crypto.dart';
+import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:test/test.dart';
 

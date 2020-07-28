@@ -1,9 +1,8 @@
-import 'package:iop_sdk/crypto/io.dart';
-import 'package:iop_sdk/layer1/builder.dart';
-import 'package:iop_sdk/layer1/operation_data.dart';
-import 'package:iop_sdk/layer2/api.dart';
+import 'package:iop_sdk/crypto.dart';
+import 'package:iop_sdk/layer1.dart';
+import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
-import 'package:iop_sdk/ssi/io.dart';
+import 'package:iop_sdk/ssi.dart';
 import 'package:test/test.dart';
 
 import '../util.dart';

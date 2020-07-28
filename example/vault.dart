@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'package:iop_sdk/crypto/core.dart';
-import 'package:iop_sdk/crypto/vault.dart';
+import 'package:iop_sdk/crypto.dart';
 
 const VAULT_FILE = '/tmp/tutorial_vault.state';
 

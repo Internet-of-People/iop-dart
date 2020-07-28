@@ -1,14 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:iop_sdk/crypto/core.dart';
-import 'package:iop_sdk/crypto/did.dart';
-import 'package:iop_sdk/crypto/io.dart';
-import 'package:iop_sdk/crypto/morpheus_plugin.dart';
-import 'package:iop_sdk/crypto/multicipher.dart';
-import 'package:iop_sdk/crypto/vault.dart';
-import 'package:iop_sdk/entities/verifier/io.dart';
-import 'package:iop_sdk/ssi/io.dart';
+import 'package:iop_sdk/crypto.dart';
+import 'package:iop_sdk/ssi.dart';
+import 'package:iop_sdk/verifier.dart';
 import 'package:test/test.dart';
 
 Response resp(String body, {int code = 200}) {

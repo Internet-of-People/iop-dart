@@ -1,6 +1,5 @@
-import 'package:iop_sdk/crypto/authentication.dart';
-import 'package:iop_sdk/crypto/io.dart';
-import 'package:iop_sdk/layer2/did_document.dart';
+import 'package:iop_sdk/crypto.dart';
+import 'package:iop_sdk/layer2.dart';
 import 'package:test/test.dart';
 
 void main() {

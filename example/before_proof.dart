@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:iop_sdk/crypto/core.dart';
-//import 'package:iop_sdk/crypto/hydra_plugin.dart';
-import 'package:iop_sdk/crypto/morpheus_plugin.dart';
-import 'package:iop_sdk/crypto/vault.dart';
-import 'package:iop_sdk/layer1/api.dart';
-import 'package:iop_sdk/layer1/builder.dart';
-import 'package:iop_sdk/layer2/api.dart';
+import 'package:iop_sdk/crypto.dart';
+import 'package:iop_sdk/layer1.dart';
+import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
 
 void main(List<String> arguments) async {
@@ -35,15 +31,18 @@ void main(List<String> arguments) async {
 
   final keyId = pubKey.keyId(); // acquire the keyId
   final contractStr = 'A long legal document, e.g. a contract with all details';
-  final contractBytes = Uint8List.fromList(utf8.encode(contractStr)).buffer.asByteData();
+  final contractBytes =
+      Uint8List.fromList(utf8.encode(contractStr)).buffer.asByteData();
   // acquire the plugin's private interface that provides you the sign interface
   final morpheusPrivate = morpheusPlugin.private(unlockPassword);
   // YOU NEED TO SAVE IT TO A SAFE PLACE!
   // TODO should use something like signRawBytes() instead of signDidOperations() here
-  final signedContract = morpheusPrivate.signDidOperations(keyId, contractBytes);
+  final signedContract =
+      morpheusPrivate.signDidOperations(keyId, contractBytes);
 
   // you must use this Buffer wrapper at the moment, we will improve in later releases
-  final content = utf8.decode(signedContract.content.content.buffer.asUint8List());
+  final content =
+      utf8.decode(signedContract.content.content.buffer.asUint8List());
   final signedContractJson = <String, dynamic>{
     'content': content,
     'publicKey': signedContract.signature.publicKey.value,
@@ -55,14 +54,16 @@ void main(List<String> arguments) async {
   print('Before proof: ${beforeProof.value}');
 
   // create our operation attempts data structure
-  final opAttempts = OperationAttemptsBuilder().registerBeforeProof(beforeProof).getAttempts();
+  final opAttempts =
+      OperationAttemptsBuilder().registerBeforeProof(beforeProof).getAttempts();
 
   //  final senderAddress = hydraPlugin.public.key(0).address;
   //  final hydraPrivate = hydraPlugin.private(unlockPassword);
 
   // initialize our layer-1 API and send the transaction
   final layer1Api = Layer1Api(network);
-  final txId = await layer1Api.sendMorpheusTxWithPassphrase(opAttempts, hydraGasPassphrase);
+  final txId = await layer1Api.sendMorpheusTxWithPassphrase(
+      opAttempts, hydraGasPassphrase);
 
   print('Transaction ID: $txId');
 
