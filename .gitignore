@@ -2,3 +2,4 @@
 .idea
 .packages
 pubspec.lock
+libmorpheus_core.so

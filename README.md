@@ -102,7 +102,7 @@ $ pub run build_runner build --delete-conflicting-outputs
 
 ```bash
 # Run tests
-$ pub run test
+$ pub run test --concurrency=1 # note: the test must run on a single thread becaus of nonce generation
 ```
 
 ```bash

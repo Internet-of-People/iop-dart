@@ -16,4 +16,4 @@ unit_test:
   script:
     - flutter --version
     - pub get
-    - pub run test
+    - ./test.sh
