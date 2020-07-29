@@ -1,10 +1,13 @@
-import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/network.dart';
 
+import 'package:iop_sdk/crypto.dart';
+
+
 final network = Network.TestNet;
 final targetAddress = 'tjseecxRmob5qBS2T3qc8frXDKz3YUGB8J'; // genesis
-final amount = 1e8 ~/ 10;
+final walletPassphrase = 'scout try doll stuff cake welcome random taste load town clerk ostrich';
+
 
 void main(List<String> arguments) async {
   await sendTransferTxWithPassphrase();
@@ -12,20 +15,17 @@ void main(List<String> arguments) async {
 }
 
 void sendTransferTxWithPassphrase() async {
-  final walletPassphrase =
-      'scout try doll stuff cake welcome random taste load town clerk ostrich';
-
-  print('Sending transfer transaction with passphrase');
-
   final layer1Api = Layer1Api(network);
+  final amount = 1e8 ~/ 10;
   final txId = await layer1Api.sendTransferTxWithPassphrase(
     walletPassphrase,
     targetAddress,
     amount,
   );
 
-  print('Transfer transaction sent with passphrase, ID: $txId');
+  print('Transaction ID: $txId');
 }
+
 
 void sendTransferTxWithVault() async {
   final hydraAccount = 0;
@@ -41,6 +41,7 @@ void sendTransferTxWithVault() async {
   final hydraPrivate = hydraPlugin.private(unlockPassword);
 
   final layer1Api = Layer1Api(network);
+  final amount = 1e8 ~/ 10;
   final txId = await layer1Api.sendTransferTx(
     senderAddress,
     targetAddress,
