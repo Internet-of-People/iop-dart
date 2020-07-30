@@ -3,11 +3,10 @@ import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:test/test.dart';
 
-
 final network = Network.TestNet;
 final targetAddress = 'tjseecxRmob5qBS2T3qc8frXDKz3YUGB8J'; // genesis
-final walletPassphrase = 'scout try doll stuff cake welcome random taste load town clerk ostrich';
-
+final walletPassphrase =
+    'scout try doll stuff cake welcome random taste load town clerk ostrich';
 
 void main() {
   group('token_transfer', () {
@@ -24,7 +23,8 @@ void main() {
       expect(txId, isNotNull);
 
       // NOTE make sure that other tests receive the CHANGED nonce, they fail otherwise
-      await Future.delayed(Duration(seconds: 12));  // it'll be included in the SDK Soon in 2020
+      await Future.delayed(
+          Duration(seconds: 12)); // it'll be included in the SDK Soon in 2020
     });
 
     test('with vault', () async {
@@ -55,7 +55,8 @@ void main() {
       expect(txId, isNotNull);
 
       // NOTE make sure that other tests receive the CHANGED nonce, they fail otherwise
-      await Future.delayed(Duration(seconds: 12));  // it'll be included in the SDK Soon in 2020
+      await Future.delayed(
+          Duration(seconds: 12)); // it'll be included in the SDK Soon in 2020
 
       firstHydKey.dispose();
       hydraPublic.dispose();

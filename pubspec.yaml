@@ -1,10 +1,10 @@
 name: iop_sdk
-description: DAC SDK - Decentralized Access Control framework (project Morpheus) based on W3C standards to provide SSI solutions, store schemas, decentralized IDs (DIDs), keys, rights and proof timestamps on a ledger for public verification, keeping verifiable claims (VCs) off-ledger.
+description: SDK for Decentralized Access Control based on W3C standards to provide SSI with decentralized identifiers (DID), keys, rights and verifiable claims/credentials (VC).
 documentation: https://developer.iop.global
 homepage: https://iop.global
 repository: https://github.com/Internet-of-People/morpheus-dart
 
-version: 3.1.0
+version: 3.1.1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

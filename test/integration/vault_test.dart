@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:iop_sdk/crypto.dart';
 import 'package:test/test.dart';
 
-
 void main() {
   group('Vault', () {
     test('save/load', () async {
@@ -23,7 +22,8 @@ void main() {
       final backup = await File('tutorial_vault.state').readAsString();
       final loadedVault = Vault.load(backup);
 
-      expect(loadedVault.save(), serializedState);;
+      expect(loadedVault.save(), serializedState);
+      ;
 
       await File('tutorial_vault.state').delete();
     });

@@ -87,7 +87,8 @@ class Layer1Api extends LayerApi {
       nonce,
     );
 
-    final signedTx = hydraPrivate.signHydraTransaction(senderAddress, transferTx);
+    final signedTx =
+        hydraPrivate.signHydraTransaction(senderAddress, transferTx);
 
     final resp = await sendSignedTx(signedTx.toString());
     return resp;
@@ -103,8 +104,8 @@ class Layer1Api extends LayerApi {
     final senderPubKey = secpPrivKey.publicKey().toString();
     nonce ??= (await getWalletNonce(senderPubKey)) + 1;
 
-    final transferTx = DartApi.instance
-        .hydraTransferTx(network.RustApiId, senderPubKey, targetAddress, amountInFlake, nonce);
+    final transferTx = DartApi.instance.hydraTransferTx(
+        network.RustApiId, senderPubKey, targetAddress, amountInFlake, nonce);
 
     final signedTx = secpPrivKey.signHydraTransaction(transferTx);
 
@@ -128,7 +129,8 @@ class Layer1Api extends LayerApi {
       nonce,
     );
 
-    final signedTx = hydraPrivate.signHydraTransaction(senderAddress, transferTx);
+    final signedTx =
+        hydraPrivate.signHydraTransaction(senderAddress, transferTx);
 
     final resp = await sendSignedTx(signedTx.toString());
     return resp;

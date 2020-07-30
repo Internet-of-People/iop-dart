@@ -1,0 +1,1 @@
+We provide several simple examples as functional tests. See our integration tests for [sending tokens](../test/integration/token_transfer_test.dart), [creating a keyvault](../test/integration/vault_test.dart) or [proving content-before claims](../test/integration/before_proof_test.dart).

@@ -32,7 +32,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  iop_sdk: ^3.1.0
+  iop_sdk: ^3.1.1
 ```
 
 ## Modules
