@@ -151,67 +151,74 @@ class NodeCryptoConfigNetwork {
 }
 
 @JsonSerializable(explicitToJson: true)
+class Timestamp {
+  final int epoch;
+  final int unix;
+  final String human;
+
+  Timestamp(
+    this.epoch,
+    this.unix,
+    this.human,
+  );
+
+  factory Timestamp.fromJson(Map<String, dynamic> json) =>
+      _$TimestampFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TimestampToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class TransactionStatusResponse {
-  @JsonKey(nullable: true)
-  final int version;
-  @JsonKey(nullable: true)
-  final int network;
-  @JsonKey(nullable: true)
-  final int typeGroup;
-  final int type;
-  @JsonKey(nullable: true)
-  final Map<String, dynamic> timestamp;
-  @JsonKey(nullable: true)
-  final String nonce;
-  final String senderPublicKey;
-  final String fee;
-  final String amount;
-  @JsonKey(nullable: true)
-  final int expiration;
-  @JsonKey(nullable: true)
-  final String recipientId;
-  @JsonKey(nullable: true)
-  final Map<String, dynamic> asset;
-  final String vendorField;
-  @JsonKey(nullable: true)
+  @JsonKey(nullable: true, includeIfNull: false)
   final String id;
   @JsonKey(nullable: true)
-  final String signature;
+  final String blockId;
   @JsonKey(nullable: true)
-  final String secondSignature;
+  final int version;
+  final int type;
+  @JsonKey(nullable: true)
+  final int typeGroup;
+  final String amount;
+  final String fee;
+  final String sender;
+  final String senderPublicKey;
+  final String recipient;
+  @JsonKey(nullable: true)
+  final String signature;
   @JsonKey(nullable: true)
   final String signSignature;
   @JsonKey(nullable: true)
   final List<String> signatures;
   @JsonKey(nullable: true)
-  final String blockId;
+  final String vendorField;
   @JsonKey(nullable: true)
-  final int sequence;
+  final Map<String, dynamic> asset;
+  final int confirmations;
   @JsonKey(nullable: true)
-  final String ipfsHash;
+  final Timestamp timestamp;
+  @JsonKey(nullable: true)
+  final String nonce;
 
   TransactionStatusResponse(
-    this.version,
-    this.network,
-    this.typeGroup,
-    this.type,
-    this.timestamp,
-    this.nonce,
-    this.senderPublicKey,
-    this.fee,
-    this.amount,
-    this.expiration,
-    this.recipientId,
-    this.asset,
-    this.vendorField,
     this.id,
+    this.blockId,
+    this.version,
+    this.type,
+    this.typeGroup,
+    this.amount,
+    this.fee,
+    this.sender,
+    this.senderPublicKey,
+    this.recipient,
     this.signature,
-    this.secondSignature,
     this.signSignature,
     this.signatures,
-    this.blockId,
-    this.sequence,
-    this.ipfsHash,
+    this.vendorField,
+    this.asset,
+    this.confirmations,
+    this.timestamp,
+    this.nonce,
   );
 
   factory TransactionStatusResponse.fromJson(Map<String, dynamic> json) =>

@@ -23,6 +23,7 @@ void main() {
       final status = await api.getTxnStatus(id);
       expect(status.isPresent, true);
       expect(status.value.id, id);
+      expect(status.value.timestamp.unix, 1593603972);
     });
 
     test('getTxnStatus - not existing', () async {

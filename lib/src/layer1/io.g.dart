@@ -161,55 +161,73 @@ Map<String, dynamic> _$NodeCryptoConfigNetworkToJson(
       'client': instance.client,
     };
 
+Timestamp _$TimestampFromJson(Map<String, dynamic> json) {
+  return Timestamp(
+    json['epoch'] as int,
+    json['unix'] as int,
+    json['human'] as String,
+  );
+}
+
+Map<String, dynamic> _$TimestampToJson(Timestamp instance) => <String, dynamic>{
+      'epoch': instance.epoch,
+      'unix': instance.unix,
+      'human': instance.human,
+    };
+
 TransactionStatusResponse _$TransactionStatusResponseFromJson(
     Map<String, dynamic> json) {
   return TransactionStatusResponse(
-    json['version'] as int,
-    json['network'] as int,
-    json['typeGroup'] as int,
-    json['type'] as int,
-    json['timestamp'] as Map<String, dynamic>,
-    json['nonce'] as String,
-    json['senderPublicKey'] as String,
-    json['fee'] as String,
-    json['amount'] as String,
-    json['expiration'] as int,
-    json['recipientId'] as String,
-    json['asset'] as Map<String, dynamic>,
-    json['vendorField'] as String,
     json['id'] as String,
+    json['blockId'] as String,
+    json['version'] as int,
+    json['type'] as int,
+    json['typeGroup'] as int,
+    json['amount'] as String,
+    json['fee'] as String,
+    json['sender'] as String,
+    json['senderPublicKey'] as String,
+    json['recipient'] as String,
     json['signature'] as String,
-    json['secondSignature'] as String,
     json['signSignature'] as String,
     (json['signatures'] as List)?.map((e) => e as String)?.toList(),
-    json['blockId'] as String,
-    json['sequence'] as int,
-    json['ipfsHash'] as String,
+    json['vendorField'] as String,
+    json['asset'] as Map<String, dynamic>,
+    json['confirmations'] as int,
+    json['timestamp'] == null
+        ? null
+        : Timestamp.fromJson(json['timestamp'] as Map<String, dynamic>),
+    json['nonce'] as String,
   );
 }
 
 Map<String, dynamic> _$TransactionStatusResponseToJson(
-        TransactionStatusResponse instance) =>
-    <String, dynamic>{
-      'version': instance.version,
-      'network': instance.network,
-      'typeGroup': instance.typeGroup,
-      'type': instance.type,
-      'timestamp': instance.timestamp,
-      'nonce': instance.nonce,
-      'senderPublicKey': instance.senderPublicKey,
-      'fee': instance.fee,
-      'amount': instance.amount,
-      'expiration': instance.expiration,
-      'recipientId': instance.recipientId,
-      'asset': instance.asset,
-      'vendorField': instance.vendorField,
-      'id': instance.id,
-      'signature': instance.signature,
-      'secondSignature': instance.secondSignature,
-      'signSignature': instance.signSignature,
-      'signatures': instance.signatures,
-      'blockId': instance.blockId,
-      'sequence': instance.sequence,
-      'ipfsHash': instance.ipfsHash,
-    };
+    TransactionStatusResponse instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  val['blockId'] = instance.blockId;
+  val['version'] = instance.version;
+  val['type'] = instance.type;
+  val['typeGroup'] = instance.typeGroup;
+  val['amount'] = instance.amount;
+  val['fee'] = instance.fee;
+  val['sender'] = instance.sender;
+  val['senderPublicKey'] = instance.senderPublicKey;
+  val['recipient'] = instance.recipient;
+  val['signature'] = instance.signature;
+  val['signSignature'] = instance.signSignature;
+  val['signatures'] = instance.signatures;
+  val['vendorField'] = instance.vendorField;
+  val['asset'] = instance.asset;
+  val['confirmations'] = instance.confirmations;
+  val['timestamp'] = instance.timestamp?.toJson();
+  val['nonce'] = instance.nonce;
+  return val;
+}
