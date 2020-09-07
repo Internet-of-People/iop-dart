@@ -156,6 +156,15 @@ class Result extends Struct {
     }
   }
 
+  int asInt64() {
+    final intPtr = asPointer<Int64>();
+    try {
+      return intPtr.value;
+    } finally {
+      free(intPtr);
+    }
+  }
+
   int asUint64() {
     final intPtr = asPointer<Uint64>();
     try {

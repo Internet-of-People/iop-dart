@@ -79,6 +79,9 @@ class PrivateKey implements Disposable {
 
   PrivateKey(this._ffi, this._owned);
 
+  // Only for JwtBuilder
+  Pointer<Void> get ffi => _ffi;
+
   static PrivateKey fromSecp(SecpPrivateKey secpSk) {
     final sk = DartApi.native.privateKey.fromSecp(secpSk.ffi);
     return PrivateKey(sk, true);

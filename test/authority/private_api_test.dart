@@ -1,4 +1,5 @@
 import 'package:http/http.dart';
+import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/entities.dart';
 import 'package:iop_sdk/utils.dart';
 import 'package:mockito/mockito.dart';
@@ -35,6 +36,15 @@ class MockApiConfig extends Mock implements ApiConfig {}
 
 class MockClient extends Mock implements Client {}
 
+Future<Response> jwtResp(Response response, Invocation req, PublicKey pk, { String contentId }) {
+  final authorizationHeader = req.namedArguments[#headers]['Authorization'].toString();
+  final token = authorizationHeader.replaceFirst('Bearer ', '');
+  final valid = validateJwtToken(token, pk, contentId: contentId);
+  pk.dispose();
+  return Future.value( valid ? response : resp('', code: 403) );
+}
+
+
 void main() {
   final client = MockClient();
   final config = MockApiConfig();
@@ -46,11 +56,12 @@ void main() {
 
   group('AuthorityPrivateApi', () {
     test('listRequests', () async {
+      final sk = TestVault.create().privateKey;
       when(
         client.get('$baseUrl/requests', headers: anyNamed('headers')),
-      ).thenAnswer((_) => Future.value(resp(requestsResponse)));
+      ).thenAnswer( (req) => jwtResp(resp(requestsResponse), req, sk.publicKey()) );
 
-      final r = await api.listRequests();
+      final r = await api.listRequests(sk);
       expect(r.length, 2);
       expect(
         r[0].capabilityLink,
@@ -90,20 +101,22 @@ void main() {
         client.get('$baseUrl/requests', headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
+      final sk = TestVault.create().privateKey;
       expect(
-        api.listRequests(),
+        api.listRequests(sk),
         throwsA(const TypeMatcher<HttpResponseError>()),
       );
     });
 
     test('getPrivateBlob', () async {
+      final sk = TestVault.create().privateKey;
       final id = ContentId('contentId');
       when(client.get(
         '$baseUrl/private-blob/${id.value}',
         headers: anyNamed('headers'),
-      )).thenAnswer((_) => Future.value(resp('BLOB')));
+      )).thenAnswer( (req) => jwtResp(resp('BLOB'), req, sk.publicKey()) );
 
-      final r = await api.getPrivateBlob(id);
+      final r = await api.getPrivateBlob(id, sk);
       expect(r.isPresent, true);
       expect(r.value, 'BLOB');
     });
@@ -115,7 +128,8 @@ void main() {
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 404)));
 
-      final r = await api.getPrivateBlob(id);
+      final sk = TestVault.create().privateKey;
+      final r = await api.getPrivateBlob(id, sk);
       expect(r.isPresent, false);
     });
 
@@ -126,13 +140,15 @@ void main() {
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 500)));
 
+      final sk = TestVault.create().privateKey;
       expect(
-        api.getPrivateBlob(id),
+        api.getPrivateBlob(id, sk),
         throwsA(const TypeMatcher<HttpResponseError>()),
       );
     });
 
     test('approveRequest', () async {
+      final sk = TestVault.create().privateKey;
       final link = CapabilityLink('link');
       final statement = TestVault.create().createSignedWitnessStatement();
       when(client.post(
@@ -140,10 +156,10 @@ void main() {
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
-        (_) => Future.value(resp('{"success": true}', code: 200)),
+        (req) => jwtResp(resp('{"success": true}', code: 200), req, sk.publicKey()),
       );
 
-      final rFut = api.approveRequest(link, statement);
+      final rFut = api.approveRequest(link, statement, sk);
       await expectLater(rFut, completes);
     });
 
@@ -158,21 +174,23 @@ void main() {
         (_) => Future.value(resp('', code: 500)),
       );
 
-      final rFut = api.approveRequest(link, statement);
+      final sk = TestVault.create().privateKey;
+      final rFut = api.approveRequest(link, statement, sk);
       await expectLater(rFut, throwsA(const TypeMatcher<HttpResponseError>()));
     });
 
     test('rejectRequest', () async {
+      final sk = TestVault.create().privateKey;
       final link = CapabilityLink('link');
       when(client.post(
         '$baseUrl/requests/${link.value}/reject',
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
-        (_) => Future.value(resp('', code: 200)),
+        (req) => jwtResp(resp('', code: 200), req, sk.publicKey()),
       );
 
-      await api.rejectRequest(link, '?');
+      await api.rejectRequest(link, '?', sk);
     });
 
     test('rejectRequest - not http200', () async {
@@ -185,8 +203,9 @@ void main() {
         (_) => Future.value(resp('', code: 500)),
       );
 
+      final sk = TestVault.create().privateKey;
       expect(
-        api.rejectRequest(link, '?'),
+        api.rejectRequest(link, '?', sk),
         throwsA(const TypeMatcher<HttpResponseError>()),
       );
     });

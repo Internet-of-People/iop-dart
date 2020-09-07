@@ -7,6 +7,8 @@ import 'package:iop_sdk/src/ffi/native_did.dart';
 import 'package:iop_sdk/src/ffi/native_hydra_plugin.dart';
 import 'package:iop_sdk/src/ffi/native_hydra_private.dart';
 import 'package:iop_sdk/src/ffi/native_hydra_public.dart';
+import 'package:iop_sdk/src/ffi/native_jwt_builder.dart';
+import 'package:iop_sdk/src/ffi/native_jwt_parser.dart';
 import 'package:iop_sdk/src/ffi/native_m_key_id.dart';
 import 'package:iop_sdk/src/ffi/native_m_private_key.dart';
 import 'package:iop_sdk/src/ffi/native_m_public_key.dart';
@@ -44,6 +46,8 @@ class NativeApi {
   final NativeHydraPlugin hydraPlugin;
   final NativeHydraPrivate hydraPrivate;
   final NativeHydraPublic hydraPublic;
+  final NativeJwtBuilder jwtBuilder;
+  final NativeJwtParser jwtParser;
   final NativeMKeyId keyId;
   final NativeMorpheusPlugin morpheusPlugin;
   final NativeMorpheusPrivate morpheusPrivate;
@@ -88,6 +92,8 @@ class NativeApi {
         hydraPlugin = NativeHydraPlugin(lib),
         hydraPrivate = NativeHydraPrivate(lib),
         hydraPublic = NativeHydraPublic(lib),
+        jwtBuilder = NativeJwtBuilder(lib),
+        jwtParser = NativeJwtParser(lib),
         keyId = NativeMKeyId(lib),
         privateKey = NativeMPrivateKey(lib),
         publicKey = NativeMPublicKey(lib),
@@ -135,10 +141,10 @@ class NativeApi {
         ),
         hydraTransferTx =
             lib.lookupFunction<NHydraTransferTx, DHydraTransferTx>(
-          'TxBuilder_hydraTransferTx',
+          'HydraTxBuilder_transfer',
         ),
         morpheusTx = lib.lookupFunction<NMorpheusTx, DMorpheusTx>(
-          'TxBuilder_morpheusTx',
+          'MorpheusTxBuilder_new',
         );
 }
 

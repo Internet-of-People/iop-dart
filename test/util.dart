@@ -6,16 +6,35 @@ import 'package:iop_sdk/ssi.dart';
 import 'package:iop_sdk/verifier.dart';
 import 'package:test/test.dart';
 
+
 Response resp(String body, {int code = 200}) {
   return Response(body, code);
 }
 
+bool validateJwtToken(String token, PublicKey publicKey, { String contentId }) {
+  try {
+    final parser = JwtParser.create(token);
+    var result = parser.publicKey.toString() == publicKey.toString();
+    if (contentId != null) {
+      result &= parser.contentId == contentId;
+    }
+    parser.dispose();
+    return result;
+  }
+  catch (e) {
+    print('Token validation failed: $e');
+    return false;
+  }
+}
+
+
 class TestVault {
   final MorpheusPrivate morpheusPrivate;
   final Did did;
+  final PrivateKey privateKey;
   final KeyId id;
 
-  TestVault._(this.morpheusPrivate, this.did, this.id);
+  TestVault._(this.morpheusPrivate, this.privateKey, this.did, this.id);
 
   DidData get didData => DidData(did.toString());
 
@@ -25,11 +44,12 @@ class TestVault {
     MorpheusPlugin.rewind(vault, unlockPassword);
     final morpheusPlugin = MorpheusPlugin.get(vault);
     final morpheusPrivate = morpheusPlugin.private(unlockPassword);
+    final privateKey = morpheusPrivate.personas.key(0).privateKey();
     final did = morpheusPrivate.personas.did(0);
     expect(did.toString(), 'did:morpheus:ezqztJ6XX6GDxdSgdiySiT3J');
     final id = did.defaultKeyId();
     expect(id.toString(), 'iezqztJ6XX6GDxdSgdiySiT3J');
-    return TestVault._(morpheusPrivate, did, id);
+    return TestVault._(morpheusPrivate, privateKey, did, id);
   }
 
   Signed<WitnessRequest> createSignedWitnessRequest() {
