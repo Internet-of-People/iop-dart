@@ -52,7 +52,7 @@ rm $ANDROID_JNILIBS_PATH/x86/Android-x86.zip
 
 # TODO consider autoextracting sdk version from our pubspec.yaml
 IOP_DEPENDENCY_NAME="iop_sdk"
-IOP_DEPENDENCY_LATEST_VERSION="3.1.1"
+IOP_DEPENDENCY_LATEST_VERSION="3.2.0"
 echo Checking IoP package dependency
 if ! grep -zqP "$IOP_DEPENDENCY_NAME:" $PROJECT_FILE
 then

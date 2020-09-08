@@ -72,13 +72,16 @@ void main() {
           nonce: nonce);
       print('Transaction ID: $txId');
 
-      await Future.delayed(
-          Duration(seconds: 12)); // it'll be included in the SDK Soon in 2020
-
       // layer-1 transaction must be confirmed
-      final txStatus = await layer1Api.getTxnStatus(txId);
+      var txStatus;
+      do {
+        await Future.delayed(Duration(seconds: 2));
+        txStatus = await layer1Api.getTxnStatus(txId);
+      } while (txStatus.isEmpty);
+
       print(
-          'Tx status: ${txStatus.value.toJson()}'); // the SDK uses optional's Optional result
+          'Tx status: ${txStatus.value
+              .toJson()}'); // the SDK uses optional's Optional result
 
       // now you can query from the layer-2 API as well!
       final layer2Api = Layer2Api(network);
