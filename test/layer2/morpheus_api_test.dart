@@ -13,7 +13,9 @@ void main() {
   final existingBeforeProof = ContentId(
     'cju6m5xQ-8oSsIY0k9qpOjFIFinmGTpdxw2siJnVPInLCg',
   );
-  final api = Layer2Api(Network.TestNet);
+  final api = Layer2Api.createMorpheusApi(
+    NetworkConfig.fromNetwork(Network.TestNet),
+  );
 
   group('api', () {
     test('getBeforeProofHistory', () async {

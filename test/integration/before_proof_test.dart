@@ -60,7 +60,7 @@ void main() {
               .getAttempts();
 
       // let's initialize our layer-1 API
-      final layer1Api = Layer1Api(network);
+      final layer1Api = Layer1Api.createApi(NetworkConfig.fromNetwork(network));
 
       // let's query and then increment the current nonce of the owner of the tx fee
       var nonce = await layer1Api.getWalletNonce(hydraGasPublicKey);
@@ -68,8 +68,10 @@ void main() {
 
       // and now you are ready to send it
       final txId = await layer1Api.sendMorpheusTxWithPassphrase(
-          opAttempts, hydraGasPassphrase,
-          nonce: nonce);
+        opAttempts,
+        hydraGasPassphrase,
+        nonce: nonce,
+      );
       print('Transaction ID: $txId');
 
       // layer-1 transaction must be confirmed
@@ -79,16 +81,17 @@ void main() {
         txStatus = await layer1Api.getTxnStatus(txId);
       } while (txStatus.isEmpty);
 
-      print(
-          'Tx status: ${txStatus.value
-              .toJson()}'); // the SDK uses optional's Optional result
+      // the SDK uses optional's Optional result
+      print('Tx status: ${txStatus.value.toJson()}');
 
       // now you can query from the layer-2 API as well!
-      final layer2Api = Layer2Api(network);
-      final dacTxStatus = await layer2Api.getTxnStatus(txId);
-      expect(dacTxStatus.isPresent, true);
-      print(
-          'DAC Tx status: ${dacTxStatus.value}'); // the SDK uses optional's Optional result
+      final layer2Api = Layer2Api.createMorpheusApi(
+        NetworkConfig.fromNetwork(network),
+      );
+      final ssiTxStatus = await layer2Api.getTxnStatus(txId);
+      expect(ssiTxStatus.isPresent, true);
+      // the SDK uses optional's Optional result
+      print('SSI Tx status: ${ssiTxStatus.value}');
 
       // we assume here that signedContract is in scope and available
       final expectedContentId = digestJson(signedContractJson);

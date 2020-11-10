@@ -4,7 +4,7 @@ import 'package:iop_sdk/network.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final api = Layer1Api(Network.TestNet);
+  final api = Layer1Api.createApi(NetworkConfig.fromNetwork(Network.TestNet));
 
   group('api', () {
     test('getNodeCryptoConfig', () async {

@@ -11,7 +11,7 @@ final walletPassphrase =
 void main() {
   group('token_transfer', () {
     test('with passphrase', () async {
-      final layer1Api = Layer1Api(network);
+      final layer1Api = Layer1Api.createApi(NetworkConfig.fromNetwork(network));
       final amount = 1e8 ~/ 10;
       final txId = await layer1Api.sendTransferTxWithPassphrase(
         walletPassphrase,
@@ -42,7 +42,7 @@ void main() {
       final senderAddress = firstHydKey.address;
       final hydraPrivate = hydraPlugin.private(unlockPassword);
 
-      final layer1Api = Layer1Api(network);
+      final layer1Api = Layer1Api.createApi(NetworkConfig.fromNetwork(network));
       final amount = 1e8 ~/ 10;
       final txId = await layer1Api.sendTransferTx(
         senderAddress,

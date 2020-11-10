@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:http/http.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/layer2.dart';
@@ -8,13 +9,17 @@ import 'package:iop_sdk/ssi.dart';
 import 'package:iop_sdk/utils.dart';
 import 'package:optional/optional.dart';
 
-class Layer2Api extends LayerApi {
-  Layer2Api(Network network) : super(network);
+class MorpheusApi {
+  final Client _client = Client();
+  final NetworkConfig _networkConfig;
+
+  MorpheusApi(this._networkConfig);
 
   Future<BeforeProofHistoryResponse> getBeforeProofHistory(
     ContentId contentId,
   ) async {
-    final resp = await layer2ApiGet('/before-proof/${contentId.value}/history');
+    final resp =
+        await _layer2ApiGet('/before-proof/${contentId.value}/history');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
@@ -25,14 +30,14 @@ class Layer2Api extends LayerApi {
   }
 
   Future<bool> beforeProofExists(ContentId contentId, {int height}) async {
-    final resp = await layer2ApiGet(
+    final resp = await _layer2ApiGet(
       _widthHeight('/before-proof/${contentId.value}/exists', height),
     );
     return json.decode(resp.body);
   }
 
   Future<DidDocument> getDidDocument(DidData did, {int height}) async {
-    final resp = await layer2ApiGet(
+    final resp = await _layer2ApiGet(
       _widthHeight('/did/${did.value}/document', height),
     );
 
@@ -46,7 +51,7 @@ class Layer2Api extends LayerApi {
   }
 
   Future<Optional<bool>> getTxnStatus(String txId) async {
-    final resp = await layer2ApiGet('/txn-status/$txId');
+    final resp = await _layer2ApiGet('/txn-status/$txId');
 
     if (resp.statusCode == HttpStatus.ok) {
       return Optional.of(json.decode(resp.body));
@@ -58,7 +63,7 @@ class Layer2Api extends LayerApi {
   }
 
   Future<String> getLastTxId(DidData did) async {
-    final resp = await layer2ApiGet('/did/${did.value}/transactions/last');
+    final resp = await _layer2ApiGet('/did/${did.value}/transactions/last');
 
     if (resp.statusCode == HttpStatus.ok) {
       return json.decode(resp.body)['transactionId'];
@@ -124,7 +129,7 @@ class Layer2Api extends LayerApi {
   Future<List<DryRunOperationError>> checkTransactionValidity(
     List<OperationData> operationAttempts,
   ) async {
-    final resp = await layer2ApiPost(
+    final resp = await _layer2ApiPost(
       '/check-transaction-validity',
       json.encode(operationAttempts),
     );
@@ -145,7 +150,7 @@ class Layer2Api extends LayerApi {
     int untilHeight,
   }) async {
     final path = includeAttempts ? 'operation-attempts' : 'operations';
-    final resp = await layer2ApiGet(
+    final resp = await _layer2ApiGet(
       _widthHeight('/did/${did.value}/$path/$fromHeight', untilHeight),
     );
 
@@ -167,7 +172,7 @@ class Layer2Api extends LayerApi {
     int untilHeight,
   }) async {
     final path = includeAttempts ? 'transaction-attempts' : 'transactions';
-    final resp = await layer2ApiGet(
+    final resp = await _layer2ApiGet(
       _widthHeight('/did/${did.value}/$path/$fromHeight', untilHeight),
     );
 
@@ -184,5 +189,24 @@ class Layer2Api extends LayerApi {
 
   String _widthHeight(String path, int height) {
     return height == null ? path : '$path/$height';
+  }
+
+  Future<Response> _layer2ApiGet(String path) async {
+    return _client.get(
+      '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+  }
+
+  Future<Response> _layer2ApiPost(String path, dynamic body) async {
+    return _client.post(
+      '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
   }
 }

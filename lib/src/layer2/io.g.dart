@@ -72,3 +72,77 @@ Map<String, dynamic> _$DryRunOperationErrorToJson<T extends OperationData>(
       'invalidOperationAttempt': _dataToJson(instance.invalidOperationAttempt),
       'message': instance.message,
     };
+
+DomainSubtreePolicies _$DomainSubtreePoliciesFromJson(
+    Map<String, dynamic> json) {
+  return DomainSubtreePolicies(
+    json['expiration'] as int,
+    json['schema'],
+  );
+}
+
+Map<String, dynamic> _$DomainSubtreePoliciesToJson(
+        DomainSubtreePolicies instance) =>
+    <String, dynamic>{
+      'expiration': instance.expiration,
+      'schema': instance.schema,
+    };
+
+DomainMetadata _$DomainMetadataFromJson(Map<String, dynamic> json) {
+  return DomainMetadata(
+    json['owner'] as String,
+    json['subtreePolicies'] == null
+        ? null
+        : DomainSubtreePolicies.fromJson(
+            json['subtreePolicies'] as Map<String, dynamic>),
+    _$enumDecodeNullable(
+        _$DomainRegistraionPolicyEnumMap, json['registraionPolicy']),
+    json['expiresAtHeight'] as int,
+  );
+}
+
+Map<String, dynamic> _$DomainMetadataToJson(DomainMetadata instance) =>
+    <String, dynamic>{
+      'owner': instance.owner,
+      'subtreePolicies': instance.subtreePolicies?.toJson(),
+      'registraionPolicy':
+          _$DomainRegistraionPolicyEnumMap[instance.registraionPolicy],
+      'expiresAtHeight': instance.expiresAtHeight,
+    };
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$DomainRegistraionPolicyEnumMap = {
+  DomainRegistraionPolicy.owner: 'owner',
+  DomainRegistraionPolicy.any: 'any',
+};

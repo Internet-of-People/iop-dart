@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:http/http.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/layer1.dart';
@@ -7,11 +8,17 @@ import 'package:iop_sdk/utils.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:optional/optional.dart';
 
-class Layer1Api extends LayerApi {
-  Layer1Api(Network network) : super(network);
+class Layer1Api {
+  final Client _client = Client();
+  final NetworkConfig _networkConfig;
+
+  Layer1Api._(this._networkConfig);
+
+  static Layer1Api createApi(NetworkConfig networkConfig) =>
+      Layer1Api._(networkConfig);
 
   Future<NodeCryptoConfigResponse> getNodeCryptoConfig() async {
-    final resp = await layer1ApiGet('/node/configuration/crypto');
+    final resp = await _layer1ApiGet('/node/configuration/crypto');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
@@ -22,7 +29,7 @@ class Layer1Api extends LayerApi {
   }
 
   Future<int> getCurrentHeight() async {
-    final resp = await layer1ApiGet('/blockchain');
+    final resp = await _layer1ApiGet('/blockchain');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
@@ -33,8 +40,137 @@ class Layer1Api extends LayerApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
+  Future<String> sendTransferTx(
+    String senderAddress,
+    String targetAddress,
+    int amountInFlake,
+    HydraPrivate hydraPrivate, {
+    int nonce,
+  }) async {
+    final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
+    nonce ??= (await getWalletNonce(senderAddress)) + 1;
+
+    final transferTx = DartApi.instance.hydraTransferTx(
+      _networkConfig.rustApiId,
+      senderBip44PubKey.publicKey().toString(),
+      targetAddress,
+      amountInFlake,
+      nonce,
+    );
+
+    final signedTx = hydraPrivate.signHydraTransaction(
+      senderAddress,
+      transferTx,
+    );
+
+    final resp = await sendTx(signedTx.toString());
+    return resp;
+  }
+
+  @Deprecated('Not red carpet methods are not used anymore. Use sendTransferTx')
+  Future<String> sendTransferTxWithPassphrase(
+    String passphrase,
+    String targetAddress,
+    int amountInFlake, {
+    int nonce,
+  }) async {
+    final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
+    final senderPubKey = secpPrivKey.publicKey().toString();
+    nonce ??= (await getWalletNonce(senderPubKey)) + 1;
+
+    final transferTx = DartApi.instance.hydraTransferTx(
+      _networkConfig.rustApiId,
+      senderPubKey,
+      targetAddress,
+      amountInFlake,
+      nonce,
+    );
+
+    final signedTx = secpPrivKey.signHydraTransaction(transferTx);
+
+    final resp = await sendTx(signedTx.toString());
+    return resp;
+  }
+
+  Future<String> sendVoteTx(
+    String fromAddress,
+    SecpPublicKey delegate,
+    HydraPrivate hydraPrivate, {
+    int nonce,
+  }) async {
+    // TODO
+  }
+
+  Future<String> sendUnvoteTx(
+    String fromAddress,
+    SecpPublicKey delegate,
+    HydraPrivate hydraPrivate, {
+    int nonce,
+  }) async {
+    // TODO
+  }
+
+  Future<String> sendMorpheusTx(
+    String senderAddress,
+    List<OperationData> attempts,
+    HydraPrivate hydraPrivate, {
+    int nonce,
+  }) async {
+    final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
+    nonce ??= (await getWalletNonce(senderAddress)) + 1;
+
+    final transferTx = DartApi.instance.morpheusTx(
+      _networkConfig.rustApiId,
+      senderBip44PubKey.publicKey().toString(),
+      attempts,
+      nonce,
+    );
+
+    final signedTx = hydraPrivate.signHydraTransaction(
+      senderAddress,
+      transferTx,
+    );
+
+    final resp = await sendTx(signedTx.toString());
+    return resp;
+  }
+
+  @Deprecated('Not red carpet methods are not used anymore. Use sendMorpheusTx')
+  Future<String> sendMorpheusTxWithPassphrase(
+    List<OperationData> attempts,
+    String passphrase, {
+    int nonce,
+  }) async {
+    final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
+    final senderPubKey = secpPrivKey.publicKey().toString();
+    nonce ??= (await getWalletNonce(senderPubKey)) + 1;
+
+    final transferTx = DartApi.instance.morpheusTx(
+      _networkConfig.rustApiId,
+      senderPubKey,
+      attempts,
+      nonce,
+    );
+
+    final signedTx = secpPrivKey.signHydraTransaction(transferTx);
+
+    final resp = await sendTx(signedTx.toString());
+    return resp;
+  }
+
+  // TODO
+  Future<String> sendCoeusTx(
+    String senderAddress,
+    List<Rust.UserOperation> attempts,
+    HydraPrivate hydraPrivate, {
+    int layer1SenderNonce,
+    int layer2PublicKeyNonce,
+  }) async {
+    return await sendTx(signedTx);
+  }
+
   Future<Optional<TransactionStatusResponse>> getTxnStatus(String txId) async {
-    final resp = await layer1ApiGet('/transactions/$txId');
+    final resp = await _layer1ApiGet('/transactions/$txId');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
@@ -47,7 +183,7 @@ class Layer1Api extends LayerApi {
   }
 
   Future<Optional<WalletResponse>> getWallet(String addressOrPublicKey) async {
-    final resp = await layer1ApiGet('/wallets/$addressOrPublicKey');
+    final resp = await _layer1ApiGet('/wallets/$addressOrPublicKey');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
@@ -69,97 +205,8 @@ class Layer1Api extends LayerApi {
     return wallet.isPresent ? int.parse(wallet.value.balance) : 0;
   }
 
-  Future<String> sendTransferTx(
-    String senderAddress,
-    String targetAddress,
-    int amountInFlake,
-    HydraPrivate hydraPrivate, {
-    int nonce,
-  }) async {
-    final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
-    nonce ??= (await getWalletNonce(senderAddress)) + 1;
-
-    final transferTx = DartApi.instance.hydraTransferTx(
-      network.RustApiId,
-      senderBip44PubKey.publicKey().toString(),
-      targetAddress,
-      amountInFlake,
-      nonce,
-    );
-
-    final signedTx =
-        hydraPrivate.signHydraTransaction(senderAddress, transferTx);
-
-    final resp = await sendSignedTx(signedTx.toString());
-    return resp;
-  }
-
-  Future<String> sendTransferTxWithPassphrase(
-    String passphrase,
-    String targetAddress,
-    int amountInFlake, {
-    int nonce,
-  }) async {
-    final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
-    final senderPubKey = secpPrivKey.publicKey().toString();
-    nonce ??= (await getWalletNonce(senderPubKey)) + 1;
-
-    final transferTx = DartApi.instance.hydraTransferTx(
-        network.RustApiId, senderPubKey, targetAddress, amountInFlake, nonce);
-
-    final signedTx = secpPrivKey.signHydraTransaction(transferTx);
-
-    final resp = await sendSignedTx(signedTx.toString());
-    return resp;
-  }
-
-  Future<String> sendMorpheusTx(
-    String senderAddress,
-    List<OperationData> attempts,
-    HydraPrivate hydraPrivate, {
-    int nonce,
-  }) async {
-    final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
-    nonce ??= (await getWalletNonce(senderAddress)) + 1;
-
-    final transferTx = DartApi.instance.morpheusTx(
-      network.RustApiId,
-      senderBip44PubKey.publicKey().toString(),
-      attempts,
-      nonce,
-    );
-
-    final signedTx =
-        hydraPrivate.signHydraTransaction(senderAddress, transferTx);
-
-    final resp = await sendSignedTx(signedTx.toString());
-    return resp;
-  }
-
-  Future<String> sendMorpheusTxWithPassphrase(
-    List<OperationData> attempts,
-    String passphrase, {
-    int nonce,
-  }) async {
-    final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
-    final senderPubKey = secpPrivKey.publicKey().toString();
-    nonce ??= (await getWalletNonce(senderPubKey)) + 1;
-
-    final transferTx = DartApi.instance.morpheusTx(
-      network.RustApiId,
-      senderPubKey,
-      attempts,
-      nonce,
-    );
-
-    final signedTx = secpPrivKey.signHydraTransaction(transferTx);
-
-    final resp = await sendSignedTx(signedTx.toString());
-    return resp;
-  }
-
-  Future<String> sendSignedTx(String signedTx) async {
-    final resp = await layer1ApiPost('/transactions', signedTx);
+  Future<String> sendTx(String signedTx) async {
+    final resp = await _layer1ApiPost('/transactions', signedTx);
 
     if (resp.statusCode != HttpStatus.ok) {
       return Future.error(HttpResponseError(resp.statusCode, resp.body));
@@ -182,5 +229,24 @@ class Layer1Api extends LayerApi {
       ));
     }
     return txResp.accept[0];
+  }
+
+  Future<Response> _layer1ApiPost(String path, dynamic body) async {
+    return _client.post(
+      '${_networkConfig.host}:${_networkConfig.port}/api/v2$path',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
+  }
+
+  Future<Response> _layer1ApiGet(String path) async {
+    return _client.get(
+      '${_networkConfig.host}:${_networkConfig.port}/api/v2$path',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
   }
 }

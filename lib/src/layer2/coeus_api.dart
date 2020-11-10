@@ -1,0 +1,73 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:http/http.dart';
+import 'package:iop_sdk/network.dart';
+import 'package:iop_sdk/utils.dart';
+import 'package:optional/optional.dart';
+
+import 'io.dart';
+
+class CoeusApi {
+  final Client _client = Client();
+  final NetworkConfig _networkConfig;
+
+  CoeusApi(this._networkConfig);
+
+  Future<Optional<dynamic>> resolve(String name) async {
+    final resp = await _layer2ApiGet('/resolve/$name');
+
+    if (resp.statusCode == HttpStatus.ok) {
+      return Optional.of(resp.body);
+    } else if (resp.statusCode == HttpStatus.notFound) {
+      return Optional.empty();
+    }
+
+    return Future.error(HttpResponseError(resp.statusCode, resp.body));
+  }
+
+  Future<Optional<DomainMetadata>> getMetadata(String name) async {
+    final resp = await _layer2ApiGet('/metadata/$name');
+
+    if (resp.statusCode == HttpStatus.ok) {
+      final body = json.decode(resp.body);
+      final metadata = DomainMetadata.fromJson(body);
+      return Optional.of(metadata);
+    } else if (resp.statusCode == HttpStatus.notFound) {
+      return Optional.empty();
+    }
+
+    return Future.error(HttpResponseError(resp.statusCode, resp.body));
+  }
+
+  Future<Optional<List<String>>> getChildren(String name) async {
+    final resp = await _layer2ApiGet('/children/$name');
+
+    if (resp.statusCode == HttpStatus.ok) {
+      return Optional.of(json.decode(resp.body) as List<String>);
+    } else if (resp.statusCode == HttpStatus.notFound) {
+      return Optional.empty();
+    }
+
+    return Future.error(HttpResponseError(resp.statusCode, resp.body));
+  }
+
+  Future<int> getLastNonce(String publicKey) async {
+    final resp = await _layer2ApiGet('/last-nonce/$publicKey');
+
+    if (resp.statusCode == HttpStatus.ok) {
+      return resp.body as int;
+    }
+
+    return Future.error(HttpResponseError(resp.statusCode, resp.body));
+  }
+
+  Future<Response> _layer2ApiGet(String path) async {
+    return _client.get(
+      '${_networkConfig.host}:${_networkConfig.port}/coeus/v1$path',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+  }
+}

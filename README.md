@@ -1,6 +1,6 @@
 # IOP SDK
 
-This package contains all Dart tool you need to interact with IOP DAC and Fort APIs and create awesome apps. For more info please visit the [IOP Developer Portal](https://developer.iop.global/).
+This package contains all Dart tool you need to interact with IOP SSI (project Morpheus) and DNS (project Coeus) APIs and create awesome apps. For more info please visit the [IOP Developer Portal](https://developer.iop.global/).
 
 This SDK will improve over time to be able to use it more easily.
 
@@ -32,7 +32,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  iop_sdk: ^3.2.0
+  iop_sdk: ^4.0.0
 ```
 
 ## Modules
@@ -47,9 +47,9 @@ As Dart finalizers are [not ready yet](https://github.com/dart-lang/sdk/issues/3
 
 ##### Dynamic Libraries and OS Support
 
-As we use our Rust code through its C-based FFI, we have to use dynamic libraries included as binaries loaded dynamically on demand.
+As we use our Rust codes through its C-based FFI, we have to use dynamic libraries included as binaries loaded dynamically on demand.
 
-Currently we support only Linux and MacOS, but we are preparing Android, iOS and Windows support as well.
+Currently, we support only Linux and MacOS, but we are preparing Android, iOS and Windows support as well.
 
 ### Entities
 
@@ -57,7 +57,7 @@ Currently we support only Linux and MacOS, but we are preparing Android, iOS and
 
 All interfaces and types that are needed to communicate with an Authority endpoint. Authorities have two types of APIs, a public and a private as described below.
 
-See more about the Authorities API [here](https://developer.iop.global/#/api/authority_api)
+See more about the Authorities API [here](https://developer.iop.global/api/authority_api)
 
 ##### Public API
 
@@ -69,29 +69,29 @@ The Private API is available with authentication only and used mostly by interna
 
 #### Inspector
 
-All interfaces and types needed to communicate with an Inspector endpoint. See more about the Inspector API [here](https://developer.iop.global/#/api/inspector_api).
+All interfaces and types needed to communicate with an Inspector endpoint. See more about the Inspector API [here](https://developer.iop.global/api/inspector_api).
 
 #### Verifier
 
-All interfaces and types needed to communicate with a Verifier endpoint. See more about the Verifier API [here](https://developer.iop.global/#/api/verifier_api).
+All interfaces and types needed to communicate with a Verifier endpoint. See more about the Verifier API [here](https://developer.iop.global/api/verifier_api).
 
 ### Layer1
 
-DAC's API consists of two main parts. Layer-1 and layer-2. On layer-1 you perform write operations that change the blockchain's state, while on layer-2 you execute read operations without touching the state.
+SSI's API consists of two main parts. Layer-1 and layer-2. On layer-1 you perform write operations that change the blockchain's state, while on layer-2 you execute read operations without touching the state.
 
-This module contains all Dart classes and utils needed to interact with the [DAC Layer-1 API](https://developer.iop.global/#/api/layer1_api). 
+This module contains all Dart classes and utils needed to interact with the [SSI Layer-1 API](https://developer.iop.global/api/layer1_api). 
 
-For more detailed examples please visit our [tutorial center](https://developer.iop.global/#/sdk/dac?id=tutorial-center).
+For more detailed examples please visit our [tutorial center](https://developer.iop.global/sdk/?id=tutorial-center).
 
 ### Layer2
 
-This module contains all Dart classes and utils needed to interact with the [DAC Layer-2 API](https://developer.iop.global/#/api/layer2_api). 
+This module contains all Dart classes and utils needed to interact with the [Layer-2 API](https://developer.iop.global/api/layer2_api). 
 
-For more detailed examples please visit our [tutorial center](https://developer.iop.global/#/sdk/dac?id=tutorial-center).
+For more detailed examples please visit our [tutorial center](https://developer.iop.global/sdk/?id=tutorial-center).
 
 ### SSI
 
-Contains all interfaces needed to use the DAC (Morpheus) protocol including all entities defined in the specification.
+Contains all interfaces needed to use the SSI (project Morpheus) protocol including all entities defined in the specification.
 
 ## Development
 

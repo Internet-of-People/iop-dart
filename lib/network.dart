@@ -5,8 +5,24 @@ enum Network {
   MainNet,
 }
 
+class NetworkConfig {
+  final String host;
+  final int port;
+  final String rustApiId;
+
+  NetworkConfig._(this.host, this.port, this.rustApiId);
+
+  static NetworkConfig fromUrl(String host, int port, Network network) {
+    return NetworkConfig._(host, port, network.rustApiId);
+  }
+
+  static NetworkConfig fromNetwork(Network network, {port = 4705}) {
+    return NetworkConfig._(network.seedServerUrlBase, port, network.rustApiId);
+  }
+}
+
 extension NetworkProperties on Network {
-  String get RustApiId => const {
+  String get rustApiId => const {
         Network.LocalTestNet: 'HYD testnet',
         Network.TestNet: 'HYD testnet',
         Network.DevNet: 'HYD devnet',
@@ -19,8 +35,4 @@ extension NetworkProperties on Network {
         Network.DevNet: 'https://dev.hydra.iop.global',
         Network.MainNet: 'https://hydra.iop.global',
       }[this];
-
-  String get layer1ApiUrl => seedServerUrlBase + ':4705/api/v2';
-
-  String get layer2ApiUrl => seedServerUrlBase + ':4705/morpheus/v1';
 }
