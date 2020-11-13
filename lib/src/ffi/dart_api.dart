@@ -16,7 +16,7 @@ class DartApi implements Disposable {
 
   static DartApi get instance {
     if (_instance == null) {
-      final api = NativeApi.load('./libmorpheus_core.so');
+      final api = NativeApi.load('./libiop_sdk_ffi.so');
       _instance = DartApi._(api);
     }
 

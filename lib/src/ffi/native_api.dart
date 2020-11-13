@@ -3,6 +3,10 @@ import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 import 'package:iop_sdk/src/ffi/native_bip44_key.dart';
 import 'package:iop_sdk/src/ffi/native_bip44_public_key.dart';
+import 'package:iop_sdk/src/ffi/native_coeus_bundle.dart';
+import 'package:iop_sdk/src/ffi/native_coeus_operation.dart';
+import 'package:iop_sdk/src/ffi/native_coeus_policy.dart';
+import 'package:iop_sdk/src/ffi/native_coeus_tx.dart';
 import 'package:iop_sdk/src/ffi/native_did.dart';
 import 'package:iop_sdk/src/ffi/native_hydra_plugin.dart';
 import 'package:iop_sdk/src/ffi/native_hydra_private.dart';
@@ -42,6 +46,12 @@ import 'package:iop_sdk/src/ffi/native_vault.dart';
 class NativeApi {
   final NativeBip44Key bip44Key;
   final NativeBip44PublicKey bip44PublicKey;
+  final NativeCoeusNoncedBundle coeusNoncedBundle;
+  final NativeCoeusNoncedBundleBuilder coeusNoncedBundleBuilder;
+  final NativeCoeusSignedBundle coeusSignedBundle;
+  final NativeCoeusSubtreePolicies coeusSubtreePolicies;
+  final NativeCoeusTxBuilder coeusTxBuilder;
+  final NativeCoeusUserOperation coeusUserOperation;
   final NativeDid did;
   final NativeHydraPlugin hydraPlugin;
   final NativeHydraPrivate hydraPrivate;
@@ -88,6 +98,12 @@ class NativeApi {
   NativeApi._(DynamicLibrary lib)
       : bip44Key = NativeBip44Key(lib),
         bip44PublicKey = NativeBip44PublicKey(lib),
+        coeusNoncedBundle = NativeCoeusNoncedBundle(lib),
+        coeusNoncedBundleBuilder = NativeCoeusNoncedBundleBuilder(lib),
+        coeusSignedBundle = NativeCoeusSignedBundle(lib),
+        coeusSubtreePolicies = NativeCoeusSubtreePolicies(lib),
+        coeusTxBuilder = NativeCoeusTxBuilder(lib),
+        coeusUserOperation = NativeCoeusUserOperation(lib),
         did = NativeDid(lib),
         hydraPlugin = NativeHydraPlugin(lib),
         hydraPrivate = NativeHydraPrivate(lib),
