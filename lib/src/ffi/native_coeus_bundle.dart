@@ -8,20 +8,20 @@ typedef DDelete_NoncedBundleBuilder = void Function(Pointer<Void> builder);
 typedef NNoncedBundleBuilder_New = Pointer<Void> Function();
 typedef DNoncedBundleBuilder_New = Pointer<Void> Function();
 
-typedef NNoncedBundleBuilder_Add = Pointer<Result> Function(
+typedef NNoncedBundleBuilder_Add = Void Function(
   Pointer<Void> builder,
   Pointer<Void> userOperation,
 );
-typedef DNoncedBundleBuilder_Add = Pointer<Result> Function(
+typedef DNoncedBundleBuilder_Add = void Function(
   Pointer<Void> builder,
   Pointer<Void> userOperation,
 );
 
-typedef NNoncedBundleBuilder_Build = Pointer<Result> Function(
+typedef NNoncedBundleBuilder_Build = Pointer<Void> Function(
   Pointer<Void> builder,
   Int64 nonce,
 );
-typedef DNoncedBundleBuilder_Build = Pointer<Result> Function(
+typedef DNoncedBundleBuilder_Build = Pointer<Void> Function(
   Pointer<Void> builder,
   int nonce,
 );

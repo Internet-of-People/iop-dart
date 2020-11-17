@@ -5,7 +5,6 @@ import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 
-
 class SubtreePolicies implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
@@ -49,7 +48,6 @@ class SubtreePolicies implements Disposable {
   }
 }
 
-
 class UserOperation implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
@@ -59,15 +57,20 @@ class UserOperation implements Disposable {
 
   UserOperation(this._ffi, this._owned);
 
-  UserOperation register(String domainName, String owner, SubtreePolicies subtreePolicies,
-        String data, int expiresAtHeight)
-  {
+  factory UserOperation.register(
+    String domainName,
+    String owner,
+    SubtreePolicies subtreePolicies,
+    String data,
+    int expiresAtHeight,
+  ) {
     final nativeDomainName = Utf8.toUtf8(domainName);
     final nativeOwner = Utf8.toUtf8(owner);
     final nativeData = Utf8.toUtf8(data);
     try {
       final op = DartApi.native.coeusUserOperation
-          .opRegister(nativeDomainName, nativeOwner, subtreePolicies._ffi, nativeData, expiresAtHeight)
+          .opRegister(nativeDomainName, nativeOwner, subtreePolicies._ffi,
+              nativeData, expiresAtHeight)
           .extract((res) => res.asPointer<Void>());
       return UserOperation(op, true);
     } finally {
@@ -91,7 +94,7 @@ class UserOperation implements Disposable {
     }
   }
 
-  UserOperation renew(String domainName, int expiresAtHeight) {
+  factory UserOperation.renew(String domainName, int expiresAtHeight) {
     final nativeDomainName = Utf8.toUtf8(domainName);
     try {
       final op = DartApi.native.coeusUserOperation
@@ -103,7 +106,7 @@ class UserOperation implements Disposable {
     }
   }
 
-  UserOperation transfer(String domainName, String toOwner) {
+  factory UserOperation.transfer(String domainName, String toOwner) {
     final nativeDomainName = Utf8.toUtf8(domainName);
     final nativeToOwner = Utf8.toUtf8(toOwner);
     try {
@@ -117,7 +120,7 @@ class UserOperation implements Disposable {
     }
   }
 
-  UserOperation delete(String domainName) {
+  factory UserOperation.delete(String domainName) {
     final nativeDomainName = Utf8.toUtf8(domainName);
     try {
       final op = DartApi.native.coeusUserOperation

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
+import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/utils.dart';
 import 'package:optional/optional.dart';
@@ -16,9 +17,9 @@ class CoeusApi {
 
   Future<Optional<dynamic>> resolve(String name) async {
     final resp = await _layer2ApiGet('/resolve/$name');
-
     if (resp.statusCode == HttpStatus.ok) {
-      return Optional.of(resp.body);
+      final body = json.decode(resp.body);
+      return Optional.of(body['data']);
     } else if (resp.statusCode == HttpStatus.notFound) {
       return Optional.empty();
     }
@@ -52,11 +53,11 @@ class CoeusApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<int> getLastNonce(String publicKey) async {
-    final resp = await _layer2ApiGet('/last-nonce/$publicKey');
+  Future<int> getLastNonce(PublicKey publicKey) async {
+    final resp = await _layer2ApiGet('/last-nonce/${publicKey.toString()}');
 
     if (resp.statusCode == HttpStatus.ok) {
-      return resp.body as int;
+      return int.parse(json.decode(resp.body)['nonce']);
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));

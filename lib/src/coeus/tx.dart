@@ -2,10 +2,10 @@ import 'dart:ffi';
 
 import 'package:iop_sdk/crypto.dart';
 import 'package:ffi/ffi.dart';
+import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/src/coeus/bundle.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
-
 
 class CoeusTxBuilder implements Disposable {
   Pointer<Void> _ffi;
@@ -13,8 +13,8 @@ class CoeusTxBuilder implements Disposable {
 
   CoeusTxBuilder(this._ffi, this._owned);
 
-  factory CoeusTxBuilder.create(String network) {
-    final nativeNetwork = Utf8.toUtf8(network);
+  factory CoeusTxBuilder.create(Network network) {
+    final nativeNetwork = Utf8.toUtf8(network.networkNativeName);
     try {
       final builder = DartApi.native.coeusTxBuilder
           .create(nativeNetwork)
@@ -25,7 +25,7 @@ class CoeusTxBuilder implements Disposable {
     }
   }
 
-  String build(SignedBundle bundle, PublicKey senderPublicKey, int nonce) {
+  String build(SignedBundle bundle, SecpPublicKey senderPublicKey, int nonce) {
     return DartApi.native.coeusTxBuilder
         .build(_ffi, bundle.ffi, senderPublicKey.ffi, nonce)
         .extract((res) => res.asString);

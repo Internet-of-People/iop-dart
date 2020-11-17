@@ -11,7 +11,7 @@ class HydraPlugin implements Disposable {
   static void rewind(
       Vault vault, String unlockPassword, Network network, int account) {
     final nativePwd = Utf8.toUtf8(unlockPassword);
-    final nativeNet = Utf8.toUtf8(network.rustApiId);
+    final nativeNet = Utf8.toUtf8(network.networkNativeName);
     try {
       return DartApi.native.hydraPlugin
           .rewind(vault.ffi, nativePwd, nativeNet, account)
@@ -23,7 +23,7 @@ class HydraPlugin implements Disposable {
   }
 
   static HydraPlugin get(Vault vault, Network network, int account) {
-    final nativeNet = Utf8.toUtf8(network.rustApiId);
+    final nativeNet = Utf8.toUtf8(network.networkNativeName);
     try {
       final ffiPlugin = DartApi.native.hydraPlugin
           .get(vault.ffi, nativeNet, account)
@@ -117,7 +117,7 @@ class HydraPrivate implements Disposable {
     return Bip44Key(ffiKey, true);
   }
 
-  Bip44Key keyByPk(SecpPublicKey secpPk) {
+  Bip44Key keyByPublicKey(SecpPublicKey secpPk) {
     final ffiKey = DartApi.native.hydraPrivate
         .keyByPk(_ffi, secpPk.ffi)
         .extract((resp) => resp.asPointer<Void>());

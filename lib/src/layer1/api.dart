@@ -2,6 +2,10 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:iop_sdk/crypto.dart';
+import 'package:iop_sdk/layer2.dart';
+import 'package:iop_sdk/src/coeus/bundle.dart';
+import 'package:iop_sdk/src/coeus/operation.dart';
+import 'package:iop_sdk/src/coeus/tx.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/utils.dart';
@@ -51,7 +55,7 @@ class Layer1Api {
     nonce ??= (await getWalletNonce(senderAddress)) + 1;
 
     final transferTx = DartApi.instance.hydraTransferTx(
-      _networkConfig.rustApiId,
+      _networkConfig.network.networkNativeName,
       senderBip44PubKey.publicKey().toString(),
       targetAddress,
       amountInFlake,
@@ -79,7 +83,7 @@ class Layer1Api {
     nonce ??= (await getWalletNonce(senderPubKey)) + 1;
 
     final transferTx = DartApi.instance.hydraTransferTx(
-      _networkConfig.rustApiId,
+      _networkConfig.network.networkNativeName,
       senderPubKey,
       targetAddress,
       amountInFlake,
@@ -120,7 +124,7 @@ class Layer1Api {
     nonce ??= (await getWalletNonce(senderAddress)) + 1;
 
     final transferTx = DartApi.instance.morpheusTx(
-      _networkConfig.rustApiId,
+      _networkConfig.network.networkNativeName,
       senderBip44PubKey.publicKey().toString(),
       attempts,
       nonce,
@@ -131,8 +135,7 @@ class Layer1Api {
       transferTx,
     );
 
-    final resp = await sendTx(signedTx.toString());
-    return resp;
+    return await sendTx(signedTx.toString());
   }
 
   @Deprecated('Not red carpet methods are not used anymore. Use sendMorpheusTx')
@@ -146,7 +149,7 @@ class Layer1Api {
     nonce ??= (await getWalletNonce(senderPubKey)) + 1;
 
     final transferTx = DartApi.instance.morpheusTx(
-      _networkConfig.rustApiId,
+      _networkConfig.network.networkNativeName,
       senderPubKey,
       attempts,
       nonce,
@@ -158,16 +161,35 @@ class Layer1Api {
     return resp;
   }
 
-  // TODO
-  /*Future<String> sendCoeusTx(
-    String senderAddress,
-    List<Rust.UserOperation> attempts,
+  Future<String> sendCoeusTx(
+    String fromAddress,
+    List<UserOperation> userOperations,
     HydraPrivate hydraPrivate, {
     int layer1SenderNonce,
     int layer2PublicKeyNonce,
   }) async {
-    return await sendTx(signedTx);
-  }*/
+    // TODO: we have to get the nonce from somewhere else rather using layer2api
+    final layer2Api = Layer2Api.createCoeusApi(_networkConfig);
+    layer1SenderNonce ??= (await getWalletNonce(fromAddress)) + 1;
+
+    final secpPubKey = hydraPrivate.public.keyByAddress(fromAddress).publicKey();
+    final secpPrivKey = hydraPrivate.keyByPublicKey(secpPubKey).privateKey();
+    final noncedBuilder = NoncedBundleBuilder.create();
+    userOperations.forEach((element) => noncedBuilder.add(element));
+
+    layer2PublicKeyNonce ??= (await layer2Api.getLastNonce(PublicKey.fromSecp(secpPubKey))) + 1;
+    final noncedBundle = noncedBuilder.build(layer2PublicKeyNonce);
+    final signedBundle = noncedBundle.sign(PrivateKey.fromSecp(secpPrivKey));
+
+    final tx = CoeusTxBuilder.create(_networkConfig.network).build(
+      signedBundle,
+      secpPubKey,
+      layer1SenderNonce,
+    );
+
+    final signedTx = secpPrivKey.signHydraTransaction(tx);
+    return await sendTx(signedTx.toString());
+  }
 
   Future<Optional<TransactionStatusResponse>> getTxnStatus(String txId) async {
     final resp = await _layer1ApiGet('/transactions/$txId');

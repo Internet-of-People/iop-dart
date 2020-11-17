@@ -8,21 +8,21 @@ enum Network {
 class NetworkConfig {
   final String host;
   final int port;
-  final String rustApiId;
+  final Network network;
 
-  NetworkConfig._(this.host, this.port, this.rustApiId);
+  NetworkConfig._(this.host, this.port, this.network);
 
   static NetworkConfig fromUrl(String host, int port, Network network) {
-    return NetworkConfig._(host, port, network.rustApiId);
+    return NetworkConfig._(host, port, network);
   }
 
   static NetworkConfig fromNetwork(Network network, {port = 4705}) {
-    return NetworkConfig._(network.seedServerUrlBase, port, network.rustApiId);
+    return NetworkConfig._(network.seedServerUrlBase, port, network);
   }
 }
 
 extension NetworkProperties on Network {
-  String get rustApiId => const {
+  String get networkNativeName => const {
         Network.LocalTestNet: 'HYD testnet',
         Network.TestNet: 'HYD testnet',
         Network.DevNet: 'HYD devnet',

@@ -17,14 +17,12 @@ class NoncedBundleBuilder implements Disposable {
 
   void add(UserOperation userOperation) {
     DartApi.native.coeusNoncedBundleBuilder
-        .add(_ffi, userOperation.ffi)
-        .extract((res) => res.asVoid);
+        .add(_ffi, userOperation.ffi);
   }
 
   NoncedBundle build(int nonce) {
     final policies = DartApi.native.coeusNoncedBundleBuilder
-        .build(_ffi, nonce)
-        .extract((res) => res.asPointer<Void>());
+        .build(_ffi, nonce);
     return NoncedBundle(policies, true);
   }
 
