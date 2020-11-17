@@ -3,7 +3,7 @@
 LIB_ZIP_FILENAME="Linux-x86.zip"
 
 echo Checking presence of Morpheus shared library binary
-if [ ! -e libmorpheus_core.so ]; then
+if [ ! -e libiop_sdk_ffi.so ]; then
   echo Downloading Morpheus shared library binary
   curl --proto '=https' --tlsv1.2 -#L -o $LIB_ZIP_FILENAME \
     https://github.com/Internet-of-People/morpheus-rust/releases/latest/download/$LIB_ZIP_FILENAME

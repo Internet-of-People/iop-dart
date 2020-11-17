@@ -3,18 +3,32 @@ import 'package:json_annotation/json_annotation.dart';
 part 'io.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class SendTransactionResponse {
+class SendTransactionResponseData {
   final List<String> accept;
   final List<String> broadcast;
   final List<String> excess;
   final List<String> invalid;
-  final List<String> errors;
 
-  SendTransactionResponse(
+  SendTransactionResponseData(
     this.accept,
     this.broadcast,
     this.excess,
     this.invalid,
+  );
+
+  factory SendTransactionResponseData.fromJson(Map<String, dynamic> json) =>
+      _$SendTransactionResponseDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SendTransactionResponseDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SendTransactionResponse {
+  final SendTransactionResponseData data;
+  final dynamic errors;
+
+  SendTransactionResponse(
+    this.data,
     this.errors,
   );
 

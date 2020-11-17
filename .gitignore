@@ -2,4 +2,4 @@
 .idea
 .packages
 pubspec.lock
-libmorpheus_core.so
+libiop_sdk_ffi.so

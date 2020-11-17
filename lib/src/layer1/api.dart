@@ -159,7 +159,7 @@ class Layer1Api {
   }
 
   // TODO
-  Future<String> sendCoeusTx(
+  /*Future<String> sendCoeusTx(
     String senderAddress,
     List<Rust.UserOperation> attempts,
     HydraPrivate hydraPrivate, {
@@ -167,7 +167,7 @@ class Layer1Api {
     int layer2PublicKeyNonce,
   }) async {
     return await sendTx(signedTx);
-  }
+  }*/
 
   Future<Optional<TransactionStatusResponse>> getTxnStatus(String txId) async {
     final resp = await _layer1ApiGet('/transactions/$txId');
@@ -213,22 +213,22 @@ class Layer1Api {
     }
 
     final body = json.decode(resp.body);
-    final txResp = SendTransactionResponse.fromJson(body['data']);
+    final txResp = SendTransactionResponse.fromJson(body);
 
-    if (txResp.invalid.isNotEmpty) {
+    if (txResp.data.invalid.isNotEmpty) {
       return Future.error(HttpResponseError(
         resp.statusCode,
         'Transaction failed: ${json.encode(txResp.errors)}',
       ));
     }
 
-    if (txResp.accept.length > 1) {
+    if (txResp.data.accept.length > 1) {
       return Future.error(HttpResponseError(
         resp.statusCode,
-        'sendTx expected 1 accepted tx, got ${txResp.accept.length}. Response: ${resp.body}',
+        'sendTx expected 1 accepted tx, got ${txResp.data.accept.length}. Response: ${resp.body}',
       ));
     }
-    return txResp.accept[0];
+    return txResp.data.accept[0];
   }
 
   Future<Response> _layer1ApiPost(String path, dynamic body) async {

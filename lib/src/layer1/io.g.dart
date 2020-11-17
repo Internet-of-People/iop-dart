@@ -6,24 +6,40 @@ part of 'io.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SendTransactionResponse _$SendTransactionResponseFromJson(
+SendTransactionResponseData _$SendTransactionResponseDataFromJson(
     Map<String, dynamic> json) {
-  return SendTransactionResponse(
+  return SendTransactionResponseData(
     (json['accept'] as List)?.map((e) => e as String)?.toList(),
     (json['broadcast'] as List)?.map((e) => e as String)?.toList(),
     (json['excess'] as List)?.map((e) => e as String)?.toList(),
     (json['invalid'] as List)?.map((e) => e as String)?.toList(),
-    (json['errors'] as List)?.map((e) => e as String)?.toList(),
+  );
+}
+
+Map<String, dynamic> _$SendTransactionResponseDataToJson(
+        SendTransactionResponseData instance) =>
+    <String, dynamic>{
+      'accept': instance.accept,
+      'broadcast': instance.broadcast,
+      'excess': instance.excess,
+      'invalid': instance.invalid,
+    };
+
+SendTransactionResponse _$SendTransactionResponseFromJson(
+    Map<String, dynamic> json) {
+  return SendTransactionResponse(
+    json['data'] == null
+        ? null
+        : SendTransactionResponseData.fromJson(
+            json['data'] as Map<String, dynamic>),
+    json['errors'],
   );
 }
 
 Map<String, dynamic> _$SendTransactionResponseToJson(
         SendTransactionResponse instance) =>
     <String, dynamic>{
-      'accept': instance.accept,
-      'broadcast': instance.broadcast,
-      'excess': instance.excess,
-      'invalid': instance.invalid,
+      'data': instance.data?.toJson(),
       'errors': instance.errors,
     };
 
