@@ -23,19 +23,14 @@ class SubtreePolicies implements Disposable {
       return SubtreePolicies(policies, true);
     } finally {
       free(nativeSchema);
-      // dispose(); // TODO Should be done automatically by Dart
     }
   }
 
   SubtreePolicies withExpiration(int maxExpiryBlocks) {
-    try {
-      final policies = DartApi.native.coeusSubtreePolicies
-          .withExpiration(_ffi, maxExpiryBlocks)
-          .extract((res) => res.asPointer<Void>());
-      return SubtreePolicies(policies, true);
-    } finally {
-      // dispose(); // TODO Should be done automatically by Dart
-    }
+    final policies = DartApi.native.coeusSubtreePolicies
+        .withExpiration(_ffi, maxExpiryBlocks)
+        .extract((res) => res.asPointer<Void>());
+    return SubtreePolicies(policies, true);
   }
 
   @override
@@ -59,13 +54,13 @@ class UserOperation implements Disposable {
 
   factory UserOperation.register(
     String domainName,
-    String owner,
+    PublicKey owner,
     SubtreePolicies subtreePolicies,
     String data,
     int expiresAtHeight,
   ) {
     final nativeDomainName = Utf8.toUtf8(domainName);
-    final nativeOwner = Utf8.toUtf8(owner);
+    final nativeOwner = Utf8.toUtf8(owner.toString());
     final nativeData = Utf8.toUtf8(data);
     try {
       final op = DartApi.native.coeusUserOperation
@@ -106,9 +101,9 @@ class UserOperation implements Disposable {
     }
   }
 
-  factory UserOperation.transfer(String domainName, String toOwner) {
+  factory UserOperation.transfer(String domainName, PublicKey toOwner) {
     final nativeDomainName = Utf8.toUtf8(domainName);
-    final nativeToOwner = Utf8.toUtf8(toOwner);
+    final nativeToOwner = Utf8.toUtf8(toOwner.toString());
     try {
       final op = DartApi.native.coeusUserOperation
           .opTransfer(nativeDomainName, nativeToOwner)

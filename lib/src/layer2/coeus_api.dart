@@ -15,11 +15,11 @@ class CoeusApi {
 
   CoeusApi(this._networkConfig);
 
-  Future<Optional<dynamic>> resolve(String name) async {
+  Future<Optional<String>> resolve(String name) async {
     final resp = await _layer2ApiGet('/resolve/$name');
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
-      return Optional.of(body['data']);
+      return Optional.of(json.encode(body['data']));
     } else if (resp.statusCode == HttpStatus.notFound) {
       return Optional.empty();
     }
@@ -45,7 +45,10 @@ class CoeusApi {
     final resp = await _layer2ApiGet('/children/$name');
 
     if (resp.statusCode == HttpStatus.ok) {
-      return Optional.of(json.decode(resp.body) as List<String>);
+      final body = json.decode(resp.body);
+      final children =
+          (body['children'] as List<dynamic>).map((e) => e as String).toList();
+      return Optional.of(children);
     } else if (resp.statusCode == HttpStatus.notFound) {
       return Optional.empty();
     }

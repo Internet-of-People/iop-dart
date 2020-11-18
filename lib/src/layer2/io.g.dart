@@ -96,7 +96,7 @@ DomainMetadata _$DomainMetadataFromJson(Map<String, dynamic> json) {
         : DomainSubtreePolicies.fromJson(
             json['subtreePolicies'] as Map<String, dynamic>),
     _$enumDecodeNullable(
-        _$DomainRegistraionPolicyEnumMap, json['registraionPolicy']),
+        _$DomainRegistrationPolicyEnumMap, json['registrationPolicy']),
     json['expiresAtHeight'] as int,
   );
 }
@@ -105,8 +105,8 @@ Map<String, dynamic> _$DomainMetadataToJson(DomainMetadata instance) =>
     <String, dynamic>{
       'owner': instance.owner,
       'subtreePolicies': instance.subtreePolicies?.toJson(),
-      'registraionPolicy':
-          _$DomainRegistraionPolicyEnumMap[instance.registraionPolicy],
+      'registrationPolicy':
+          _$DomainRegistrationPolicyEnumMap[instance.registrationPolicy],
       'expiresAtHeight': instance.expiresAtHeight,
     };
 
@@ -142,7 +142,7 @@ T _$enumDecodeNullable<T>(
   return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
-const _$DomainRegistraionPolicyEnumMap = {
-  DomainRegistraionPolicy.owner: 'owner',
-  DomainRegistraionPolicy.any: 'any',
+const _$DomainRegistrationPolicyEnumMap = {
+  DomainRegistrationPolicy.owner: 'owner',
+  DomainRegistrationPolicy.any: 'any',
 };

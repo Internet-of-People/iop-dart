@@ -83,18 +83,26 @@ class DomainSubtreePolicies {
   Map<String, dynamic> toJson() => _$DomainSubtreePoliciesToJson(this);
 }
 
-enum DomainRegistraionPolicy {
-  owner, any
+enum DomainRegistrationPolicy {
+  @JsonValue('owner')
+  owner,
+  @JsonValue('any')
+  any,
 }
 
 @JsonSerializable(explicitToJson: true)
 class DomainMetadata {
   final String owner;
   final DomainSubtreePolicies subtreePolicies;
-  final DomainRegistraionPolicy registraionPolicy;
+  final DomainRegistrationPolicy registrationPolicy;
   final int expiresAtHeight;
 
-  DomainMetadata(this.owner, this.subtreePolicies, this.registraionPolicy, this.expiresAtHeight);
+  DomainMetadata(
+    this.owner,
+    this.subtreePolicies,
+    this.registrationPolicy,
+    this.expiresAtHeight,
+  );
 
   factory DomainMetadata.fromJson(Map<String, dynamic> json) =>
       _$DomainMetadataFromJson(json);
