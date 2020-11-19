@@ -8,6 +8,7 @@ import 'package:iop_sdk/src/coeus/operation.dart';
 import 'package:iop_sdk/src/coeus/tx.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/layer1.dart';
+import 'package:iop_sdk/src/layer1/hydra_tx.dart';
 import 'package:iop_sdk/utils.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:optional/optional.dart';
@@ -54,9 +55,9 @@ class Layer1Api {
     final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
     nonce ??= (await getWalletNonce(senderAddress)) + 1;
 
-    final transferTx = DartApi.instance.hydraTransferTx(
-      _networkConfig.network.networkNativeName,
-      senderBip44PubKey.publicKey().toString(),
+    final builder = HydraTxBuilder(_networkConfig.network);
+    final transferTx = builder.transfer(
+      senderBip44PubKey.publicKey(),
       targetAddress,
       amountInFlake,
       nonce,
@@ -79,11 +80,11 @@ class Layer1Api {
     int nonce,
   }) async {
     final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
-    final senderPubKey = secpPrivKey.publicKey().toString();
-    nonce ??= (await getWalletNonce(senderPubKey)) + 1;
+    final senderPubKey = secpPrivKey.publicKey();
+    nonce ??= (await getWalletNonce(senderPubKey.toString())) + 1;
 
-    final transferTx = DartApi.instance.hydraTransferTx(
-      _networkConfig.network.networkNativeName,
+    final builder = HydraTxBuilder(_networkConfig.network);
+    final transferTx = builder.transfer(
       senderPubKey,
       targetAddress,
       amountInFlake,
@@ -172,12 +173,14 @@ class Layer1Api {
     final layer2Api = Layer2Api.createCoeusApi(_networkConfig);
     layer1SenderNonce ??= (await getWalletNonce(fromAddress)) + 1;
 
-    final secpPubKey = hydraPrivate.public.keyByAddress(fromAddress).publicKey();
+    final secpPubKey =
+        hydraPrivate.public.keyByAddress(fromAddress).publicKey();
     final secpPrivKey = hydraPrivate.keyByPublicKey(secpPubKey).privateKey();
     final noncedBuilder = NoncedBundleBuilder.create();
     userOperations.forEach((element) => noncedBuilder.add(element));
 
-    layer2PublicKeyNonce ??= (await layer2Api.getLastNonce(PublicKey.fromSecp(secpPubKey))) + 1;
+    layer2PublicKeyNonce ??=
+        (await layer2Api.getLastNonce(PublicKey.fromSecp(secpPubKey))) + 1;
     final noncedBundle = noncedBuilder.build(layer2PublicKeyNonce);
     final signedBundle = noncedBundle.sign(PrivateKey.fromSecp(secpPrivKey));
 

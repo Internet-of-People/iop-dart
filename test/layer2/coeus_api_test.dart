@@ -9,7 +9,7 @@ import 'package:optional/optional.dart';
 import 'package:test/test.dart';
 
 final network = Network.TestNet;
-final networkConfig = NetworkConfig.fromNetwork(network, port: 4703);
+final networkConfig = NetworkConfig.fromNetwork(network);
 final layer1Api = Layer1Api.createApi(networkConfig);
 final layer2Api = Layer2Api.createCoeusApi(networkConfig);
 
@@ -35,11 +35,12 @@ void registerDomain(
     hydraPrivate,
   );
 
-  Optional<TransactionStatusResponse> txStatus;
+  Optional<bool> txStatus;
   do {
     await Future.delayed(Duration(seconds: 2));
-    txStatus = await layer1Api.getTxnStatus(txId);
+    txStatus = await layer2Api.getTxnStatus(txId);
   } while (txStatus.isEmpty);
+  expect(txStatus, Optional.of(true));
 }
 
 void main() async {
@@ -123,8 +124,8 @@ void main() async {
       final resp = await layer2Api.getChildren(registeredDomain);
       expect(resp.isPresent, true);
       expect(resp.value.length, 2);
-      expect(resp.value[0], 'sub1');
-      expect(resp.value[1], 'sub2');
+      expect(resp.value.contains('sub1'), true);
+      expect(resp.value.contains('sub2'), true);
     });
 
     test('getChildren - not existing', () async {

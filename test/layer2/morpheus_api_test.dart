@@ -47,17 +47,16 @@ void main() {
         hydraPrivate,
       );
 
-      Optional<TransactionStatusResponse> txStatus;
-      do {
-        await Future.delayed(Duration(seconds: 2));
-        txStatus = await layer1Api.getTxnStatus(beforeProofTxId);
-      } while (txStatus.isEmpty);
-
       final layer2Api = Layer2Api.createMorpheusApi(
         NetworkConfig.fromNetwork(network),
       );
-      final ssiTxStatus = await layer2Api.getTxnStatus(beforeProofTxId);
-      expect(ssiTxStatus.isPresent, true);
+
+      Optional<bool> txStatus;
+      do {
+        await Future.delayed(Duration(seconds: 2));
+        txStatus = await layer2Api.getTxnStatus(beforeProofTxId);
+      } while (txStatus.isEmpty);
+      expect(txStatus, Optional.of(true));
     });
 
     test('getBeforeProofHistory', () async {

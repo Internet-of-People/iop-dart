@@ -15,6 +15,18 @@ class CoeusApi {
 
   CoeusApi(this._networkConfig);
 
+  Future<Optional<bool>> getTxnStatus(String txId) async {
+    final resp = await _layer2ApiGet('/txn-status/$txId');
+
+    if (resp.statusCode == HttpStatus.ok) {
+      return Optional.of(json.decode(resp.body));
+    } else if (resp.statusCode == HttpStatus.notFound) {
+      return Optional.empty();
+    }
+
+    return Future.error(HttpResponseError(resp.statusCode, resp.body));
+  }
+
   Future<Optional<String>> resolve(String name) async {
     final resp = await _layer2ApiGet('/resolve/$name');
     if (resp.statusCode == HttpStatus.ok) {

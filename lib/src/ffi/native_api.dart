@@ -11,6 +11,7 @@ import 'package:iop_sdk/src/ffi/native_did.dart';
 import 'package:iop_sdk/src/ffi/native_hydra_plugin.dart';
 import 'package:iop_sdk/src/ffi/native_hydra_private.dart';
 import 'package:iop_sdk/src/ffi/native_hydra_public.dart';
+import 'package:iop_sdk/src/ffi/native_hydra_tx.dart';
 import 'package:iop_sdk/src/ffi/native_jwt_builder.dart';
 import 'package:iop_sdk/src/ffi/native_jwt_parser.dart';
 import 'package:iop_sdk/src/ffi/native_m_key_id.dart';
@@ -56,6 +57,7 @@ class NativeApi {
   final NativeHydraPlugin hydraPlugin;
   final NativeHydraPrivate hydraPrivate;
   final NativeHydraPublic hydraPublic;
+  final NativeHydraTx hydraTx;
   final NativeJwtBuilder jwtBuilder;
   final NativeJwtParser jwtParser;
   final NativeMKeyId keyId;
@@ -87,7 +89,6 @@ class NativeApi {
   final DDigestJson digestJson;
   final DStringifyJson stringifyJson;
   final DNonce264 nonce264;
-  final DHydraTransferTx hydraTransferTx;
   final DMorpheusTx morpheusTx;
 
   static NativeApi load(fileName) {
@@ -108,6 +109,7 @@ class NativeApi {
         hydraPlugin = NativeHydraPlugin(lib),
         hydraPrivate = NativeHydraPrivate(lib),
         hydraPublic = NativeHydraPublic(lib),
+        hydraTx = NativeHydraTx(lib),
         jwtBuilder = NativeJwtBuilder(lib),
         jwtParser = NativeJwtParser(lib),
         keyId = NativeMKeyId(lib),
@@ -154,10 +156,6 @@ class NativeApi {
         ),
         nonce264 = lib.lookupFunction<NNonce264, DNonce264>(
           'nonce264',
-        ),
-        hydraTransferTx =
-            lib.lookupFunction<NHydraTransferTx, DHydraTransferTx>(
-          'HydraTxBuilder_transfer',
         ),
         morpheusTx = lib.lookupFunction<NMorpheusTx, DMorpheusTx>(
           'MorpheusTxBuilder_new',
@@ -214,21 +212,6 @@ typedef DStringifyJson = Pointer<Result> Function(
 
 typedef NNonce264 = Pointer<Result> Function();
 typedef DNonce264 = Pointer<Result> Function();
-
-typedef NHydraTransferTx = Pointer<Result> Function(
-  Pointer<Utf8> network,
-  Pointer<Utf8> senderPubKey,
-  Pointer<Utf8> recipient,
-  Int64 amount,
-  Int64 nonce,
-);
-typedef DHydraTransferTx = Pointer<Result> Function(
-  Pointer<Utf8> network,
-  Pointer<Utf8> senderPubKey,
-  Pointer<Utf8> recipient,
-  int amount,
-  int nonce,
-);
 
 typedef NMorpheusTx = Pointer<Result> Function(
   Pointer<Utf8> network,

@@ -104,34 +104,6 @@ class DartApi implements Disposable {
   }
 
   // TODO Temporary API for the transfer builder
-  String hydraTransferTx(
-    String network,
-    String senderPubKey,
-    String recipient,
-    int flakesAmount,
-    int nonce,
-  ) {
-    final nativeNet = Utf8.toUtf8(network);
-    final nativeSender = Utf8.toUtf8(senderPubKey);
-    final nativeRecipient = Utf8.toUtf8(recipient);
-    try {
-      return _native
-          .hydraTransferTx(
-            nativeNet,
-            nativeSender,
-            nativeRecipient,
-            flakesAmount,
-            nonce,
-          )
-          .extract((res) => res.asString);
-    } finally {
-      free(nativeRecipient);
-      free(nativeSender);
-      free(nativeNet);
-    }
-  }
-
-  // TODO Temporary API for the transfer builder
   String morpheusTx(
     String network,
     String senderPubKey,
