@@ -17,13 +17,12 @@ class HydraTxBuilder {
     int nonce,
   ) {
     final nativeNet = Utf8.toUtf8(network.networkNativeName);
-    final nativeSender = Utf8.toUtf8(senderPubKey.toString());
     final nativeRecipient = Utf8.toUtf8(recipient);
     try {
       return DartApi.native.hydraTx
           .transfer(
             nativeNet,
-            nativeSender,
+            senderPubKey.ffi,
             nativeRecipient,
             flakesAmount,
             nonce,
@@ -31,7 +30,6 @@ class HydraTxBuilder {
           .extract((res) => res.asString);
     } finally {
       free(nativeRecipient);
-      free(nativeSender);
       free(nativeNet);
     }
   }
@@ -42,20 +40,16 @@ class HydraTxBuilder {
     int nonce,
   ) {
     final nativeNet = Utf8.toUtf8(network.networkNativeName);
-    final nativeSender = Utf8.toUtf8(senderPubKey.toString());
-    final nativeDelegate = Utf8.toUtf8(delegate.toString());
     try {
       return DartApi.native.hydraTx
           .vote(
             nativeNet,
-            nativeSender,
-            nativeDelegate,
+            senderPubKey.ffi,
+            delegate.ffi,
             nonce,
           )
           .extract((res) => res.asString);
     } finally {
-      free(nativeDelegate);
-      free(nativeSender);
       free(nativeNet);
     }
   }
@@ -66,20 +60,16 @@ class HydraTxBuilder {
     int nonce,
   ) {
     final nativeNet = Utf8.toUtf8(network.networkNativeName);
-    final nativeSender = Utf8.toUtf8(senderPubKey.toString());
-    final nativeDelegate = Utf8.toUtf8(delegate.toString());
     try {
       return DartApi.native.hydraTx
           .unvote(
             nativeNet,
-            nativeSender,
-            nativeDelegate,
+            senderPubKey.ffi,
+            delegate.ffi,
             nonce,
           )
           .extract((res) => res.asString);
     } finally {
-      free(nativeDelegate);
-      free(nativeSender);
       free(nativeNet);
     }
   }

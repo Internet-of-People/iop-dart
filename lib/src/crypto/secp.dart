@@ -150,7 +150,7 @@ class SecpPublicKey implements Disposable {
     }
   }
 
-  // Only for fromSecp implementations
+  // Only for fromSecp and transaction builder implementations
   Pointer<Void> get ffi => _ffi;
 
   @override

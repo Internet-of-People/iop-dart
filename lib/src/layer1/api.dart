@@ -126,7 +126,7 @@ class Layer1Api {
 
     final transferTx = DartApi.instance.morpheusTx(
       _networkConfig.network.networkNativeName,
-      senderBip44PubKey.publicKey().toString(),
+      senderBip44PubKey.publicKey(),
       attempts,
       nonce,
     );
@@ -146,8 +146,8 @@ class Layer1Api {
     int nonce,
   }) async {
     final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
-    final senderPubKey = secpPrivKey.publicKey().toString();
-    nonce ??= (await getWalletNonce(senderPubKey)) + 1;
+    final senderPubKey = secpPrivKey.publicKey();
+    nonce ??= (await getWalletNonce(senderPubKey.toString())) + 1;
 
     final transferTx = DartApi.instance.morpheusTx(
       _networkConfig.network.networkNativeName,

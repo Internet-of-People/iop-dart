@@ -106,20 +106,18 @@ class DartApi implements Disposable {
   // TODO Temporary API for the transfer builder
   String morpheusTx(
     String network,
-    String senderPubKey,
+    SecpPublicKey senderPubKey,
     List<OperationData> opAttempts,
     int nonce,
   ) {
     final nativeNet = Utf8.toUtf8(network);
-    final nativeSender = Utf8.toUtf8(senderPubKey);
     final nativeOps = Utf8.toUtf8(json.encode(opAttempts));
     try {
       return _native
-          .morpheusTx(nativeNet, nativeSender, nativeOps, nonce)
+          .morpheusTx(nativeNet, senderPubKey.ffi, nativeOps, nonce)
           .extract((res) => res.asString);
     } finally {
       free(nativeOps);
-      free(nativeSender);
       free(nativeNet);
     }
   }

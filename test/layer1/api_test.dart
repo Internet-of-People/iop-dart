@@ -1,4 +1,3 @@
-import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:test/test.dart';

@@ -215,13 +215,13 @@ typedef DNonce264 = Pointer<Result> Function();
 
 typedef NMorpheusTx = Pointer<Result> Function(
   Pointer<Utf8> network,
-  Pointer<Utf8> senderPubKey,
+  Pointer<Void> senderPubKey,
   Pointer<Utf8> opAttemptsJson,
   Int64 nonce,
 );
 typedef DMorpheusTx = Pointer<Result> Function(
   Pointer<Utf8> network,
-  Pointer<Utf8> senderPubKey,
+  Pointer<Void> senderPubKey,
   Pointer<Utf8> opAttemptsJson,
   int nonce,
 );
