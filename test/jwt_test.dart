@@ -1,7 +1,7 @@
 import 'package:iop_sdk/crypto.dart';
 import 'package:test/test.dart';
 
-import '../util.dart';
+import 'util.dart';
 
 
 const TOKEN = 'eyJhbGciOiJNdWx0aWNpcGhlciIsImtpZCI6InBlejJDTGtCVWpIQjh3OEc4N0QzWWtSRWpwUnVpcVB1NkJyUnNnSE1ReTJQenQ2In0.eyJleHAiOjE1OTYxOTU1NjcsIm5iZiI6MTU5NjE5NTI2NywianRpIjoiY2p1cHFxdVJSYWcybEtUV0FqZS1mRGdvcllVQkVuNE5pNks4Uk11TmhYV05hOCJ9.c2V6NmlTQWU0TGE1NllveHhHREdod2NOYzZNZFZQOWhIUzdTN2g4ZU1WUW9jNTVMS1RrZ0pTUU52eG5VNHV2RGV2YXhWRjN2Q2MyWHYyY1hYekp5YmZNQ3FBMg';

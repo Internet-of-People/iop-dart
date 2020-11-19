@@ -97,22 +97,59 @@ class Layer1Api {
     return resp;
   }
 
+  Future<String> sendVoteOrUnvote(
+    String voterAddress,
+    HydraPrivate hydraPrivate,
+    String createTx(
+      HydraTxBuilder builder,
+      SecpPublicKey senderPubKey,
+      int nonce,
+    ),
+    int nonce,
+  ) async {
+    final voterBip44PubKey = hydraPrivate.public.keyByAddress(voterAddress);
+    nonce ??= (await getWalletNonce(voterAddress)) + 1;
+
+    final builder = HydraTxBuilder(_networkConfig.network);
+    final transferTx = createTx(builder, voterBip44PubKey.publicKey(), nonce);
+
+    final signedTx = hydraPrivate.signHydraTransaction(
+      voterAddress,
+      transferTx,
+    );
+
+    final resp = await sendTx(signedTx.toString());
+    return resp;
+  }
+
   Future<String> sendVoteTx(
-    String fromAddress,
+    String voterAddress,
     SecpPublicKey delegate,
     HydraPrivate hydraPrivate, {
     int nonce,
   }) async {
-    // TODO
+    return await sendVoteOrUnvote(
+      voterAddress,
+      hydraPrivate,
+      (builder, senderPubKey, nonce) =>
+          builder.vote(senderPubKey, delegate, nonce),
+      nonce,
+    );
   }
 
   Future<String> sendUnvoteTx(
-    String fromAddress,
+    String voterAddress,
     SecpPublicKey delegate,
     HydraPrivate hydraPrivate, {
     int nonce,
   }) async {
-    // TODO
+    return await sendVoteOrUnvote(
+      voterAddress,
+      hydraPrivate,
+          (builder, senderPubKey, nonce) =>
+          builder.unvote(senderPubKey, delegate, nonce),
+      nonce,
+    );
   }
 
   Future<String> sendMorpheusTx(

@@ -34,7 +34,7 @@ class HydraTxBuilder {
     }
   }
 
-  String Vote(
+  String vote(
     SecpPublicKey senderPubKey,
     SecpPublicKey delegate,
     int nonce,
