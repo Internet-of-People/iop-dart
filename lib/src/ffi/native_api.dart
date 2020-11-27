@@ -18,6 +18,9 @@ import 'package:iop_sdk/src/ffi/native_m_key_id.dart';
 import 'package:iop_sdk/src/ffi/native_m_private_key.dart';
 import 'package:iop_sdk/src/ffi/native_m_public_key.dart';
 import 'package:iop_sdk/src/ffi/native_m_signature.dart';
+import 'package:iop_sdk/src/ffi/native_morpheus_asset.dart';
+import 'package:iop_sdk/src/ffi/native_morpheus_op_builder.dart';
+import 'package:iop_sdk/src/ffi/native_morpheus_op_signer.dart';
 import 'package:iop_sdk/src/ffi/native_morpheus_plugin.dart';
 import 'package:iop_sdk/src/ffi/native_morpheus_private_key.dart';
 import 'package:iop_sdk/src/ffi/native_morpheus_private_kind.dart';
@@ -25,6 +28,7 @@ import 'package:iop_sdk/src/ffi/native_morpheus_private.dart';
 import 'package:iop_sdk/src/ffi/native_morpheus_public_key.dart';
 import 'package:iop_sdk/src/ffi/native_morpheus_public_kind.dart';
 import 'package:iop_sdk/src/ffi/native_morpheus_public.dart';
+import 'package:iop_sdk/src/ffi/native_morpheus_tx.dart';
 import 'package:iop_sdk/src/ffi/native_secp_key_id.dart';
 import 'package:iop_sdk/src/ffi/native_secp_private_key.dart';
 import 'package:iop_sdk/src/ffi/native_secp_public_key.dart';
@@ -61,6 +65,12 @@ class NativeApi {
   final NativeJwtBuilder jwtBuilder;
   final NativeJwtParser jwtParser;
   final NativeMKeyId keyId;
+  final NativeMorpheusAsset morpheusAsset;
+  final NativeMorpheusAssetBuilder morpheusAssetBuilder;
+  final NativeMorpheusOperation morpheusOperation;
+  final NativeMorpheusOperationBuilder morpheusOperationBuilder;
+  final NativeMorpheusOperationSigner morpheusOperationSigner;
+  final NativeMorpheusSignedOperation morpheusSignedOperation;
   final NativeMorpheusPlugin morpheusPlugin;
   final NativeMorpheusPrivate morpheusPrivate;
   final NativeMorpheusPrivateKey morpheusPrivateKey;
@@ -68,6 +78,7 @@ class NativeApi {
   final NativeMorpheusPublic morpheusPublic;
   final NativeMorpheusPublicKey morpheusPublicKey;
   final NativeMorpheusPublicKind morpheusPublicKind;
+  final NativeMorpheusTxBuilder morpheusTxBuilder;
   final NativeMPrivateKey privateKey;
   final NativeMPublicKey publicKey;
   final NativeMSignature signature;
@@ -89,7 +100,6 @@ class NativeApi {
   final DDigestJson digestJson;
   final DStringifyJson stringifyJson;
   final DNonce264 nonce264;
-  final DMorpheusTx morpheusTx;
 
   static NativeApi load(fileName) {
     final lib = DynamicLibrary.open(fileName);
@@ -116,6 +126,12 @@ class NativeApi {
         privateKey = NativeMPrivateKey(lib),
         publicKey = NativeMPublicKey(lib),
         signature = NativeMSignature(lib),
+        morpheusAsset = NativeMorpheusAsset(lib),
+        morpheusAssetBuilder = NativeMorpheusAssetBuilder(lib),
+        morpheusOperation = NativeMorpheusOperation(lib),
+        morpheusOperationBuilder = NativeMorpheusOperationBuilder(lib),
+        morpheusOperationSigner = NativeMorpheusOperationSigner(lib),
+        morpheusSignedOperation = NativeMorpheusSignedOperation(lib),
         morpheusPlugin = NativeMorpheusPlugin(lib),
         morpheusPrivate = NativeMorpheusPrivate(lib),
         morpheusPrivateKey = NativeMorpheusPrivateKey(lib),
@@ -123,6 +139,7 @@ class NativeApi {
         morpheusPublic = NativeMorpheusPublic(lib),
         morpheusPublicKey = NativeMorpheusPublicKey(lib),
         morpheusPublicKind = NativeMorpheusPublicKind(lib),
+        morpheusTxBuilder = NativeMorpheusTxBuilder(lib),
         secpKeyId = NativeSecpKeyId(lib),
         secpPrivateKey = NativeSecpPrivateKey(lib),
         secpPublicKey = NativeSecpPublicKey(lib),
@@ -156,9 +173,6 @@ class NativeApi {
         ),
         nonce264 = lib.lookupFunction<NNonce264, DNonce264>(
           'nonce264',
-        ),
-        morpheusTx = lib.lookupFunction<NMorpheusTx, DMorpheusTx>(
-          'MorpheusTxBuilder_new',
         );
 }
 
@@ -212,16 +226,3 @@ typedef DStringifyJson = Pointer<Result> Function(
 
 typedef NNonce264 = Pointer<Result> Function();
 typedef DNonce264 = Pointer<Result> Function();
-
-typedef NMorpheusTx = Pointer<Result> Function(
-  Pointer<Utf8> network,
-  Pointer<Void> senderPubKey,
-  Pointer<Utf8> opAttemptsJson,
-  Int64 nonce,
-);
-typedef DMorpheusTx = Pointer<Result> Function(
-  Pointer<Utf8> network,
-  Pointer<Void> senderPubKey,
-  Pointer<Utf8> opAttemptsJson,
-  int nonce,
-);

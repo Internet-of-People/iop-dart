@@ -9,6 +9,9 @@ class Did implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
+  // NOTE Needed in MorpheusOperationBuilder
+  Pointer<Void> get ffi => _ffi;
+
   Did(this._ffi, this._owned);
 
   static String prefix() {

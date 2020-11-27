@@ -216,6 +216,11 @@ class MorpheusPrivate implements Disposable {
     return MorpheusPrivateKind._(ffiKind, true);
   }
 
+  MorpheusPublic get public {
+    final ffiPub = DartApi.native.morpheusPrivate.publicGet(_ffi);
+    return MorpheusPublic._(ffiPub, true);
+  }
+
   MorpheusPrivateKey keyByPk(PublicKey pk) {
     final ffiMorpheusSk = DartApi.native.morpheusPrivate
         .keyByPk(_ffi, pk.ffi)

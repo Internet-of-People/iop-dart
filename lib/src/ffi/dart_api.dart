@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 import 'package:iop_sdk/src/ffi/native_api.dart';
-import 'package:iop_sdk/layer1.dart';
 
 class DartApi implements Disposable {
   static DartApi _instance;
@@ -101,25 +99,6 @@ class DartApi implements Disposable {
 
   String nonce264() {
     return _native.nonce264().extract((res) => res.asString);
-  }
-
-  // TODO Temporary API for the transfer builder
-  String morpheusTx(
-    String network,
-    SecpPublicKey senderPubKey,
-    List<OperationData> opAttempts,
-    int nonce,
-  ) {
-    final nativeNet = Utf8.toUtf8(network);
-    final nativeOps = Utf8.toUtf8(json.encode(opAttempts));
-    try {
-      return _native
-          .morpheusTx(nativeNet, senderPubKey.ffi, nativeOps, nonce)
-          .extract((res) => res.asString);
-    } finally {
-      free(nativeOps);
-      free(nativeNet);
-    }
   }
 
   @override

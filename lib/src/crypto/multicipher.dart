@@ -79,7 +79,7 @@ class PrivateKey implements Disposable {
 
   PrivateKey(this._ffi, this._owned);
 
-  // For JwtBuilder.sign and NoncedBundle.sign
+  // For JwtBuilder.sign, NoncedBundle.sign and MorpheusOperationSigner.sign
   Pointer<Void> get ffi => _ffi;
 
   static PrivateKey fromSecp(SecpPrivateKey secpSk) {

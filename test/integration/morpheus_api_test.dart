@@ -31,9 +31,10 @@ void main() {
       final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
       final hydraPrivate = hydraPlugin.private(unlockPassword);
 
-      final opAttempts = OperationAttemptsBuilder()
-          .registerBeforeProof(beforeProof)
-          .getAttempts();
+      // TODO use fluent api for builder pattern instead of void add() functions
+      final builder = MorpheusAssetBuilder.create();
+      builder.addRegisterBeforeProof(beforeProof);
+      final opAttempts = builder.build();
 
       final senderAddress = hydraPlugin.public.key(0).address;
 

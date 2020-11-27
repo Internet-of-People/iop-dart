@@ -43,16 +43,16 @@ void main() {
       };
 
       final beforeProof = digestJson(signedContractJson);
-      final opAttempts = OperationAttemptsBuilder()
-          .registerBeforeProof(beforeProof)
-          .getAttempts();
+      final assetBuilder = MorpheusAssetBuilder.create();
+      assetBuilder.addRegisterBeforeProof(beforeProof.value);
+      final asset = assetBuilder.build();
 
       final layer1Api = Layer1Api.createApi(NetworkConfig.fromNetwork(network));
 
       final senderAddress = hydraPlugin.public.key(0).address;
       final txId = await layer1Api.sendMorpheusTx(
         senderAddress,
-        opAttempts,
+        asset,
         hydraPrivate,
       );
 

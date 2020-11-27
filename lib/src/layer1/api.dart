@@ -6,7 +6,6 @@ import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/src/coeus/bundle.dart';
 import 'package:iop_sdk/src/coeus/operation.dart';
 import 'package:iop_sdk/src/coeus/tx.dart';
-import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/src/layer1/hydra_tx.dart';
 import 'package:iop_sdk/utils.dart';
@@ -146,7 +145,7 @@ class Layer1Api {
     return await sendVoteOrUnvote(
       voterAddress,
       hydraPrivate,
-          (builder, senderPubKey, nonce) =>
+      (builder, senderPubKey, nonce) =>
           builder.unvote(senderPubKey, delegate, nonce),
       nonce,
     );
@@ -154,23 +153,23 @@ class Layer1Api {
 
   Future<String> sendMorpheusTx(
     String senderAddress,
-    List<OperationData> attempts,
+    MorpheusAsset morpheusAsset,
     HydraPrivate hydraPrivate, {
     int nonce,
   }) async {
     final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
     nonce ??= (await getWalletNonce(senderAddress)) + 1;
 
-    final transferTx = DartApi.instance.morpheusTx(
-      _networkConfig.network.networkNativeName,
+    final morpheusTx = MorpheusTxBuilder.build(
+      _networkConfig.network,
+      morpheusAsset,
       senderBip44PubKey.publicKey(),
-      attempts,
       nonce,
     );
 
     final signedTx = hydraPrivate.signHydraTransaction(
       senderAddress,
-      transferTx,
+      morpheusTx
     );
 
     return await sendTx(signedTx.toString());
@@ -178,7 +177,7 @@ class Layer1Api {
 
   @Deprecated('Not red carpet methods are not used anymore. Use sendMorpheusTx')
   Future<String> sendMorpheusTxWithPassphrase(
-    List<OperationData> attempts,
+    MorpheusAsset morpheusAsset,
     String passphrase, {
     int nonce,
   }) async {
@@ -186,17 +185,15 @@ class Layer1Api {
     final senderPubKey = secpPrivKey.publicKey();
     nonce ??= (await getWalletNonce(senderPubKey.toString())) + 1;
 
-    final transferTx = DartApi.instance.morpheusTx(
-      _networkConfig.network.networkNativeName,
+    final morpheusTx = MorpheusTxBuilder.build(
+      _networkConfig.network,
+      morpheusAsset,
       senderPubKey,
-      attempts,
       nonce,
     );
 
-    final signedTx = secpPrivKey.signHydraTransaction(transferTx);
-
-    final resp = await sendTx(signedTx.toString());
-    return resp;
+    final signedTx = secpPrivKey.signHydraTransaction(morpheusTx);
+    return await sendTx(signedTx.toString());
   }
 
   Future<String> sendCoeusTx(

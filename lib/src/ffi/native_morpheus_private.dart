@@ -24,7 +24,7 @@ typedef DMorpheusPrivate_Public_Get = Pointer<Void> Function(
 );
 
 typedef NMorpheusPrivate_KeyByPk = Pointer<Result> Function(
-  Pointer<Void> private,
+  Pointer<Void> morpheusPrivate,
   Pointer<Void> pk,
 );
 typedef DMorpheusPrivate_KeyByPk = Pointer<Result> Function(
