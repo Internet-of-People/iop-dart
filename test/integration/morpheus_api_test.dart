@@ -8,7 +8,6 @@ import 'package:iop_sdk/ssi.dart';
 import 'package:optional/optional.dart';
 import 'package:test/test.dart';
 
-
 final network = Network.TestNet;
 final unlockPassword = '+*7=_X8<3yH:v2@s';
 final hydraAccount = 0;
@@ -31,10 +30,9 @@ void main() {
       final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
       final hydraPrivate = hydraPlugin.private(unlockPassword);
 
-      // TODO use fluent api for builder pattern instead of void add() functions
-      final builder = MorpheusAssetBuilder.create();
-      builder.addRegisterBeforeProof(beforeProof);
-      final opAttempts = builder.build();
+      final opAttempts = MorpheusAssetBuilder.create()
+          .addRegisterBeforeProof(beforeProof)
+          .build();
 
       final senderAddress = hydraPlugin.public.key(0).address;
 
@@ -68,7 +66,9 @@ void main() {
     });
 
     test('getBeforeProofHistory - non existing', () async {
-      final resp = await layer2Api.getBeforeProofHistory(ContentId('not-existing'),);
+      final resp = await layer2Api.getBeforeProofHistory(
+        ContentId('not-existing'),
+      );
       expect(resp.contentId, ContentId('not-existing'));
       expect(resp.existsFromHeight, isNull);
       expect(resp.queriedAtHeight, isNotNull);
@@ -87,7 +87,7 @@ void main() {
       final resp3 = await layer2Api.beforeProofExists(
         beforeProof,
         // TODO: we currently don't have the exact height, see the comment above
-        height: beforeProofHeight+5,
+        height: beforeProofHeight + 5,
       );
       expect(resp3, true);
     });
@@ -151,7 +151,8 @@ void main() {
     });*/
 
     test('getDidTransactionAttemptIds - not existing', () async {
-      final resp = await layer2Api.getDidTransactionAttemptIds(nonExistingDid, 1);
+      final resp =
+          await layer2Api.getDidTransactionAttemptIds(nonExistingDid, 1);
       expect(resp, isEmpty);
     });
 

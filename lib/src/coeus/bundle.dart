@@ -15,9 +15,10 @@ class NoncedBundleBuilder implements Disposable {
   factory NoncedBundleBuilder.create() =>
       NoncedBundleBuilder(DartApi.native.coeusNoncedBundleBuilder.create(), true);
 
-  void add(UserOperation userOperation) {
+  NoncedBundleBuilder add(UserOperation userOperation) {
     DartApi.native.coeusNoncedBundleBuilder
         .add(_ffi, userOperation.ffi);
+    return this;
   }
 
   NoncedBundle build(int nonce) {

@@ -14,9 +14,9 @@ void main() {
       final morpheusPrivate = vault.morpheusPrivate;
       final tombstoneOp = MorpheusOperationBuilder.create(did, null).tombstoneDid();
 
-      final signer = MorpheusOperationSigner.create();
-      signer.add(tombstoneOp);
-      final signedOps = signer.sign(morpheusPrivate, did.defaultKeyId());
+      final signedOps = MorpheusOperationSigner.create()
+        .add(tombstoneOp)
+        .sign(morpheusPrivate, did.defaultKeyId());
       final signedOpsData = SignedOperationsData.fromJson(json.decode(signedOps.toString()));
 
       expect(

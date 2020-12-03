@@ -43,9 +43,9 @@ class MorpheusOperationSigner implements Disposable {
     return MorpheusOperationSigner(signer, true);
   }
 
-  // TODO consider returning `this` as part of the builder pattern
-  void add(MorpheusOperation operation) {
+  MorpheusOperationSigner add(MorpheusOperation operation) {
     DartApi.native.morpheusOperationSigner.add(_ffi, operation.ffi);
+    return this;
   }
 
   MorpheusSignedOperation signWithKey(PrivateKey privateKey) {

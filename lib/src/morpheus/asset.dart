@@ -20,17 +20,19 @@ class MorpheusAssetBuilder implements Disposable {
     return MorpheusAssetBuilder(builder, true);
   }
 
-  void addSigned(MorpheusSignedOperation signedOperation) {
-    return DartApi.native.morpheusAssetBuilder
+  MorpheusAssetBuilder addSigned(MorpheusSignedOperation signedOperation) {
+    DartApi.native.morpheusAssetBuilder
         .addSigned(_ffi, signedOperation.ffi);
+    return this;
   }
 
-  void addRegisterBeforeProof(ContentId contentId) {
+  MorpheusAssetBuilder addRegisterBeforeProof(ContentId contentId) {
     final nativeCid = Utf8.toUtf8(contentId.value);
     try {
       DartApi.native.morpheusAssetBuilder
           .addRegisterBeforeProof(_ffi, nativeCid)
           .extract((res) => res.asVoid);
+      return this;
     } finally {
       free(nativeCid);
     }

@@ -205,8 +205,6 @@ class Layer1Api {
   }) async {
     // TODO: we have to get the nonce from somewhere else rather using layer2api
     final layer2Api = Layer2Api.createCoeusApi(_networkConfig);
-    layer1SenderNonce ??= (await getWalletNonce(fromAddress)) + 1;
-
     final secpPubKey =
         hydraPrivate.public.keyByAddress(fromAddress).publicKey();
     final secpPrivKey = hydraPrivate.keyByPublicKey(secpPubKey).privateKey();
@@ -218,6 +216,7 @@ class Layer1Api {
     final noncedBundle = noncedBuilder.build(layer2PublicKeyNonce);
     final signedBundle = noncedBundle.sign(PrivateKey.fromSecp(secpPrivKey));
 
+    layer1SenderNonce ??= (await getWalletNonce(fromAddress)) + 1;
     final tx = CoeusTxBuilder.create(_networkConfig.network).build(
       signedBundle,
       secpPubKey,
