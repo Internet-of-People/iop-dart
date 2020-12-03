@@ -5,8 +5,9 @@ import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/ssi.dart';
-import 'package:optional/optional.dart';
 import 'package:test/test.dart';
+
+import '../util.dart';
 
 final network = Network.TestNet;
 final unlockPassword = '+*7=_X8<3yH:v2@s';
@@ -19,7 +20,8 @@ final layer1Api = Layer1Api.createApi(NetworkConfig.fromNetwork(network));
 final beforeProof = ContentId('before-proof-test${random.nextInt(1000000000)}');
 var beforeProofHeight;
 var beforeProofTxId;
-final nonExistingDid = DidData('did:morpheus:ezqztJ6XX6GDxdSgdiySiT3a');
+final existingDid = Did.fromString('did:morpheus:ezqztJ6XX6GDxdSgdiySiT3J');
+final nonExistingDid = Did.fromString('did:morpheus:ezqztJ6XX6GDxdSgdiySiT3a');
 
 void main() {
   group('api', () {
@@ -46,16 +48,21 @@ void main() {
         hydraPrivate,
       );
 
-      final layer2Api = Layer2Api.createMorpheusApi(
-        NetworkConfig.fromNetwork(network),
-      );
+      await waitForMorpheusLayer2Confirmation(beforeProofTxId, true);
 
-      Optional<bool> txStatus;
-      do {
-        await Future.delayed(Duration(seconds: 2));
-        txStatus = await layer2Api.getTxnStatus(beforeProofTxId);
-      } while (txStatus.isEmpty);
-      expect(txStatus, Optional.of(true));
+      MorpheusPlugin.rewind(vault, unlockPassword);
+
+      final morpheusPlugin = MorpheusPlugin.get(vault);
+      final morpheusPrivate = morpheusPlugin.private(unlockPassword);
+
+      final addKeyOp = MorpheusOperationBuilder.create(existingDid, null)
+        .addKey('iez25N5WZ1Q6TQpgpyYgiu9gTX', 0);
+      final signedAddKeyOp = MorpheusOperationSigner.create()
+          .add(addKeyOp)
+          .sign(morpheusPrivate, KeyId.fromString('iezqztJ6XX6GDxdSgdiySiT3J'));
+      final morpheusAsset = MorpheusAssetBuilder.create().addSigned(signedAddKeyOp).build();
+      final didTxId = await layer1.sendMorpheusTx(senderAddress, morpheusAsset, hydraPrivate);
+      await waitForMorpheusLayer2Confirmation(didTxId, true);
     });
 
     test('getBeforeProofHistory', () async {
@@ -97,14 +104,11 @@ void main() {
       expect(resp, false);
     });
 
-    // TODO
-    /*test('getDidDocument', () async {
-      final resp = await layer2Api.getDidDocument(
-        existingDid,
-      );
+    test('getDidDocument', () async {
+      final resp = await layer2Api.getDidDocument(existingDid);
       expect(resp.height, isNotNull);
       expect(resp.did, existingDid);
-    });*/
+    });
 
     test('getDidDocument - not existing', () async {
       final resp = await layer2Api.getDidDocument(nonExistingDid);
@@ -123,19 +127,17 @@ void main() {
       expect(resp.isPresent, false);
     });
 
-    // TODO
-    /*test('getLastTxId', () async {
+    test('getLastTxId', () async {
       final resp = await layer2Api.getLastTxId(existingDid);
       expect(resp, isNotNull);
-    });*/
+    });
 
     test('getLastTxId - not existing', () async {
       final resp = await layer2Api.getLastTxId(nonExistingDid);
       expect(resp, isNull);
     });
 
-    // TODO
-    /*test('getDidTransactionIds', () async {
+    test('getDidTransactionIds', () async {
       final resp = await layer2Api.getDidTransactionIds(existingDid, 1);
       expect(resp.length, greaterThan(0));
     });
@@ -148,30 +150,28 @@ void main() {
     test('getDidTransactionAttemptIds', () async {
       final resp = await layer2Api.getDidTransactionAttemptIds(existingDid, 1);
       expect(resp.length, greaterThan(0));
-    });*/
+    });
 
     test('getDidTransactionAttemptIds - not existing', () async {
       final resp =
-          await layer2Api.getDidTransactionAttemptIds(nonExistingDid, 1);
+      await layer2Api.getDidTransactionAttemptIds(nonExistingDid, 1);
       expect(resp, isEmpty);
     });
 
-    // TODO
-    /*test('getDidOperations', () async {
+    test('getDidOperations', () async {
       final resp = await layer2Api.getDidOperations(existingDid, 1);
       expect(resp.length, greaterThan(0));
-    });*/
+    });
 
     test('getDidOperations - not existing', () async {
       final resp = await layer2Api.getDidOperations(nonExistingDid, 1);
       expect(resp, isEmpty);
     });
 
-    // TODO
-    /*test('getDidOperationAttempts', () async {
+    test('getDidOperationAttempts', () async {
       final resp = await layer2Api.getDidOperationAttempts(existingDid, 1);
       expect(resp.length, greaterThan(0));
-    });*/
+    });
 
     test('getDidOperationAttempts - not existing', () async {
       final resp = await layer2Api.getDidOperationAttempts(nonExistingDid, 1);
@@ -179,34 +179,25 @@ void main() {
     });
 
     test('checkTransactionValidity - valid tx / simple op', () async {
-      final beforeProofOp = RegisterBeforeProofData(ContentId('contentId'));
-      final resp = await layer2Api.checkTransactionValidity([beforeProofOp]);
+      final asset = MorpheusAssetBuilder.create()
+          .addRegisterBeforeProof(ContentId('contentId'))
+          .build();
+      final resp = await layer2Api.checkTransactionValidity(asset);
       expect(resp, isEmpty);
     });
 
-    // TODO
-    /*test('checkTransactionValidity - valid tx / signed ops', () async {
+    test('checkTransactionValidity - valid tx / signed ops', () async {
       final vault = TestVault.create();
-      final lastTxId = await layer2Api.getLastTxId(existingDid);
-      final tombstoneOp = TombstoneDidData(existingDid, lastTxId);
-      final signedOp = SignedOperationAttemptsBuilder.tempSign(
-        vault.morpheusPrivate,
-        vault.id,
-        [tombstoneOp],
-      );
-      final r = await layer2Api.checkTransactionValidity([signedOp]);
-      expect(r, isEmpty);
-    });*/
 
-    test('checkTransactionValidity - invalid tx', () async {
-      final tombstoneOp = TombstoneDidData(DidData('invalid_did'), 'invalid');
-      final signedOp = SignedOperationsData(
-        [tombstoneOp],
-        PublicKeyData('invalid'),
-        SignatureData('invalid'),
-      );
-      final resp = await layer2Api.checkTransactionValidity([signedOp]);
-      expect(resp.length, 1);
+      final tombstoneOp = MorpheusOperationBuilder.create(existingDid, null)
+        .tombstoneDid();
+      final signedOp = MorpheusOperationSigner.create()
+        .add(tombstoneOp)
+        .sign(vault.morpheusPrivate, vault.id);
+      final asset = MorpheusAssetBuilder.create().addSigned(signedOp).build();
+
+      final r = await layer2Api.checkTransactionValidity(asset);
+      expect(r, isEmpty);
     });
   });
 }

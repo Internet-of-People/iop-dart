@@ -2,9 +2,57 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:iop_sdk/crypto.dart';
+import 'package:iop_sdk/layer1.dart';
+import 'package:iop_sdk/layer2.dart';
+import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/ssi.dart';
 import 'package:iop_sdk/verifier.dart';
+import 'package:optional/optional.dart';
 import 'package:test/test.dart';
+
+
+final networkConfig = NetworkConfig.fromNetwork(Network.TestNet);
+final layer1 = Layer1Api.createApi(networkConfig);
+final coeusLayer2 = Layer2Api.createCoeusApi(networkConfig);
+final morpheusLayer2 = Layer2Api.createMorpheusApi(networkConfig);
+
+// TODO generalize the different waitFor...Confirmation functions below
+//      with too much shared implementeation
+Future<void> waitForLayer1Confirmation(String txId, bool expected) async
+{
+  bool success;
+  for (var i = 0; i < 12; i++) {
+    await Future.delayed(const Duration(seconds: 2));
+    final status = await layer1.getTxnStatus(txId);
+    if (status.isPresent && status.value.id == txId) {
+      success = true;
+      break;
+    }
+  }
+  expect(success, expected);
+}
+
+Future<void> waitForCoeusLayer2Confirmation(String txId, bool expected) async
+{
+  var txStatus = Optional.empty();
+  do {
+    await Future.delayed(Duration(seconds: 2));
+    txStatus = await coeusLayer2.getTxnStatus(txId);
+  } while (txStatus.isEmpty);
+  final success = txStatus.value;
+  expect(success, expected);
+}
+
+Future<void> waitForMorpheusLayer2Confirmation(String txId, bool expected) async
+{
+  var txStatus = Optional.empty();
+  do {
+    await Future.delayed(Duration(seconds: 2));
+    txStatus = await morpheusLayer2.getTxnStatus(txId);
+  } while (txStatus.isEmpty);
+  final success = txStatus.value;
+  expect(success, expected);
+}
 
 
 Response resp(String body, {int code = 200}) {

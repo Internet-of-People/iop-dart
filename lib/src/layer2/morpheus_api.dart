@@ -36,9 +36,9 @@ class MorpheusApi {
     return json.decode(resp.body);
   }
 
-  Future<DidDocument> getDidDocument(DidData did, {int height}) async {
+  Future<DidDocument> getDidDocument(Did did, {int height}) async {
     final resp = await _layer2ApiGet(
-      _widthHeight('/did/${did.value}/document', height),
+      _widthHeight('/did/${did.toString()}/document', height),
     );
 
     if (resp.statusCode == HttpStatus.ok) {
@@ -62,8 +62,8 @@ class MorpheusApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<String> getLastTxId(DidData did) async {
-    final resp = await _layer2ApiGet('/did/${did.value}/transactions/last');
+  Future<String> getLastTxId(Did did) async {
+    final resp = await _layer2ApiGet('/did/${did.toString()}/transactions/last');
 
     if (resp.statusCode == HttpStatus.ok) {
       return json.decode(resp.body)['transactionId'];
@@ -75,7 +75,7 @@ class MorpheusApi {
   }
 
   Future<List<TransactionIdHeight>> getDidTransactionIds(
-    DidData did,
+    Did did,
     int fromHeight, {
     int untilHeight,
   }) async {
@@ -88,7 +88,7 @@ class MorpheusApi {
   }
 
   Future<List<TransactionIdHeight>> getDidTransactionAttemptIds(
-    DidData did,
+    Did did,
     int fromHeight, {
     int untilHeight,
   }) async {
@@ -101,7 +101,7 @@ class MorpheusApi {
   }
 
   Future<List<DidOperation>> getDidOperations(
-    DidData did,
+    Did did,
     int fromHeight, {
     int untilHeight,
   }) async {
@@ -114,7 +114,7 @@ class MorpheusApi {
   }
 
   Future<List<DidOperation>> getDidOperationAttempts(
-    DidData did,
+    Did did,
     int fromHeight, {
     int untilHeight,
   }) async {
@@ -127,11 +127,13 @@ class MorpheusApi {
   }
 
   Future<List<DryRunOperationError>> checkTransactionValidity(
-    List<OperationData> operationAttempts,
+    MorpheusAsset asset,
   ) async {
+    final assetStr = asset.toString();
+    final assetData = json.decode(assetStr);
     final resp = await _layer2ApiPost(
       '/check-transaction-validity',
-      json.encode(operationAttempts),
+      json.encode(assetData['operationAttempts']),
     );
 
     if (resp.statusCode == HttpStatus.ok) {
@@ -145,13 +147,13 @@ class MorpheusApi {
 
   Future<List<DidOperation>> _didOperationsQuery(
     bool includeAttempts,
-    DidData did,
+    Did did,
     int fromHeight, {
     int untilHeight,
   }) async {
     final path = includeAttempts ? 'operation-attempts' : 'operations';
     final resp = await _layer2ApiGet(
-      _widthHeight('/did/${did.value}/$path/$fromHeight', untilHeight),
+      _widthHeight('/did/${did.toString()}/$path/$fromHeight', untilHeight),
     );
 
     if (resp.statusCode == HttpStatus.ok) {
@@ -167,13 +169,13 @@ class MorpheusApi {
 
   Future<List<TransactionIdHeight>> _didTransactionIdsQuery(
     bool includeAttempts,
-    DidData did,
+    Did did,
     int fromHeight, {
     int untilHeight,
   }) async {
     final path = includeAttempts ? 'transaction-attempts' : 'transactions';
     final resp = await _layer2ApiGet(
-      _widthHeight('/did/${did.value}/$path/$fromHeight', untilHeight),
+      _widthHeight('/did/${did.toString()}/$path/$fromHeight', untilHeight),
     );
 
     if (resp.statusCode == HttpStatus.ok) {

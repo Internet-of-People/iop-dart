@@ -63,11 +63,19 @@ class NativeMorpheusAssetBuilder {
 typedef NDelete_MorpheusAsset = Void Function(Pointer<Void> asset);
 typedef DDelete_MorpheusAsset = void Function(Pointer<Void> asset);
 
+typedef NMorpheusAsset_ToString = Pointer<Result> Function(Pointer<Void> asset);
+typedef DMorpheusAsset_ToString = Pointer<Result> Function(Pointer<Void> asset);
+
+
 class NativeMorpheusAsset {
   final DDelete_MorpheusAsset delete;
+  final DMorpheusAsset_ToString to_String;
 
   NativeMorpheusAsset(DynamicLibrary lib) :
     delete = lib.lookupFunction<NDelete_MorpheusAsset, DDelete_MorpheusAsset>(
       'delete_MorpheusAsset',
+    ),
+    to_String = lib.lookupFunction<NMorpheusAsset_ToString, DMorpheusAsset_ToString>(
+      'MorpheusAsset_to_string',
     );
 }

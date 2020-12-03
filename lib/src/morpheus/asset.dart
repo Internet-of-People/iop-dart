@@ -60,6 +60,12 @@ class MorpheusAsset implements Disposable {
   MorpheusAsset(this._ffi, this._owned);
 
   @override
+  String toString() {
+    return DartApi.native.morpheusAsset.to_String(_ffi)
+        .extract((res) => res.asString);
+  }
+
+  @override
   void dispose() {
     if (_owned) {
       DartApi.native.morpheusAsset.delete(_ffi);
