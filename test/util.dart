@@ -89,7 +89,7 @@ class TestVault {
   static TestVault create() {
     final unlockPassword = 'unlock';
     final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
-    MorpheusPlugin.rewind(vault, unlockPassword);
+    MorpheusPlugin.init(vault, unlockPassword);
     final morpheusPlugin = MorpheusPlugin.get(vault);
     final morpheusPrivate = morpheusPlugin.private(unlockPassword);
     final privateKey = morpheusPrivate.personas.key(0).privateKey();

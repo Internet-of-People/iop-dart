@@ -2,11 +2,11 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 
-typedef NMorpheusPlugin_Rewind = Pointer<Result> Function(
+typedef NMorpheusPlugin_Init = Pointer<Result> Function(
   Pointer<Void> vault,
   Pointer<Utf8> unlockPwd,
 );
-typedef DMorpheusPlugin_Rewind = Pointer<Result> Function(
+typedef DMorpheusPlugin_Init = Pointer<Result> Function(
   Pointer<Void> vault,
   Pointer<Utf8> unlockPwd,
 );
@@ -42,16 +42,16 @@ typedef DDelete_MorpheusPlugin = void Function(
 );
 
 class NativeMorpheusPlugin {
-  final DMorpheusPlugin_Rewind rewind;
+  final DMorpheusPlugin_Init init;
   final DMorpheusPlugin_Get get;
   final DMorpheusPlugin_Public_Get public_get;
   final DMorpheusPlugin_Private private;
   final DDelete_MorpheusPlugin delete;
 
   NativeMorpheusPlugin(DynamicLibrary lib)
-      : rewind =
-            lib.lookupFunction<NMorpheusPlugin_Rewind, DMorpheusPlugin_Rewind>(
-          'MorpheusPlugin_rewind',
+      : init =
+            lib.lookupFunction<NMorpheusPlugin_Init, DMorpheusPlugin_Init>(
+          'MorpheusPlugin_init',
         ),
         get = lib.lookupFunction<NMorpheusPlugin_Get, DMorpheusPlugin_Get>(
           'MorpheusPlugin_get',

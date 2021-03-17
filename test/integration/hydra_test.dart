@@ -11,7 +11,7 @@ final unlockPassword = 'unlock';
 
 void main() {
   final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
-  HydraPlugin.rewind(vault, unlockPassword, network, hydraAccount);
+  HydraPlugin.init(vault, unlockPassword, network, hydraAccount);
 
   final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
   final hydraPrivate = hydraPlugin.private(unlockPassword);

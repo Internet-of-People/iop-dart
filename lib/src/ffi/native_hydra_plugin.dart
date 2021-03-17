@@ -2,13 +2,13 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 
-typedef NHydraPlugin_Rewind = Pointer<Result> Function(
+typedef NHydraPlugin_Init = Pointer<Result> Function(
   Pointer<Void> vault,
   Pointer<Utf8> unlockPwd,
   Pointer<Utf8> network,
   Int32 idx,
 );
-typedef DHydraPlugin_Rewind = Pointer<Result> Function(
+typedef DHydraPlugin_Init = Pointer<Result> Function(
   Pointer<Void> vault,
   Pointer<Utf8> unlockPwd,
   Pointer<Utf8> network,
@@ -50,15 +50,15 @@ typedef DHydraPlugin_Public_Get = Pointer<Result> Function(
 );
 
 class NativeHydraPlugin {
-  final DHydraPlugin_Rewind rewind;
+  final DHydraPlugin_Init init;
   final DHydraPlugin_Get get;
   final DDelete_HydraPlugin delete;
   final DHydraPlugin_Private private;
   final DHydraPlugin_Public_Get publicGet;
 
   NativeHydraPlugin(DynamicLibrary lib)
-      : rewind = lib.lookupFunction<NHydraPlugin_Rewind, DHydraPlugin_Rewind>(
-          'HydraPlugin_rewind',
+      : init = lib.lookupFunction<NHydraPlugin_Init, DHydraPlugin_Init>(
+          'HydraPlugin_init',
         ),
         get = lib.lookupFunction<NHydraPlugin_Get, DHydraPlugin_Get>(
           'HydraPlugin_get',

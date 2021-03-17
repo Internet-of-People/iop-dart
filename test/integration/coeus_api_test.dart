@@ -54,7 +54,7 @@ void main() async {
   final registeredDomainExpiresAtHeight =
       (await layer1Api.getCurrentHeight()) + 10;
   final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
-  HydraPlugin.rewind(vault, unlockPassword, network, hydraAccount);
+  HydraPlugin.init(vault, unlockPassword, network, hydraAccount);
 
   final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
   final hydraPrivate = hydraPlugin.private(unlockPassword);

@@ -27,7 +27,7 @@ void main() {
   group('api', () {
     setUpAll(() async {
       final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
-      HydraPlugin.rewind(vault, unlockPassword, network, hydraAccount);
+      HydraPlugin.init(vault, unlockPassword, network, hydraAccount);
 
       final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
       final hydraPrivate = hydraPlugin.private(unlockPassword);
@@ -50,7 +50,7 @@ void main() {
 
       await waitForMorpheusLayer2Confirmation(beforeProofTxId, true);
 
-      MorpheusPlugin.rewind(vault, unlockPassword);
+      MorpheusPlugin.init(vault, unlockPassword);
 
       final morpheusPlugin = MorpheusPlugin.get(vault);
       final morpheusPrivate = morpheusPlugin.private(unlockPassword);

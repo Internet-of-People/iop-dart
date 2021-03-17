@@ -8,13 +8,13 @@ import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/network.dart';
 
 class HydraPlugin implements Disposable {
-  static void rewind(
+  static void init(
       Vault vault, String unlockPassword, Network network, int account) {
     final nativePwd = Utf8.toUtf8(unlockPassword);
     final nativeNet = Utf8.toUtf8(network.networkNativeName);
     try {
       return DartApi.native.hydraPlugin
-          .rewind(vault.ffi, nativePwd, nativeNet, account)
+          .init(vault.ffi, nativePwd, nativeNet, account)
           .extract((res) => res.asVoid);
     } finally {
       free(nativeNet);

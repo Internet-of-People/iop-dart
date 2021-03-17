@@ -331,11 +331,11 @@ class MorpheusPrivate implements Disposable {
 }
 
 class MorpheusPlugin implements Disposable {
-  static void rewind(Vault vault, String unlockPassword) {
+  static void init(Vault vault, String unlockPassword) {
     final nativePwd = Utf8.toUtf8(unlockPassword);
     try {
       return DartApi.native.morpheusPlugin
-          .rewind(vault.ffi, nativePwd)
+          .init(vault.ffi, nativePwd)
           .extract((res) => res.asVoid);
     } finally {
       free(nativePwd);

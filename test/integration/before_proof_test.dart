@@ -17,8 +17,8 @@ void main() {
   group('BeforeProof registration', () {
     test('works', () async {
       final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
-      MorpheusPlugin.rewind(vault, unlockPassword);
-      HydraPlugin.rewind(vault, unlockPassword, network, hydraAccount);
+      MorpheusPlugin.init(vault, unlockPassword);
+      HydraPlugin.init(vault, unlockPassword, network, hydraAccount);
 
       final morpheusPlugin = MorpheusPlugin.get(vault);
       final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
