@@ -43,20 +43,19 @@ typedef DHydraUnvoteTx = Pointer<Result> Function(
   int nonce,
 );
 
-
 class NativeHydraTx {
   final DHydraTransferTx transfer;
   final DHydraVoteTx vote;
   final DHydraUnvoteTx unvote;
 
-  NativeHydraTx(DynamicLibrary lib) :
-    transfer = lib.lookupFunction<NHydraTransferTx, DHydraTransferTx>(
-      'HydraTxBuilder_transfer',
-    ),
-    vote = lib.lookupFunction<NHydraVoteTx, DHydraVoteTx>(
-      'HydraTxBuilder_vote',
-    ),
-    unvote = lib.lookupFunction<NHydraUnvoteTx, DHydraUnvoteTx>(
-      'HydraTxBuilder_unvote',
-    );
+  NativeHydraTx(DynamicLibrary lib)
+      : transfer = lib.lookupFunction<NHydraTransferTx, DHydraTransferTx>(
+          'HydraTxBuilder_transfer',
+        ),
+        vote = lib.lookupFunction<NHydraVoteTx, DHydraVoteTx>(
+          'HydraTxBuilder_vote',
+        ),
+        unvote = lib.lookupFunction<NHydraUnvoteTx, DHydraUnvoteTx>(
+          'HydraTxBuilder_unvote',
+        );
 }

@@ -34,7 +34,8 @@ void main() {
   group('AuthorityPublicApi', () {
     test('listProcesses', () async {
       when(
-        client.get(Uri.parse('$baseUrl/processes'), headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/processes'),
+            headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp(processesResponse)));
 
       final r = await api.listProcesses();
@@ -46,7 +47,8 @@ void main() {
 
     test('listProcesses - not http200', () async {
       when(
-        client.get(Uri.parse('$baseUrl/processes'), headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/processes'),
+            headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
@@ -58,7 +60,8 @@ void main() {
     test('getPublicBlob', () async {
       final id = ContentId('contentId');
       when(
-        client.get(Uri.parse('$baseUrl/blob/${id.value}'), headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/blob/${id.value}'),
+            headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('BLOB')));
 
       final r = await api.getPublicBlob(id);
@@ -69,7 +72,8 @@ void main() {
     test('getPublicBlob - http404', () async {
       final id = ContentId('contentId');
       when(
-        client.get(Uri.parse('$baseUrl/blob/${id.value}'), headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/blob/${id.value}'),
+            headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 404)));
 
       final r = await api.getPublicBlob(id);
@@ -79,7 +83,8 @@ void main() {
     test('getPublicBlob - not http200/404', () async {
       final id = ContentId('contentId');
       when(
-        client.get(Uri.parse('$baseUrl/blob/${id.value}'), headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/blob/${id.value}'),
+            headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
@@ -93,7 +98,7 @@ void main() {
           TestVault.create().createSignedWitnessRequest();
       final link = CapabilityLink('link');
       when(client.post(
-          Uri.parse('$baseUrl/requests'),
+        Uri.parse('$baseUrl/requests'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -109,7 +114,7 @@ void main() {
       final signedWitnessRequest =
           TestVault.create().createSignedWitnessRequest();
       when(client.post(
-          Uri.parse('$baseUrl/requests'),
+        Uri.parse('$baseUrl/requests'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -173,7 +178,7 @@ void main() {
     test('getRequestStatus - http404', () async {
       final link = CapabilityLink('link');
       when(client.get(
-          Uri.parse('$baseUrl/requests/${link.value}/status'),
+        Uri.parse('$baseUrl/requests/${link.value}/status'),
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 404)));
 
@@ -185,7 +190,7 @@ void main() {
     test('getRequestStatus - not http200/404', () async {
       final link = CapabilityLink('link');
       when(client.get(
-          Uri.parse('$baseUrl/requests/${link.value}/status'),
+        Uri.parse('$baseUrl/requests/${link.value}/status'),
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 500)));
 

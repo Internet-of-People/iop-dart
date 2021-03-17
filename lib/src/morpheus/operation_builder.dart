@@ -5,7 +5,6 @@ import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 
-
 class MorpheusOperation implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
@@ -39,7 +38,9 @@ class MorpheusOperationBuilder implements Disposable {
           .extract((res) => res.asPointer<Void>());
       return MorpheusOperationBuilder(builder, true);
     } finally {
-      if (nativeTxId != nullptr) { calloc.free(nativeTxId); }
+      if (nativeTxId != nullptr) {
+        calloc.free(nativeTxId);
+      }
     }
   }
 

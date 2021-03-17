@@ -167,10 +167,8 @@ class Layer1Api {
       nonce,
     );
 
-    final signedTx = hydraPrivate.signHydraTransaction(
-      senderAddress,
-      morpheusTx
-    );
+    final signedTx =
+        hydraPrivate.signHydraTransaction(senderAddress, morpheusTx);
 
     return await sendTx(signedTx.toString());
   }

@@ -10,7 +10,6 @@ import 'package:iop_sdk/verifier.dart';
 import 'package:optional/optional.dart';
 import 'package:test/test.dart';
 
-
 final networkConfig = NetworkConfig.fromNetwork(Network.TestNet);
 final layer1 = Layer1Api.createApi(networkConfig);
 final coeusLayer2 = Layer2Api.createCoeusApi(networkConfig);
@@ -18,8 +17,7 @@ final morpheusLayer2 = Layer2Api.createMorpheusApi(networkConfig);
 
 // TODO generalize the different waitFor...Confirmation functions below
 //      with too much shared implementeation
-Future<void> waitForLayer1Confirmation(String txId, bool expected) async
-{
+Future<void> waitForLayer1Confirmation(String txId, bool expected) async {
   bool success;
   for (var i = 0; i < 12; i++) {
     await Future.delayed(const Duration(seconds: 2));
@@ -32,8 +30,7 @@ Future<void> waitForLayer1Confirmation(String txId, bool expected) async
   expect(success, expected);
 }
 
-Future<void> waitForCoeusLayer2Confirmation(String txId, bool expected) async
-{
+Future<void> waitForCoeusLayer2Confirmation(String txId, bool expected) async {
   var txStatus = Optional.empty();
   do {
     await Future.delayed(Duration(seconds: 2));
@@ -43,8 +40,8 @@ Future<void> waitForCoeusLayer2Confirmation(String txId, bool expected) async
   expect(success, expected);
 }
 
-Future<void> waitForMorpheusLayer2Confirmation(String txId, bool expected) async
-{
+Future<void> waitForMorpheusLayer2Confirmation(
+    String txId, bool expected) async {
   var txStatus = Optional.empty();
   do {
     await Future.delayed(Duration(seconds: 2));
@@ -54,12 +51,11 @@ Future<void> waitForMorpheusLayer2Confirmation(String txId, bool expected) async
   expect(success, expected);
 }
 
-
 Response resp(String body, {int code = 200}) {
   return Response(body, code);
 }
 
-bool validateJwtToken(String token, PublicKey publicKey, { String contentId }) {
+bool validateJwtToken(String token, PublicKey publicKey, {String contentId}) {
   try {
     final parser = JwtParser.create(token);
     var result = parser.publicKey.toString() == publicKey.toString();
@@ -68,13 +64,11 @@ bool validateJwtToken(String token, PublicKey publicKey, { String contentId }) {
     }
     parser.dispose();
     return result;
-  }
-  catch (e) {
+  } catch (e) {
     print('Token validation failed: $e');
     return false;
   }
 }
-
 
 class TestVault {
   final MorpheusPrivate morpheusPrivate;

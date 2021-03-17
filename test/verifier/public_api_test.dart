@@ -25,7 +25,8 @@ void main() {
   group('VerifierPublicApi', () {
     test('getAfterProof', () async {
       when(
-        client.get(Uri.parse('$baseUrl/after-proof'), headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/after-proof'),
+            headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp(
             json.encode({'blockHash': 'hash', 'blockHeight': 42}),
           )));
@@ -37,7 +38,8 @@ void main() {
 
     test('getAfterProof - not http200', () async {
       when(
-        client.get(Uri.parse('$baseUrl/after-proof'), headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/after-proof'),
+            headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
@@ -49,7 +51,7 @@ void main() {
     test('validate', () async {
       final request = TestVault.create().createValidationRequest();
       when(client.post(
-          Uri.parse('$baseUrl/validate'),
+        Uri.parse('$baseUrl/validate'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -64,7 +66,7 @@ void main() {
     test('validate - not http200', () async {
       final request = TestVault.create().createValidationRequest();
       when(client.post(
-          Uri.parse('$baseUrl/validate'),
+        Uri.parse('$baseUrl/validate'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(

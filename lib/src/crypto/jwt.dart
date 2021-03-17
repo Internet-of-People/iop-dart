@@ -5,7 +5,6 @@ import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 
-
 class JwtBuilder implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
@@ -49,7 +48,9 @@ class JwtBuilder implements Disposable {
   }
 
   String sign(PrivateKey privateKey) {
-    return DartApi.native.jwtBuilder.sign(_ffi, privateKey.ffi).extract((res) => res.asString);
+    return DartApi.native.jwtBuilder
+        .sign(_ffi, privateKey.ffi)
+        .extract((res) => res.asString);
   }
 
   @override
@@ -62,18 +63,18 @@ class JwtBuilder implements Disposable {
   }
 }
 
-
 class JwtParser implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
   JwtParser(this._ffi, this._owned);
 
-  factory JwtParser.create(String token, { DateTime currentTime }) {
+  factory JwtParser.create(String token, {DateTime currentTime}) {
     Pointer<Int64> epochSecs = nullptr;
     if (currentTime != null) {
       epochSecs = calloc<Int64>();
-      epochSecs.value = (currentTime.toUtc().millisecondsSinceEpoch / 1000).round();
+      epochSecs.value =
+          (currentTime.toUtc().millisecondsSinceEpoch / 1000).round();
     }
 
     final nativeToken = token.toNativeUtf8();
@@ -108,8 +109,7 @@ class JwtParser implements Disposable {
     final cidPtr = DartApi.native.jwtParser.contentId_get(_ffi);
     if (cidPtr == null) {
       return null;
-    }
-    else {
+    } else {
       return cidPtr.intoString();
     }
   }

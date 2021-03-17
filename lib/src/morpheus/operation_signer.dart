@@ -5,7 +5,6 @@ import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 import 'package:iop_sdk/src/morpheus/operation_builder.dart';
 
-
 class MorpheusSignedOperation implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
@@ -17,7 +16,8 @@ class MorpheusSignedOperation implements Disposable {
 
   @override
   String toString() {
-    return DartApi.native.morpheusSignedOperation.to_String(_ffi)
+    return DartApi.native.morpheusSignedOperation
+        .to_String(_ffi)
         .extract((res) => res.asString);
   }
 
@@ -30,7 +30,6 @@ class MorpheusSignedOperation implements Disposable {
     }
   }
 }
-
 
 class MorpheusOperationSigner implements Disposable {
   Pointer<Void> _ffi;

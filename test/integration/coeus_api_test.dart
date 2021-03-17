@@ -74,7 +74,7 @@ void main() async {
       );
     });
 
-   test('resolve', () async {
+    test('resolve', () async {
       final resp = await layer2Api.resolve(registeredDomain);
 
       expect(resp.isPresent, true);

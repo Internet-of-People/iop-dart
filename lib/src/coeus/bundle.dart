@@ -5,25 +5,22 @@ import 'package:iop_sdk/src/coeus/operation.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 
-
 class NoncedBundleBuilder implements Disposable {
   Pointer<Void> _ffi;
   bool _owned;
 
   NoncedBundleBuilder(this._ffi, this._owned);
 
-  factory NoncedBundleBuilder.create() =>
-      NoncedBundleBuilder(DartApi.native.coeusNoncedBundleBuilder.create(), true);
+  factory NoncedBundleBuilder.create() => NoncedBundleBuilder(
+      DartApi.native.coeusNoncedBundleBuilder.create(), true);
 
   NoncedBundleBuilder add(UserOperation userOperation) {
-    DartApi.native.coeusNoncedBundleBuilder
-        .add(_ffi, userOperation.ffi);
+    DartApi.native.coeusNoncedBundleBuilder.add(_ffi, userOperation.ffi);
     return this;
   }
 
   NoncedBundle build(int nonce) {
-    final policies = DartApi.native.coeusNoncedBundleBuilder
-        .build(_ffi, nonce);
+    final policies = DartApi.native.coeusNoncedBundleBuilder.build(_ffi, nonce);
     return NoncedBundle(policies, true);
   }
 
@@ -36,7 +33,6 @@ class NoncedBundleBuilder implements Disposable {
     }
   }
 }
-
 
 class NoncedBundle implements Disposable {
   Pointer<Void> _ffi;
@@ -60,7 +56,6 @@ class NoncedBundle implements Disposable {
     }
   }
 }
-
 
 class SignedBundle implements Disposable {
   Pointer<Void> _ffi;

@@ -18,8 +18,9 @@ typedef DMorpheusTxBuilder_Build = Pointer<Result> Function(
 class NativeMorpheusTxBuilder {
   final DMorpheusTxBuilder_Build build;
 
-  NativeMorpheusTxBuilder(DynamicLibrary lib) :
-    build = lib.lookupFunction<NMorpheusTxBuilder_Build, DMorpheusTxBuilder_Build>(
-      'MorpheusTxBuilder_build',
-    );
+  NativeMorpheusTxBuilder(DynamicLibrary lib)
+      : build = lib
+            .lookupFunction<NMorpheusTxBuilder_Build, DMorpheusTxBuilder_Build>(
+          'MorpheusTxBuilder_build',
+        );
 }

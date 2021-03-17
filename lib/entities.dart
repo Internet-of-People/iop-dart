@@ -19,7 +19,8 @@ abstract class Api {
     return headers;
   }
 
-  Future<Response> post(String path, dynamic body, { Map<String,String> customHeaders }) async {
+  Future<Response> post(String path, dynamic body,
+      {Map<String, String> customHeaders}) async {
     return _config.client.post(
       Uri.parse('${_baseUrl}$path'),
       headers: headers(customHeaders),
@@ -27,7 +28,7 @@ abstract class Api {
     );
   }
 
-  Future<Response> get(String path, { Map<String,String> customHeaders }) async {
+  Future<Response> get(String path, {Map<String, String> customHeaders}) async {
     return _config.client.get(
       Uri.parse('${_baseUrl}$path'),
       headers: headers(customHeaders),
@@ -38,21 +39,24 @@ abstract class Api {
     return await get(path, customHeaders: _authHeader(withPrivateKey));
   }
 
-  Future<Response> postAuth(String path, dynamic content, PrivateKey withPrivateKey) async {
-    return await post(path, content, customHeaders: _authHeader(withPrivateKey, content: content));
+  Future<Response> postAuth(
+      String path, dynamic content, PrivateKey withPrivateKey) async {
+    return await post(path, content,
+        customHeaders: _authHeader(withPrivateKey, content: content));
   }
 
-  String _jwtToken(PrivateKey privateKey, { dynamic content }) {
-    final builder = content == null ?
-      JwtBuilder.create() : JwtBuilder.withContentId( digestJson(content).toString() );
+  String _jwtToken(PrivateKey privateKey, {dynamic content}) {
+    final builder = content == null
+        ? JwtBuilder.create()
+        : JwtBuilder.withContentId(digestJson(content).toString());
     final token = builder.sign(privateKey);
     builder.dispose();
     return token;
   }
 
-  Map<String, String> _authHeader(PrivateKey privateKey, { dynamic content }) {
+  Map<String, String> _authHeader(PrivateKey privateKey, {dynamic content}) {
     final token = _jwtToken(privateKey, content: content);
-    return { 'Authorization': 'Bearer $token' };
+    return {'Authorization': 'Bearer $token'};
   }
 }
 

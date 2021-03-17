@@ -49,8 +49,7 @@ class NativeMorpheusPlugin {
   final DDelete_MorpheusPlugin delete;
 
   NativeMorpheusPlugin(DynamicLibrary lib)
-      : init =
-            lib.lookupFunction<NMorpheusPlugin_Init, DMorpheusPlugin_Init>(
+      : init = lib.lookupFunction<NMorpheusPlugin_Init, DMorpheusPlugin_Init>(
           'MorpheusPlugin_init',
         ),
         get = lib.lookupFunction<NMorpheusPlugin_Get, DMorpheusPlugin_Get>(

@@ -23,8 +23,10 @@ class AuthorityPrivateApi extends Api {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<Optional<dynamic>> getPrivateBlob(ContentId contentId, PrivateKey withPrivateKey) async {
-    final resp = await getAuth('/private-blob/${contentId.value}', withPrivateKey);
+  Future<Optional<dynamic>> getPrivateBlob(
+      ContentId contentId, PrivateKey withPrivateKey) async {
+    final resp =
+        await getAuth('/private-blob/${contentId.value}', withPrivateKey);
     if (resp.statusCode == HttpStatus.ok) {
       return Optional.of(resp.body);
     } else if (resp.statusCode == HttpStatus.notFound) {
@@ -67,7 +69,6 @@ class AuthorityPrivateApi extends Api {
       return Future.error(HttpResponseError(resp.statusCode, resp.body));
     }
   }
-
 }
 
 @JsonSerializable(explicitToJson: true)

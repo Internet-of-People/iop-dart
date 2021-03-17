@@ -2,7 +2,6 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 
-
 typedef NDelete_JwtBuilder = Void Function(
   Pointer<Void> builder,
 );
@@ -61,8 +60,6 @@ typedef DJwtBuilder_Sign = Pointer<Result> Function(
   Pointer<Void> privateKey,
 );
 
-
-
 class NativeJwtBuilder {
   final DDelete_JwtBuilder delete;
   final DJwtBuilder_Create create;
@@ -73,30 +70,35 @@ class NativeJwtBuilder {
   final DJwtBuilder_TimeToLive_Set timeToLive_set;
   final DJwtBuilder_Sign sign;
 
-  NativeJwtBuilder(DynamicLibrary lib) :
-    delete = lib.lookupFunction<NDelete_JwtBuilder, DDelete_JwtBuilder>(
-      'delete_JwtBuilder',
-    ),
-    // "default" is a reserved word and cannot be used as a class member name
-    create = lib.lookupFunction<NJwtBuilder_Default, DJwtBuilder_Create>(
-      'JwtBuilder_default',
-    ),
-    withContentId = lib.lookupFunction<NJwtBuilder_WithContentId, DJwtBuilder_WithContentId>(
-      'JwtBuilder_with_content_id',
-    ),
-    createdAt_get = lib.lookupFunction<NJwtBuilder_CreatedAt_Get, DJwtBuilder_CreatedAt_Get>(
-      'JwtBuilder_created_at_get',
-    ),
-    createdAt_set = lib.lookupFunction<NJwtBuilder_CreatedAt_Set, DJwtBuilder_CreatedAt_Set>(
-      'JwtBuilder_created_at_set',
-    ),
-    timeToLive_get = lib.lookupFunction<NJwtBuilder_TimeToLive_Get, DJwtBuilder_TimeToLive_Get>(
-      'JwtBuilder_time_to_live_set',
-    ),
-    timeToLive_set = lib.lookupFunction<NJwtBuilder_TimeToLive_Set, DJwtBuilder_TimeToLive_Set>(
-      'JwtBuilder_time_to_live_set',
-    ),
-    sign = lib.lookupFunction<NJwtBuilder_Sign, DJwtBuilder_Sign>(
-      'JwtBuilder_sign',
-    );
+  NativeJwtBuilder(DynamicLibrary lib)
+      : delete = lib.lookupFunction<NDelete_JwtBuilder, DDelete_JwtBuilder>(
+          'delete_JwtBuilder',
+        ),
+        // "default" is a reserved word and cannot be used as a class member name
+        create = lib.lookupFunction<NJwtBuilder_Default, DJwtBuilder_Create>(
+          'JwtBuilder_default',
+        ),
+        withContentId = lib.lookupFunction<NJwtBuilder_WithContentId,
+            DJwtBuilder_WithContentId>(
+          'JwtBuilder_with_content_id',
+        ),
+        createdAt_get = lib.lookupFunction<NJwtBuilder_CreatedAt_Get,
+            DJwtBuilder_CreatedAt_Get>(
+          'JwtBuilder_created_at_get',
+        ),
+        createdAt_set = lib.lookupFunction<NJwtBuilder_CreatedAt_Set,
+            DJwtBuilder_CreatedAt_Set>(
+          'JwtBuilder_created_at_set',
+        ),
+        timeToLive_get = lib.lookupFunction<NJwtBuilder_TimeToLive_Get,
+            DJwtBuilder_TimeToLive_Get>(
+          'JwtBuilder_time_to_live_set',
+        ),
+        timeToLive_set = lib.lookupFunction<NJwtBuilder_TimeToLive_Set,
+            DJwtBuilder_TimeToLive_Set>(
+          'JwtBuilder_time_to_live_set',
+        ),
+        sign = lib.lookupFunction<NJwtBuilder_Sign, DJwtBuilder_Sign>(
+          'JwtBuilder_sign',
+        );
 }

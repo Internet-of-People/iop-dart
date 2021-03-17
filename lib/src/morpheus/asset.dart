@@ -21,8 +21,7 @@ class MorpheusAssetBuilder implements Disposable {
   }
 
   MorpheusAssetBuilder addSigned(MorpheusSignedOperation signedOperation) {
-    DartApi.native.morpheusAssetBuilder
-        .addSigned(_ffi, signedOperation.ffi);
+    DartApi.native.morpheusAssetBuilder.addSigned(_ffi, signedOperation.ffi);
     return this;
   }
 
@@ -61,7 +60,8 @@ class MorpheusAsset implements Disposable {
 
   @override
   String toString() {
-    return DartApi.native.morpheusAsset.to_String(_ffi)
+    return DartApi.native.morpheusAsset
+        .to_String(_ffi)
         .extract((res) => res.asString);
   }
 
@@ -75,9 +75,9 @@ class MorpheusAsset implements Disposable {
   }
 }
 
-
-class MorpheusTxBuilder{
-  static String build(Network network, MorpheusAsset asset, SecpPublicKey senderPubKey, int nonce) {
+class MorpheusTxBuilder {
+  static String build(Network network, MorpheusAsset asset,
+      SecpPublicKey senderPubKey, int nonce) {
     final nativeNetwork = network.networkNativeName.toNativeUtf8();
     try {
       return DartApi.native.morpheusTxBuilder

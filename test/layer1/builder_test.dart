@@ -12,12 +12,14 @@ void main() {
     test('tombstoneDid', () {
       final vault = TestVault.create();
       final morpheusPrivate = vault.morpheusPrivate;
-      final tombstoneOp = MorpheusOperationBuilder.create(did, null).tombstoneDid();
+      final tombstoneOp =
+          MorpheusOperationBuilder.create(did, null).tombstoneDid();
 
       final signedOps = MorpheusOperationSigner.create()
-        .add(tombstoneOp)
-        .sign(morpheusPrivate, did.defaultKeyId());
-      final signedOpsData = SignedOperationsData.fromJson(json.decode(signedOps.toString()));
+          .add(tombstoneOp)
+          .sign(morpheusPrivate, did.defaultKeyId());
+      final signedOpsData =
+          SignedOperationsData.fromJson(json.decode(signedOps.toString()));
 
       expect(
         signedOpsData.signerPublicKey.value,

@@ -16,9 +16,7 @@ void main() {
   final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
   final hydraPrivate = hydraPlugin.private(unlockPassword);
 
-  final senderAddress = hydraPlugin.public
-      .key(0)
-      .address;
+  final senderAddress = hydraPlugin.public.key(0).address;
 
   group('token_transfer', () {
     test('with vault', () async {

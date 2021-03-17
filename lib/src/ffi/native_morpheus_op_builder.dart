@@ -8,10 +8,11 @@ typedef DDelete_MorpheusOperation = void Function(Pointer<Void> operation);
 class NativeMorpheusOperation {
   final DDelete_MorpheusOperation delete;
 
-  NativeMorpheusOperation(DynamicLibrary lib) :
-    delete = lib.lookupFunction<NDelete_MorpheusOperation, DDelete_MorpheusOperation>(
-      'delete_MorpheusOperation',
-    );
+  NativeMorpheusOperation(DynamicLibrary lib)
+      : delete = lib.lookupFunction<NDelete_MorpheusOperation,
+            DDelete_MorpheusOperation>(
+          'delete_MorpheusOperation',
+        );
 }
 
 typedef NDelete_MorpheusOperationBuilder = Void Function(Pointer<Void> builder);
@@ -84,26 +85,34 @@ class NativeMorpheusOperationBuilder {
   final DMorpheusOperationBuilder_RevokeRight revokeRight;
   final DMorpheusOperationBuilder_TombstoneDid tombstoneDid;
 
-  NativeMorpheusOperationBuilder(DynamicLibrary lib) :
-    delete = lib.lookupFunction<NDelete_MorpheusOperationBuilder, DDelete_MorpheusOperationBuilder>(
-      'delete_MorpheusOperationBuilder',
-    ),
-    create = lib.lookupFunction<NMorpheusOperationBuilder_New, DMorpheusOperationBuilder_New>(
-      'MorpheusOperationBuilder_new',
-    ),
-    addKey = lib.lookupFunction<NMorpheusOperationBuilder_AddKey, DMorpheusOperationBuilder_AddKey>(
-      'MorpheusOperationBuilder_add_key',
-    ),
-    revokeKey = lib.lookupFunction<NMorpheusOperationBuilder_RevokeKey, DMorpheusOperationBuilder_RevokeKey>(
-      'MorpheusOperationBuilder_revoke_key',
-    ),
-    addRight = lib.lookupFunction<NMorpheusOperationBuilder_AddRight, DMorpheusOperationBuilder_AddRight>(
-      'MorpheusOperationBuilder_add_right',
-    ),
-    revokeRight = lib.lookupFunction<NMorpheusOperationBuilder_RevokeRight, DMorpheusOperationBuilder_RevokeRight>(
-      'MorpheusOperationBuilder_revoke_right',
-    ),
-    tombstoneDid = lib.lookupFunction<NMorpheusOperationBuilder_TombstoneDid, DMorpheusOperationBuilder_TombstoneDid>(
-      'MorpheusOperationBuilder_tombstone_did',
-    );
+  NativeMorpheusOperationBuilder(DynamicLibrary lib)
+      : delete = lib.lookupFunction<NDelete_MorpheusOperationBuilder,
+            DDelete_MorpheusOperationBuilder>(
+          'delete_MorpheusOperationBuilder',
+        ),
+        create = lib.lookupFunction<NMorpheusOperationBuilder_New,
+            DMorpheusOperationBuilder_New>(
+          'MorpheusOperationBuilder_new',
+        ),
+        addKey = lib.lookupFunction<NMorpheusOperationBuilder_AddKey,
+            DMorpheusOperationBuilder_AddKey>(
+          'MorpheusOperationBuilder_add_key',
+        ),
+        revokeKey = lib.lookupFunction<NMorpheusOperationBuilder_RevokeKey,
+            DMorpheusOperationBuilder_RevokeKey>(
+          'MorpheusOperationBuilder_revoke_key',
+        ),
+        addRight = lib.lookupFunction<NMorpheusOperationBuilder_AddRight,
+            DMorpheusOperationBuilder_AddRight>(
+          'MorpheusOperationBuilder_add_right',
+        ),
+        revokeRight = lib.lookupFunction<NMorpheusOperationBuilder_RevokeRight,
+            DMorpheusOperationBuilder_RevokeRight>(
+          'MorpheusOperationBuilder_revoke_right',
+        ),
+        tombstoneDid = lib.lookupFunction<
+            NMorpheusOperationBuilder_TombstoneDid,
+            DMorpheusOperationBuilder_TombstoneDid>(
+          'MorpheusOperationBuilder_tombstone_did',
+        );
 }

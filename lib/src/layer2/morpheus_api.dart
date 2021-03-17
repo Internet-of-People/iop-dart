@@ -63,7 +63,8 @@ class MorpheusApi {
   }
 
   Future<String> getLastTxId(Did did) async {
-    final resp = await _layer2ApiGet('/did/${did.toString()}/transactions/last');
+    final resp =
+        await _layer2ApiGet('/did/${did.toString()}/transactions/last');
 
     if (resp.statusCode == HttpStatus.ok) {
       return json.decode(resp.body)['transactionId'];
@@ -195,7 +196,8 @@ class MorpheusApi {
 
   Future<Response> _layer2ApiGet(String path) async {
     return _client.get(
-      Uri.parse('${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path'),
+      Uri.parse(
+          '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -204,7 +206,8 @@ class MorpheusApi {
 
   Future<Response> _layer2ApiPost(String path, dynamic body) async {
     return _client.post(
-      Uri.parse('${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path'),
+      Uri.parse(
+          '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path'),
       headers: {
         'Content-Type': 'application/json',
       },

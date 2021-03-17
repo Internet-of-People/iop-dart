@@ -44,8 +44,8 @@ void main() {
 
       final beforeProof = digestJson(signedContractJson);
       final asset = MorpheusAssetBuilder.create()
-        .addRegisterBeforeProof(beforeProof)
-        .build();
+          .addRegisterBeforeProof(beforeProof)
+          .build();
 
       final layer1Api = Layer1Api.createApi(NetworkConfig.fromNetwork(network));
 
