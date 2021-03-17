@@ -83,6 +83,7 @@ class TestVault {
   static TestVault create() {
     final unlockPassword = 'unlock';
     final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
+
     MorpheusPlugin.init(vault, unlockPassword);
     final morpheusPlugin = MorpheusPlugin.get(vault);
     final morpheusPrivate = morpheusPlugin.private(unlockPassword);
@@ -91,6 +92,7 @@ class TestVault {
     expect(did.toString(), 'did:morpheus:ezqztJ6XX6GDxdSgdiySiT3J');
     final id = did.defaultKeyId();
     expect(id.toString(), 'iezqztJ6XX6GDxdSgdiySiT3J');
+
     return TestVault._(morpheusPrivate, privateKey, did, id);
   }
 

@@ -54,7 +54,8 @@ class MorpheusApi {
     final resp = await _layer2ApiGet('/txn-status/$txId');
 
     if (resp.statusCode == HttpStatus.ok) {
-      return Optional.of(json.decode(resp.body));
+      final decoded = json.decode(resp.body);
+      return Optional.of(decoded);
     } else if (resp.statusCode == HttpStatus.notFound) {
       return Optional.empty();
     }

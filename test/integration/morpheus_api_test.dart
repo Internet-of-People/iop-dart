@@ -20,16 +20,18 @@ final layer1Api = Layer1Api.createApi(NetworkConfig.fromNetwork(network));
 final beforeProof = ContentId('before-proof-test${random.nextInt(1000000000)}');
 var beforeProofHeight;
 var beforeProofTxId;
-final existingDid = Did.fromString('did:morpheus:ezqztJ6XX6GDxdSgdiySiT3J');
+// final existingDid = Did.fromString('did:morpheus:ezqztJ6XX6GDxdSgdiySiT3J');
+var didVault;
+var existingDid;
 final nonExistingDid = Did.fromString('did:morpheus:ezqztJ6XX6GDxdSgdiySiT3a');
 
 void main() {
   group('api', () {
     setUpAll(() async {
-      final vault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
-      HydraPlugin.init(vault, unlockPassword, network, hydraAccount);
+      final gasVault = Vault.create(Bip39.DEMO_PHRASE, '', unlockPassword);
+      HydraPlugin.init(gasVault, unlockPassword, network, hydraAccount);
 
-      final hydraPlugin = HydraPlugin.get(vault, network, hydraAccount);
+      final hydraPlugin = HydraPlugin.get(gasVault, network, hydraAccount);
       final hydraPrivate = hydraPlugin.private(unlockPassword);
 
       final opAttempts = MorpheusAssetBuilder.create()
@@ -50,16 +52,19 @@ void main() {
 
       await waitForMorpheusLayer2Confirmation(beforeProofTxId, true);
 
-      MorpheusPlugin.init(vault, unlockPassword);
+      didVault = Vault.create(Bip39('en').generatePhrase(), '', unlockPassword);
+      MorpheusPlugin.init(didVault, unlockPassword);
 
-      final morpheusPlugin = MorpheusPlugin.get(vault);
+      final morpheusPlugin = MorpheusPlugin.get(didVault);
       final morpheusPrivate = morpheusPlugin.private(unlockPassword);
+      existingDid = morpheusPrivate.personas.did(0);
 
-      final addKeyOp = MorpheusOperationBuilder.create(existingDid, null)
+      final didLastTxId = await layer2Api.getLastTxId(existingDid);
+      final addKeyOp = MorpheusOperationBuilder.create(existingDid, didLastTxId)
           .addKey('iez25N5WZ1Q6TQpgpyYgiu9gTX', 0);
       final signedAddKeyOp = MorpheusOperationSigner.create()
           .add(addKeyOp)
-          .sign(morpheusPrivate, KeyId.fromString('iezqztJ6XX6GDxdSgdiySiT3J'));
+          .sign(morpheusPrivate, existingDid.defaultKeyId());
       final morpheusAsset =
           MorpheusAssetBuilder.create().addSigned(signedAddKeyOp).build();
       final didTxId = await layer1.sendMorpheusTx(
@@ -109,13 +114,13 @@ void main() {
     test('getDidDocument', () async {
       final resp = await layer2Api.getDidDocument(existingDid);
       expect(resp.height, isNotNull);
-      expect(resp.did, existingDid);
+      expect(resp.did.value, existingDid.toString());
     });
 
     test('getDidDocument - not existing', () async {
       final resp = await layer2Api.getDidDocument(nonExistingDid);
       expect(resp.height, isNotNull);
-      expect(resp.did, nonExistingDid);
+      expect(resp.did.value, nonExistingDid.toString());
     });
 
     test('getTxnStatus', () async {
@@ -189,17 +194,20 @@ void main() {
     });
 
     test('checkTransactionValidity - valid tx / signed ops', () async {
-      final vault = TestVault.create();
+      final morpheusPlugin = MorpheusPlugin.get(didVault);
+      final morpheusPrivate = morpheusPlugin.private(unlockPassword);
 
+      final didLastTxId = await layer2Api.getLastTxId(existingDid);
       final tombstoneOp =
-          MorpheusOperationBuilder.create(existingDid, null).tombstoneDid();
+          MorpheusOperationBuilder.create(existingDid, didLastTxId)
+              .tombstoneDid();
       final signedOp = MorpheusOperationSigner.create()
           .add(tombstoneOp)
-          .sign(vault.morpheusPrivate, vault.id);
+          .sign(morpheusPrivate, existingDid.defaultKeyId());
       final asset = MorpheusAssetBuilder.create().addSigned(signedOp).build();
 
-      final r = await layer2Api.checkTransactionValidity(asset);
-      expect(r, isEmpty);
+      final resp = await layer2Api.checkTransactionValidity(asset);
+      expect(resp, isEmpty);
     });
   });
 }

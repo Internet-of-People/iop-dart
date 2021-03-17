@@ -44,11 +44,11 @@ class MorpheusOperationBuilder implements Disposable {
     }
   }
 
-  MorpheusOperation addKey(String authentication, int blockHeight) {
+  MorpheusOperation addKey(String authentication, int expiresAtHeight) {
     final nativeAuth = authentication.toNativeUtf8();
     try {
       final op = DartApi.native.morpheusOperationBuilder
-          .addKey(_ffi, nativeAuth, blockHeight)
+          .addKey(_ffi, nativeAuth, expiresAtHeight)
           .extract((res) => res.asPointer<Void>());
       return MorpheusOperation(op, true);
     } finally {
