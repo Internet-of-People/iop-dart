@@ -58,7 +58,7 @@ void main() {
     test('listRequests', () async {
       final sk = TestVault.create().privateKey;
       when(
-        client.get('$baseUrl/requests', headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/requests'), headers: anyNamed('headers')),
       ).thenAnswer( (req) => jwtResp(resp(requestsResponse), req, sk.publicKey()) );
 
       final r = await api.listRequests(sk);
@@ -98,7 +98,7 @@ void main() {
 
     test('listRequests - not http200', () async {
       when(
-        client.get('$baseUrl/requests', headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/requests'), headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       final sk = TestVault.create().privateKey;
@@ -112,7 +112,7 @@ void main() {
       final sk = TestVault.create().privateKey;
       final id = ContentId('contentId');
       when(client.get(
-        '$baseUrl/private-blob/${id.value}',
+          Uri.parse('$baseUrl/private-blob/${id.value}'),
         headers: anyNamed('headers'),
       )).thenAnswer( (req) => jwtResp(resp('BLOB'), req, sk.publicKey()) );
 
@@ -124,7 +124,7 @@ void main() {
     test('getPrivateBlob - http404', () async {
       final id = ContentId('contentId');
       when(client.get(
-        '$baseUrl/private-blob/${id.value}',
+          Uri.parse('$baseUrl/private-blob/${id.value}'),
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 404)));
 
@@ -136,7 +136,7 @@ void main() {
     test('getPrivateBlob - not http200/404', () async {
       final id = ContentId('contentId');
       when(client.get(
-        '$baseUrl/private-blob/${id.value}',
+          Uri.parse('$baseUrl/private-blob/${id.value}'),
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 500)));
 
@@ -152,7 +152,7 @@ void main() {
       final link = CapabilityLink('link');
       final statement = TestVault.create().createSignedWitnessStatement();
       when(client.post(
-        '$baseUrl/requests/${link.value}/approve',
+          Uri.parse('$baseUrl/requests/${link.value}/approve'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -167,7 +167,7 @@ void main() {
       final link = CapabilityLink('link');
       final statement = TestVault.create().createSignedWitnessStatement();
       when(client.post(
-        '$baseUrl/requests/${link.value}/approve',
+          Uri.parse('$baseUrl/requests/${link.value}/approve'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -183,7 +183,7 @@ void main() {
       final sk = TestVault.create().privateKey;
       final link = CapabilityLink('link');
       when(client.post(
-        '$baseUrl/requests/${link.value}/reject',
+          Uri.parse('$baseUrl/requests/${link.value}/reject'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -196,7 +196,7 @@ void main() {
     test('rejectRequest - not http200', () async {
       final link = CapabilityLink('link');
       when(client.post(
-        '$baseUrl/requests/${link.value}/reject',
+          Uri.parse('$baseUrl/requests/${link.value}/reject'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(

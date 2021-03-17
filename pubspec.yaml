@@ -11,11 +11,11 @@ environment:
 
 dependencies:
   ffi: ^1.0.0
-  http: ^0.12.1
+  http: ^0.13.0
   meta: ^1.1.8
   pedantic: ^1.9.0
-  json_annotation: ^3.0.1
-  json_serializable: ^3.3.0
+  json_annotation: ^4.0.0
+  json_serializable: ^4.0.3
   optional: ^5.0.0
 
 dev_dependencies:

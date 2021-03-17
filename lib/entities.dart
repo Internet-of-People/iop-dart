@@ -21,7 +21,7 @@ abstract class Api {
 
   Future<Response> post(String path, dynamic body, { Map<String,String> customHeaders }) async {
     return _config.client.post(
-      '${_baseUrl}$path',
+      Uri.parse('${_baseUrl}$path'),
       headers: headers(customHeaders),
       body: body,
     );
@@ -29,7 +29,7 @@ abstract class Api {
 
   Future<Response> get(String path, { Map<String,String> customHeaders }) async {
     return _config.client.get(
-      '${_baseUrl}$path',
+      Uri.parse('${_baseUrl}$path'),
       headers: headers(customHeaders),
     );
   }

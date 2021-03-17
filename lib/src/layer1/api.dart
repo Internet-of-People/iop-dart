@@ -291,7 +291,7 @@ class Layer1Api {
 
   Future<Response> _layer1ApiPost(String path, dynamic body) async {
     return _client.post(
-      '${_networkConfig.host}:${_networkConfig.port}/api/v2$path',
+      Uri.parse('${_networkConfig.host}:${_networkConfig.port}/api/v2$path'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -301,7 +301,7 @@ class Layer1Api {
 
   Future<Response> _layer1ApiGet(String path) async {
     return _client.get(
-      '${_networkConfig.host}:${_networkConfig.port}/api/v2$path',
+      Uri.parse('${_networkConfig.host}:${_networkConfig.port}/api/v2$path'),
       headers: {
         'Content-Type': 'application/json',
       },

@@ -80,7 +80,7 @@ class CoeusApi {
 
   Future<Response> _layer2ApiGet(String path) async {
     return _client.get(
-      '${_networkConfig.host}:${_networkConfig.port}/coeus/v1$path',
+      Uri.parse('${_networkConfig.host}:${_networkConfig.port}/coeus/v1$path'),
       headers: {
         'Content-Type': 'application/json',
       },

@@ -195,7 +195,7 @@ class MorpheusApi {
 
   Future<Response> _layer2ApiGet(String path) async {
     return _client.get(
-      '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path',
+      Uri.parse('${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -204,7 +204,7 @@ class MorpheusApi {
 
   Future<Response> _layer2ApiPost(String path, dynamic body) async {
     return _client.post(
-      '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path',
+      Uri.parse('${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path'),
       headers: {
         'Content-Type': 'application/json',
       },

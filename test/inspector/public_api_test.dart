@@ -32,7 +32,7 @@ void main() {
   group('InspectorPublicApi', () {
     test('listScenarios', () async {
       when(
-        client.get('$baseUrl/scenarios', headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/scenarios'), headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp(scenariosResponse)));
 
       final r = await api.listScenarios();
@@ -42,7 +42,7 @@ void main() {
 
     test('listScenarios - not http200', () async {
       when(
-        client.get('$baseUrl/scenarios', headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/scenarios'), headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
@@ -54,7 +54,7 @@ void main() {
     test('getPublicBlob', () async {
       final id = ContentId('contentId');
       when(
-        client.get('$baseUrl/blob/${id.value}', headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/blob/${id.value}'), headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('BLOB')));
 
       final r = await api.getPublicBlob(id);
@@ -65,7 +65,7 @@ void main() {
     test('getPublicBlob - http404', () async {
       final id = ContentId('contentId');
       when(
-        client.get('$baseUrl/blob/${id.value}', headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/blob/${id.value}'), headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 404)));
 
       final r = await api.getPublicBlob(id);
@@ -75,7 +75,7 @@ void main() {
     test('getPublicBlob - not http200/404', () async {
       final id = ContentId('contentId');
       when(
-        client.get('$baseUrl/blob/${id.value}', headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/blob/${id.value}'), headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
@@ -87,7 +87,7 @@ void main() {
     test('uploadPresentation', () async {
       final presentation = TestVault.create().createSignedPresentation();
       when(client.post(
-        '$baseUrl/presentation',
+        Uri.parse('$baseUrl/presentation'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -101,7 +101,7 @@ void main() {
     test('uploadPresentation - not http202', () async {
       final presentation = TestVault.create().createSignedPresentation();
       when(client.post(
-        '$baseUrl/presentation',
+        Uri.parse('$baseUrl/presentation'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
