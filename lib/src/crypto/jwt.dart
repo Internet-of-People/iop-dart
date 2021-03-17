@@ -18,14 +18,14 @@ class JwtBuilder implements Disposable {
   }
 
   factory JwtBuilder.withContentId(String contentId) {
-    final nativeContentId = Utf8.toUtf8(contentId);
+    final nativeContentId = contentId.toNativeUtf8();
     try {
       final builder = DartApi.native.jwtBuilder
           .withContentId(nativeContentId)
           .extract((res) => res.asPointer<Void>());
       return JwtBuilder(builder, true);
     } finally {
-      free(nativeContentId);
+      calloc.free(nativeContentId);
     }
   }
 
@@ -72,18 +72,18 @@ class JwtParser implements Disposable {
   factory JwtParser.create(String token, { DateTime currentTime }) {
     Pointer<Int64> epochSecs = nullptr;
     if (currentTime != null) {
-      epochSecs = allocate<Int64>();
+      epochSecs = calloc<Int64>();
       epochSecs.value = (currentTime.toUtc().millisecondsSinceEpoch / 1000).round();
     }
 
-    final nativeToken = Utf8.toUtf8(token);
+    final nativeToken = token.toNativeUtf8();
     try {
       final parser = DartApi.native.jwtParser
           .create(nativeToken, epochSecs)
           .extract((res) => res.asPointer<Void>());
       return JwtParser(parser, true);
     } finally {
-      free(nativeToken);
+      calloc.free(nativeToken);
     }
   }
 

@@ -16,32 +16,32 @@ class Vault implements Disposable {
     String unlockPassword, {
     String languageCode = 'en',
   }) {
-    final nativeLang = Utf8.toUtf8(languageCode);
-    final nativeSeed = Utf8.toUtf8(seed);
-    final nativeW25 = Utf8.toUtf8(word25);
-    final nativePwd = Utf8.toUtf8(unlockPassword);
+    final nativeLang = languageCode.toNativeUtf8();
+    final nativeSeed = seed.toNativeUtf8();
+    final nativeW25 = word25.toNativeUtf8();
+    final nativePwd = unlockPassword.toNativeUtf8();
     try {
       final ffiVault = DartApi.native.vault
           .create(nativeLang, nativeSeed, nativeW25, nativePwd)
           .extract((res) => res.asPointer<Void>());
       return Vault._(ffiVault, true);
     } finally {
-      free(nativePwd);
-      free(nativeW25);
-      free(nativeSeed);
-      free(nativeLang);
+      calloc.free(nativePwd);
+      calloc.free(nativeW25);
+      calloc.free(nativeSeed);
+      calloc.free(nativeLang);
     }
   }
 
   static Vault load(String vaultJson) {
-    final nativeJson = Utf8.toUtf8(vaultJson);
+    final nativeJson = vaultJson.toNativeUtf8();
     try {
       final ffiVault = DartApi.native.vault
           .load(nativeJson)
           .extract((res) => res.asPointer<Void>());
       return Vault._(ffiVault, true);
     } finally {
-      free(nativeJson);
+      calloc.free(nativeJson);
     }
   }
 

@@ -33,25 +33,25 @@ class SecpPrivateKey implements Disposable {
   SecpPrivateKey(this._ffi, this._owned);
 
   static SecpPrivateKey fromArkPassphrase(String passphrase) {
-    final nativePassphrase = Utf8.toUtf8(passphrase);
+    final nativePassphrase = passphrase.toNativeUtf8();
     try {
       final ffiSk = DartApi.native.secpPrivateKey
           .fromArkPassphrase(nativePassphrase)
           .extract((resp) => resp.asPointer<Void>());
       return SecpPrivateKey(ffiSk, true);
     } finally {
-      free(nativePassphrase);
+      calloc.free(nativePassphrase);
     }
   }
 
   String toWif(String network) {
-    final nativeNetwork = Utf8.toUtf8(network);
+    final nativeNetwork = network.toNativeUtf8();
     try {
       return DartApi.native.secpPrivateKey
           .toWif(_ffi, nativeNetwork)
           .intoString();
     } finally {
-      free(nativeNetwork);
+      calloc.free(nativeNetwork);
     }
   }
 
@@ -72,14 +72,14 @@ class SecpPrivateKey implements Disposable {
   }
 
   SignedHydraTransaction signHydraTransaction(String txJson) {
-    final nativeTx = Utf8.toUtf8(txJson);
+    final nativeTx = txJson.toNativeUtf8();
     try {
       final signedTx = DartApi.native.secpPrivateKey
           .signHydraTx(_ffi, nativeTx)
           .extract((resp) => resp.asString);
       return SignedHydraTransaction(signedTx);
     } finally {
-      free(nativeTx);
+      calloc.free(nativeTx);
     }
   }
 
@@ -103,14 +103,14 @@ class SecpPublicKey implements Disposable {
   SecpPublicKey(this._ffi, this._owned);
 
   static SecpPublicKey fromString(String str) {
-    final nativeStr = Utf8.toUtf8(str);
+    final nativeStr = str.toNativeUtf8();
     try {
       final ffi = DartApi.native.secpPublicKey
           .fromString(nativeStr)
           .extract((resp) => resp.asPointer<Void>());
       return SecpPublicKey(ffi, true);
     } finally {
-      free(nativeStr);
+      calloc.free(nativeStr);
     }
   }
 

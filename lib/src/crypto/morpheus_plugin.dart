@@ -243,42 +243,42 @@ class MorpheusPrivate implements Disposable {
   Ssi.Signed<Ssi.WitnessRequest> signWitnessRequest(
       KeyId id, Ssi.WitnessRequest request) {
     final requestString = json.encode(request.toJson());
-    final nativeRequest = Utf8.toUtf8(requestString);
+    final nativeRequest = requestString.toNativeUtf8();
     try {
       final signedFfi = DartApi.native.morpheusPrivate
           .signWitnessRequest(_ffi, id.ffi, nativeRequest)
           .extract((resp) => resp.asPointer<Void>());
       return _toSsiSignedTyped(signedFfi, request);
     } finally {
-      free(nativeRequest);
+      calloc.free(nativeRequest);
     }
   }
 
   Ssi.Signed<Ssi.WitnessStatement> signWitnessStatement(
       KeyId id, Ssi.WitnessStatement statement) {
     final statementString = json.encode(statement.toJson());
-    final nativeStatement = Utf8.toUtf8(statementString);
+    final nativeStatement = statementString.toNativeUtf8();
     try {
       final signedFfi = DartApi.native.morpheusPrivate
           .signWitnessStatement(_ffi, id.ffi, nativeStatement)
           .extract((resp) => resp.asPointer<Void>());
       return _toSsiSignedTyped(signedFfi, statement);
     } finally {
-      free(nativeStatement);
+      calloc.free(nativeStatement);
     }
   }
 
   Ssi.Signed<Ssi.Presentation> signClaimPresentation(
       KeyId id, Ssi.Presentation presentation) {
     final presentationString = json.encode(presentation.toJson());
-    final nativePresentation = Utf8.toUtf8(presentationString);
+    final nativePresentation = presentationString.toNativeUtf8();
     try {
       final signedFfi = DartApi.native.morpheusPrivate
           .signClaimPresentation(_ffi, id.ffi, nativePresentation)
           .extract((resp) => resp.asPointer<Void>());
       return _toSsiSignedTyped(signedFfi, presentation);
     } finally {
-      free(nativePresentation);
+      calloc.free(nativePresentation);
     }
   }
 
@@ -332,13 +332,13 @@ class MorpheusPrivate implements Disposable {
 
 class MorpheusPlugin implements Disposable {
   static void init(Vault vault, String unlockPassword) {
-    final nativePwd = Utf8.toUtf8(unlockPassword);
+    final nativePwd = unlockPassword.toNativeUtf8();
     try {
       return DartApi.native.morpheusPlugin
           .init(vault.ffi, nativePwd)
           .extract((res) => res.asVoid);
     } finally {
-      free(nativePwd);
+      calloc.free(nativePwd);
     }
   }
 
@@ -355,14 +355,14 @@ class MorpheusPlugin implements Disposable {
   MorpheusPlugin._(this._ffi, this._owned);
 
   MorpheusPrivate private(String unlockPassword) {
-    final nativePwd = Utf8.toUtf8(unlockPassword);
+    final nativePwd = unlockPassword.toNativeUtf8();
     try {
       final private = DartApi.native.morpheusPlugin
           .private(_ffi, nativePwd)
           .extract((res) => res.asPointer<Void>());
       return MorpheusPrivate._(private, true);
     } finally {
-      free(nativePwd);
+      calloc.free(nativePwd);
     }
   }
 

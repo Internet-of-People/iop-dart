@@ -27,14 +27,14 @@ class MorpheusAssetBuilder implements Disposable {
   }
 
   MorpheusAssetBuilder addRegisterBeforeProof(ContentId contentId) {
-    final nativeCid = Utf8.toUtf8(contentId.value);
+    final nativeCid = contentId.value.toNativeUtf8();
     try {
       DartApi.native.morpheusAssetBuilder
           .addRegisterBeforeProof(_ffi, nativeCid)
           .extract((res) => res.asVoid);
       return this;
     } finally {
-      free(nativeCid);
+      calloc.free(nativeCid);
     }
   }
 
@@ -78,13 +78,13 @@ class MorpheusAsset implements Disposable {
 
 class MorpheusTxBuilder{
   static String build(Network network, MorpheusAsset asset, SecpPublicKey senderPubKey, int nonce) {
-    final nativeNetwork = Utf8.toUtf8(network.networkNativeName);
+    final nativeNetwork = network.networkNativeName.toNativeUtf8();
     try {
       return DartApi.native.morpheusTxBuilder
           .build(nativeNetwork, asset._ffi, senderPubKey.ffi, nonce)
           .extract((res) => res.asString);
     } finally {
-      free(nativeNetwork);
+      calloc.free(nativeNetwork);
     }
   }
 }

@@ -10,27 +10,27 @@ import 'package:iop_sdk/network.dart';
 class HydraPlugin implements Disposable {
   static void init(
       Vault vault, String unlockPassword, Network network, int account) {
-    final nativePwd = Utf8.toUtf8(unlockPassword);
-    final nativeNet = Utf8.toUtf8(network.networkNativeName);
+    final nativePwd = unlockPassword.toNativeUtf8();
+    final nativeNet = network.networkNativeName.toNativeUtf8();
     try {
       return DartApi.native.hydraPlugin
           .init(vault.ffi, nativePwd, nativeNet, account)
           .extract((res) => res.asVoid);
     } finally {
-      free(nativeNet);
-      free(nativePwd);
+      calloc.free(nativeNet);
+      calloc.free(nativePwd);
     }
   }
 
   static HydraPlugin get(Vault vault, Network network, int account) {
-    final nativeNet = Utf8.toUtf8(network.networkNativeName);
+    final nativeNet = network.networkNativeName.toNativeUtf8();
     try {
       final ffiPlugin = DartApi.native.hydraPlugin
           .get(vault.ffi, nativeNet, account)
           .extract((res) => res.asPointer<Void>());
       return HydraPlugin(ffiPlugin, true);
     } finally {
-      free(nativeNet);
+      calloc.free(nativeNet);
     }
   }
 
@@ -40,14 +40,14 @@ class HydraPlugin implements Disposable {
   HydraPlugin(this._ffi, this._owned);
 
   HydraPrivate private(String unlockPassword) {
-    final nativePwd = Utf8.toUtf8(unlockPassword);
+    final nativePwd = unlockPassword.toNativeUtf8();
     try {
       final ffiPrivate = DartApi.native.hydraPlugin
           .private(_ffi, nativePwd)
           .extract((res) => res.asPointer<Void>());
       return HydraPrivate(ffiPrivate, _owned);
     } finally {
-      free(nativePwd);
+      calloc.free(nativePwd);
     }
   }
 
@@ -97,16 +97,16 @@ class HydraPrivate implements Disposable {
   //      returning SignedContent and maybe extracting signer address from tx or using HydraAddress
   SignedHydraTransaction signHydraTransaction(String address, String tx) {
     // TODO should we dedicate a toJson() function for tx serialization?
-    final nativeAddr = Utf8.toUtf8(address);
-    final nativeTx = Utf8.toUtf8(tx);
+    final nativeAddr = address.toNativeUtf8();
+    final nativeTx = tx.toNativeUtf8();
     try {
       final signedTx = DartApi.native.hydraPrivate
           .signHydraTx(_ffi, nativeAddr, nativeTx)
           .extract((res) => res.asString);
       return SignedHydraTransaction(signedTx);
     } finally {
-      free(nativeTx);
-      free(nativeAddr);
+      calloc.free(nativeTx);
+      calloc.free(nativeAddr);
     }
   }
 
@@ -160,14 +160,14 @@ class HydraPublic implements Disposable {
   }
 
   Bip44PublicKey keyByAddress(String address) {
-    final nativeAddr = Utf8.toUtf8(address);
+    final nativeAddr = address.toNativeUtf8();
     try {
       final bip44PubKey = DartApi.native.hydraPublic
           .keyByAddress(_ffi, nativeAddr)
           .extract((res) => res.asPointer<Void>());
       return Bip44PublicKey(bip44PubKey, true);
     } finally {
-      free(nativeAddr);
+      calloc.free(nativeAddr);
     }
   }
 

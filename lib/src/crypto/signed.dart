@@ -41,7 +41,7 @@ class SignedBytes implements Disposable {
 
   ValidationResult validateWithDidDoc(String didDoc,
       {int fromHeightInc, int untilHeightExc}) {
-    final nativeDidDoc = Utf8.toUtf8(didDoc);
+    final nativeDidDoc = didDoc.toNativeUtf8();
     final nativeFrom = fromHeightInc.asOptional();
     final nativeUntil = untilHeightExc.asOptional();
     try {
@@ -51,12 +51,12 @@ class SignedBytes implements Disposable {
       return ValidationResult(ffiResult, true);
     } finally {
       if (nativeUntil != nullptr) {
-        free(nativeUntil);
+        calloc.free(nativeUntil);
       }
       if (nativeFrom != nullptr) {
-        free(nativeFrom);
+        calloc.free(nativeFrom);
       }
-      free(nativeDidDoc);
+      calloc.free(nativeDidDoc);
     }
   }
 
@@ -100,7 +100,7 @@ class SignedJson implements Disposable {
 
   ValidationResult validateWithDidDoc(String didDoc,
       {int fromHeightInc, int untilHeightExc}) {
-    final nativeDidDoc = Utf8.toUtf8(didDoc);
+    final nativeDidDoc = didDoc.toNativeUtf8();
     final nativeFrom = fromHeightInc.asOptional();
     final nativeUntil = untilHeightExc.asOptional();
     try {
@@ -110,12 +110,12 @@ class SignedJson implements Disposable {
       return ValidationResult(ffiResult, true);
     } finally {
       if (nativeUntil != nullptr) {
-        free(nativeUntil);
+        calloc.free(nativeUntil);
       }
       if (nativeFrom != nullptr) {
-        free(nativeFrom);
+        calloc.free(nativeFrom);
       }
-      free(nativeDidDoc);
+      calloc.free(nativeDidDoc);
     }
   }
 

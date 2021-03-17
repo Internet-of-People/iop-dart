@@ -22,12 +22,12 @@ class ValidationResult implements Disposable {
         final nativeReason = issueApi.reasonGet(ffiIssue);
         final nativeSeverity = issueApi.severityGet(ffiIssue);
         try {
-          final reason = Utf8.fromUtf8(nativeReason);
-          final severity = Utf8.fromUtf8(nativeSeverity);
+          final reason = nativeReason.toDartString();
+          final severity = nativeSeverity.toDartString();
           return ValidationIssue(code, reason, severity);
         } finally {
-          free(nativeSeverity);
-          free(nativeReason);
+          calloc.free(nativeSeverity);
+          calloc.free(nativeReason);
           issueApi.delete(ffiIssue);
         }
       });

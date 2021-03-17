@@ -34,14 +34,14 @@ class KeyId implements Disposable {
   }
 
   static KeyId fromString(String str) {
-    final nativeStr = Utf8.toUtf8(str);
+    final nativeStr = str.toNativeUtf8();
     try {
       final key = DartApi.native.keyId
           .fromString(nativeStr)
           .extract((res) => res.asPointer<Void>());
       return KeyId(key, true);
     } finally {
-      free(nativeStr);
+      calloc.free(nativeStr);
     }
   }
 
@@ -140,14 +140,14 @@ class PublicKey implements Disposable {
   }
 
   static PublicKey fromString(String str) {
-    final nativeStr = Utf8.toUtf8(str);
+    final nativeStr = str.toNativeUtf8();
     try {
       final pk = DartApi.native.publicKey
           .fromString(nativeStr)
           .extract((res) => res.asPointer<Void>());
       return PublicKey(pk, true);
     } finally {
-      free(nativeStr);
+      calloc.free(nativeStr);
     }
   }
 
@@ -227,14 +227,14 @@ class Signature implements Disposable {
   }
 
   static Signature fromString(String str) {
-    final nativeStr = Utf8.toUtf8(str);
+    final nativeStr = str.toNativeUtf8();
     try {
       final sig = DartApi.native.signature
           .fromString(nativeStr)
           .extract((res) => res.asPointer<Void>());
       return Signature(sig, true);
     } finally {
-      free(nativeStr);
+      calloc.free(nativeStr);
     }
   }
 

@@ -19,14 +19,14 @@ class Did implements Disposable {
   }
 
   static Did fromString(String str) {
-    final nativeStr = Utf8.toUtf8(str);
+    final nativeStr = str.toNativeUtf8();
     try {
       final did = DartApi.native.did
           .fromString(nativeStr)
           .extract((res) => res.asPointer<Void>());
       return Did(did, true);
     } finally {
-      free(nativeStr);
+      calloc.free(nativeStr);
     }
   }
 

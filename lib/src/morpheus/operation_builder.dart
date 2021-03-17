@@ -32,66 +32,66 @@ class MorpheusOperationBuilder implements Disposable {
   MorpheusOperationBuilder(this._ffi, this._owned);
 
   factory MorpheusOperationBuilder.create(Did did, String lastTxId) {
-    final nativeTxId = lastTxId != null ? Utf8.toUtf8(lastTxId) : nullptr;
+    final nativeTxId = lastTxId != null ? lastTxId.toNativeUtf8() : nullptr;
     try {
       final builder = DartApi.native.morpheusOperationBuilder
           .create(did.ffi, nativeTxId)
           .extract((res) => res.asPointer<Void>());
       return MorpheusOperationBuilder(builder, true);
     } finally {
-      if (nativeTxId != nullptr) { free(nativeTxId); }
+      if (nativeTxId != nullptr) { calloc.free(nativeTxId); }
     }
   }
 
   MorpheusOperation addKey(String authentication, int blockHeight) {
-    final nativeAuth = Utf8.toUtf8(authentication);
+    final nativeAuth = authentication.toNativeUtf8();
     try {
       final op = DartApi.native.morpheusOperationBuilder
           .addKey(_ffi, nativeAuth, blockHeight)
           .extract((res) => res.asPointer<Void>());
       return MorpheusOperation(op, true);
     } finally {
-      free(nativeAuth);
+      calloc.free(nativeAuth);
     }
   }
 
   MorpheusOperation revokeKey(String authentication) {
-    final nativeAuth = Utf8.toUtf8(authentication);
+    final nativeAuth = authentication.toNativeUtf8();
     try {
       final op = DartApi.native.morpheusOperationBuilder
           .revokeKey(_ffi, nativeAuth)
           .extract((res) => res.asPointer<Void>());
       return MorpheusOperation(op, true);
     } finally {
-      free(nativeAuth);
+      calloc.free(nativeAuth);
     }
   }
 
   MorpheusOperation addRight(String authentication, String right) {
-    final nativeAuth = Utf8.toUtf8(authentication);
-    final nativeRight = Utf8.toUtf8(right);
+    final nativeAuth = authentication.toNativeUtf8();
+    final nativeRight = right.toNativeUtf8();
     try {
       final op = DartApi.native.morpheusOperationBuilder
           .addRight(_ffi, nativeAuth, nativeRight)
           .extract((res) => res.asPointer<Void>());
       return MorpheusOperation(op, true);
     } finally {
-      free(nativeRight);
-      free(nativeAuth);
+      calloc.free(nativeRight);
+      calloc.free(nativeAuth);
     }
   }
 
   MorpheusOperation revokeRight(String authentication, String right) {
-    final nativeAuth = Utf8.toUtf8(authentication);
-    final nativeRight = Utf8.toUtf8(right);
+    final nativeAuth = authentication.toNativeUtf8();
+    final nativeRight = right.toNativeUtf8();
     try {
       final op = DartApi.native.morpheusOperationBuilder
           .revokeRight(_ffi, nativeAuth, nativeRight)
           .extract((res) => res.asPointer<Void>());
       return MorpheusOperation(op, true);
     } finally {
-      free(nativeRight);
-      free(nativeAuth);
+      calloc.free(nativeRight);
+      calloc.free(nativeAuth);
     }
   }
 

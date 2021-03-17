@@ -7,7 +7,7 @@ extension Optional on int {
   Pointer<IntPtr> asOptional() {
     Pointer<IntPtr> result = nullptr;
     if (this != null) {
-      result = allocate<IntPtr>();
+      result = calloc<IntPtr>();
       result.value = this;
     }
     return result;
@@ -21,7 +21,7 @@ class NativeSlice extends Struct {
   int _length;
 
   factory NativeSlice.fromParts(Pointer<Void> ptr, int length) {
-    final result = allocate<NativeSlice>();
+    final result = calloc<NativeSlice>();
     return result.ref
       .._ptr = ptr
       .._length = length;
@@ -37,14 +37,14 @@ class ByteSlice implements Disposable {
 
   factory ByteSlice.fromBytes(ByteData data) {
     final length = data.lengthInBytes;
-    final ptr = allocate<Uint8>(count: length);
+    final ptr = calloc<Uint8>(length);
     try {
       final dartSlice = ptr.asTypedList(length);
       dartSlice.setAll(0, data.buffer.asUint8List(data.offsetInBytes, length));
       final nativeSlice = NativeSlice.fromParts(ptr.cast(), length);
       return ByteSlice(nativeSlice);
     } catch (e) {
-      free(ptr);
+      calloc.free(ptr);
       rethrow;
     }
   }
@@ -61,8 +61,8 @@ class ByteSlice implements Disposable {
 
   @override
   void dispose() {
-    free(_slice.ptr);
-    free(_slice.addressOf);
+    calloc.free(_slice.ptr);
+    calloc.free(_slice.addressOf);
   }
 }
 
@@ -92,9 +92,9 @@ extension ResultPtr on Pointer<Result> {
 extension StringPtr on Pointer<Utf8> {
   String intoString() {
     try {
-      return Utf8.fromUtf8(cast());
+      return toDartString();
     } finally {
-      free(this);
+      calloc.free(this);
     }
   }
 }
@@ -104,11 +104,12 @@ class Result extends Struct {
   Pointer<Utf8> _error;
 
   Pointer get _value {
-    return _error == nullptr ? _success : throw Utf8.fromUtf8(_error);
+    return _error == nullptr ? _success : throw _error.toDartString();
   }
 
   String get asString {
-    final result = Utf8.fromUtf8(_value.cast());
+    final Pointer<Utf8> rawUtf8Ptr = _value.cast();
+    final result = rawUtf8Ptr.toDartString();
     return result;
   }
 
@@ -130,16 +131,17 @@ class Result extends Struct {
         growable: false,
       );
     } finally {
-      free(slicePtr);
+      calloc.free(slicePtr);
     }
   }
 
   List<String> asStringList() {
     return asList((raw) {
       try {
-        return Utf8.fromUtf8(raw);
+        Pointer<Utf8> rawUtfPtr = raw.cast();
+        return rawUtfPtr.toDartString();
       } finally {
-        free(raw);
+        calloc.free(raw);
       }
     });
   }
@@ -152,7 +154,7 @@ class Result extends Struct {
       final value = intPtr.value;
       return value != 0;
     } finally {
-      free(intPtr);
+      calloc.free(intPtr);
     }
   }
 
@@ -161,7 +163,7 @@ class Result extends Struct {
     try {
       return intPtr.value;
     } finally {
-      free(intPtr);
+      calloc.free(intPtr);
     }
   }
 
@@ -170,17 +172,17 @@ class Result extends Struct {
     try {
       return intPtr.value;
     } finally {
-      free(intPtr);
+      calloc.free(intPtr);
     }
   }
 
   void dispose() {
     if (_success != nullptr) {
-      free(_success);
+      calloc.free(_success);
     }
     if (_error != nullptr) {
-      free(_error);
+      calloc.free(_error);
     }
-    free(addressOf);
+    calloc.free(addressOf);
   }
 }

@@ -29,71 +29,71 @@ class DartApi implements Disposable {
   }
 
   String bip39GeneratePhrase(String langCode) {
-    final nativeLangCode = Utf8.toUtf8(langCode);
+    final nativeLangCode = langCode.toNativeUtf8();
     try {
       return _native
           .bip39_generate_phrase(nativeLangCode)
           .extract((res) => res.asString);
     } finally {
-      free(nativeLangCode);
+      calloc.free(nativeLangCode);
     }
   }
 
   void bip39ValidatePhrase(String langCode, String phrase) {
-    final nativeLangCode = Utf8.toUtf8(langCode);
-    final nativePhrase = Utf8.toUtf8(phrase);
+    final nativeLangCode = langCode.toNativeUtf8();
+    final nativePhrase = phrase.toNativeUtf8();
     try {
       return _native
           .bip39_validate_phrase(nativeLangCode, nativePhrase)
           .extract((res) => res.asVoid);
     } finally {
-      free(nativeLangCode);
-      free(nativePhrase);
+      calloc.free(nativeLangCode);
+      calloc.free(nativePhrase);
     }
   }
 
   List<String> bip39ListWords(String langCode, String prefix) {
-    final nativeLangCode = Utf8.toUtf8(langCode);
-    final nativePrefix = Utf8.toUtf8(prefix);
+    final nativeLangCode = langCode.toNativeUtf8();
+    final nativePrefix = prefix.toNativeUtf8();
 
     try {
       return _native
           .bip39_list_words(nativeLangCode, nativePrefix)
           .extract((res) => res.asStringList());
     } finally {
-      free(nativeLangCode);
-      free(nativePrefix);
+      calloc.free(nativeLangCode);
+      calloc.free(nativePrefix);
     }
   }
 
   String selectiveDigestJson(String json, String keepPaths) {
-    final nativeJson = Utf8.toUtf8(json);
-    final nativeKeepPaths = Utf8.toUtf8(keepPaths);
+    final nativeJson = json.toNativeUtf8();
+    final nativeKeepPaths = keepPaths.toNativeUtf8();
     try {
       return _native
           .selectiveDigestJson(nativeJson, nativeKeepPaths)
           .extract((res) => res.asString);
     } finally {
-      free(nativeJson);
-      free(nativeKeepPaths);
+      calloc.free(nativeJson);
+      calloc.free(nativeKeepPaths);
     }
   }
 
   String digestJson(String json) {
-    final nativeJson = Utf8.toUtf8(json);
+    final nativeJson = json.toNativeUtf8();
     try {
       return _native.digestJson(nativeJson).extract((res) => res.asString);
     } finally {
-      free(nativeJson);
+      calloc.free(nativeJson);
     }
   }
 
   String stringifyJson(String json) {
-    final nativeJson = Utf8.toUtf8(json);
+    final nativeJson = json.toNativeUtf8();
     try {
       return _native.stringifyJson(nativeJson).extract((res) => res.asString);
     } finally {
-      free(nativeJson);
+      calloc.free(nativeJson);
     }
   }
 

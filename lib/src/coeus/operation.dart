@@ -15,14 +15,14 @@ class SubtreePolicies implements Disposable {
       SubtreePolicies(DartApi.native.coeusSubtreePolicies.create(), true);
 
   SubtreePolicies withSchema(String schema) {
-    final nativeSchema = Utf8.toUtf8(schema);
+    final nativeSchema = schema.toNativeUtf8();
     try {
       final policies = DartApi.native.coeusSubtreePolicies
           .withSchema(_ffi, nativeSchema)
           .extract((res) => res.asPointer<Void>());
       return SubtreePolicies(policies, true);
     } finally {
-      free(nativeSchema);
+      calloc.free(nativeSchema);
     }
   }
 
@@ -59,9 +59,9 @@ class UserOperation implements Disposable {
     String data,
     int expiresAtHeight,
   ) {
-    final nativeDomainName = Utf8.toUtf8(domainName);
-    final nativeOwner = Utf8.toUtf8(owner.toString());
-    final nativeData = Utf8.toUtf8(data);
+    final nativeDomainName = domainName.toNativeUtf8();
+    final nativeOwner = owner.toString().toNativeUtf8();
+    final nativeData = data.toNativeUtf8();
     try {
       final op = DartApi.native.coeusUserOperation
           .opRegister(nativeDomainName, nativeOwner, subtreePolicies._ffi,
@@ -69,61 +69,61 @@ class UserOperation implements Disposable {
           .extract((res) => res.asPointer<Void>());
       return UserOperation(op, true);
     } finally {
-      free(nativeData);
-      free(nativeOwner);
-      free(nativeDomainName);
+      calloc.free(nativeData);
+      calloc.free(nativeOwner);
+      calloc.free(nativeDomainName);
     }
   }
 
   factory UserOperation.update(String domainName, String schema) {
-    final nativeDomainName = Utf8.toUtf8(domainName);
-    final nativeSchema = Utf8.toUtf8(schema);
+    final nativeDomainName = domainName.toNativeUtf8();
+    final nativeSchema = schema.toNativeUtf8();
     try {
       final op = DartApi.native.coeusUserOperation
           .opUpdate(nativeDomainName, nativeSchema)
           .extract((res) => res.asPointer<Void>());
       return UserOperation(op, true);
     } finally {
-      free(nativeSchema);
-      free(nativeDomainName);
+      calloc.free(nativeSchema);
+      calloc.free(nativeDomainName);
     }
   }
 
   factory UserOperation.renew(String domainName, int expiresAtHeight) {
-    final nativeDomainName = Utf8.toUtf8(domainName);
+    final nativeDomainName = domainName.toNativeUtf8();
     try {
       final op = DartApi.native.coeusUserOperation
           .opRenew(nativeDomainName, expiresAtHeight)
           .extract((res) => res.asPointer<Void>());
       return UserOperation(op, true);
     } finally {
-      free(nativeDomainName);
+      calloc.free(nativeDomainName);
     }
   }
 
   factory UserOperation.transfer(String domainName, PublicKey toOwner) {
-    final nativeDomainName = Utf8.toUtf8(domainName);
-    final nativeToOwner = Utf8.toUtf8(toOwner.toString());
+    final nativeDomainName = domainName.toNativeUtf8();
+    final nativeToOwner = toOwner.toString().toNativeUtf8();
     try {
       final op = DartApi.native.coeusUserOperation
           .opTransfer(nativeDomainName, nativeToOwner)
           .extract((res) => res.asPointer<Void>());
       return UserOperation(op, true);
     } finally {
-      free(nativeToOwner);
-      free(nativeDomainName);
+      calloc.free(nativeToOwner);
+      calloc.free(nativeDomainName);
     }
   }
 
   factory UserOperation.delete(String domainName) {
-    final nativeDomainName = Utf8.toUtf8(domainName);
+    final nativeDomainName = domainName.toNativeUtf8();
     try {
       final op = DartApi.native.coeusUserOperation
           .opDelete(nativeDomainName)
           .extract((res) => res.asPointer<Void>());
       return UserOperation(op, true);
     } finally {
-      free(nativeDomainName);
+      calloc.free(nativeDomainName);
     }
   }
 

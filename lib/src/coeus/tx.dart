@@ -14,14 +14,14 @@ class CoeusTxBuilder implements Disposable {
   CoeusTxBuilder(this._ffi, this._owned);
 
   factory CoeusTxBuilder.create(Network network) {
-    final nativeNetwork = Utf8.toUtf8(network.networkNativeName);
+    final nativeNetwork = network.networkNativeName.toNativeUtf8();
     try {
       final builder = DartApi.native.coeusTxBuilder
           .create(nativeNetwork)
           .extract((res) => res.asPointer<Void>());
       return CoeusTxBuilder(builder, true);
     } finally {
-      free(nativeNetwork);
+      calloc.free(nativeNetwork);
     }
   }
 
