@@ -37,7 +37,7 @@ void main() {
 
       final signedContractJson = <String, dynamic>{
         'content':
-            utf8.decode(signedContract.content.content.buffer.asUint8List()),
+            utf8.decode(signedContract.content.content!.buffer.asUint8List()),
         'publicKey': signedContract.signature.publicKey.value,
         'signature': signedContract.signature.bytes.value,
       };

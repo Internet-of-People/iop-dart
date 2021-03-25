@@ -8,63 +8,49 @@ part of 'io.dart';
 
 RequestEntry _$RequestEntryFromJson(Map<String, dynamic> json) {
   return RequestEntry(
-    json['capabilityLink'] == null
-        ? null
-        : CapabilityLink.fromJson(json['capabilityLink'] as String),
-    json['requestId'] == null
-        ? null
-        : ContentId.fromJson(json['requestId'] as String),
-    json['dateOfRequest'] == null
-        ? null
-        : DateTime.parse(json['dateOfRequest'] as String),
-    _$enumDecodeNullable(_$StatusEnumMap, json['status']),
-    json['processId'] == null
-        ? null
-        : ContentId.fromJson(json['processId'] as String),
-    json['notes'] as String,
+    CapabilityLink.fromJson(json['capabilityLink'] as String),
+    ContentId.fromJson(json['requestId'] as String),
+    DateTime.parse(json['dateOfRequest'] as String),
+    _$enumDecode(_$StatusEnumMap, json['status']),
+    ContentId.fromJson(json['processId'] as String),
+    json['notes'] as String?,
   );
 }
 
 Map<String, dynamic> _$RequestEntryToJson(RequestEntry instance) =>
     <String, dynamic>{
-      'capabilityLink': instance.capabilityLink?.toJson(),
-      'requestId': instance.requestId?.toJson(),
-      'dateOfRequest': instance.dateOfRequest?.toIso8601String(),
+      'capabilityLink': instance.capabilityLink.toJson(),
+      'requestId': instance.requestId.toJson(),
+      'dateOfRequest': instance.dateOfRequest.toIso8601String(),
       'status': _$StatusEnumMap[instance.status],
-      'processId': instance.processId?.toJson(),
+      'processId': instance.processId.toJson(),
       'notes': instance.notes,
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$StatusEnumMap = {
@@ -86,11 +72,11 @@ Map<String, dynamic> _$CapabilityLinkToJson(CapabilityLink instance) =>
 
 RequestStatus _$RequestStatusFromJson(Map<String, dynamic> json) {
   return RequestStatus(
-    _$enumDecodeNullable(_$StatusEnumMap, json['status']),
+    _$enumDecode(_$StatusEnumMap, json['status']),
     json['signedStatement'] == null
         ? null
         : Signed.fromJson(json['signedStatement'] as Map<String, dynamic>),
-    json['rejectionReason'] as String,
+    json['rejectionReason'] as String?,
   );
 }
 

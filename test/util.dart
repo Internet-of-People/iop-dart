@@ -18,7 +18,7 @@ final morpheusLayer2 = Layer2Api.createMorpheusApi(networkConfig);
 // TODO generalize the different waitFor...Confirmation functions below
 //      with too much shared implementeation
 Future<void> waitForLayer1Confirmation(String txId, bool expected) async {
-  bool success;
+  var success = false;
   for (var i = 0; i < 12; i++) {
     await Future.delayed(const Duration(seconds: 2));
     final status = await layer1.getTxnStatus(txId);
@@ -55,7 +55,7 @@ Response resp(String body, {int code = 200}) {
   return Response(body, code);
 }
 
-bool validateJwtToken(String token, PublicKey publicKey, {String contentId}) {
+bool validateJwtToken(String token, PublicKey publicKey, {String? contentId}) {
   try {
     final parser = JwtParser.create(token);
     var result = parser.publicKey.toString() == publicKey.toString();
@@ -103,7 +103,7 @@ class TestVault {
       didData,
       Content<DynamicContent>.fromJson(json.decode(claimString)),
     );
-    expect(claim.content.content.content.containsKey('apple'), true);
+    expect(claim.content.content?.content.containsKey('apple'), true);
     final claimant = KeyLink('#0');
     final evidence = Content<DynamicContent>.fromJson(
       json.decode(evidenceString),
@@ -122,8 +122,8 @@ class TestVault {
 
   Signed<WitnessStatement> createSignedWitnessStatement() {
     final signedWitnessRequest = createSignedWitnessRequest();
-    final claim = signedWitnessRequest.content.content.claim;
-    final processId = signedWitnessRequest.content.content.processId;
+    final claim = signedWitnessRequest.content.content!.claim;
+    final processId = signedWitnessRequest.content.content!.processId;
     final constraint = Constraint(
       null,
       null,
@@ -149,7 +149,7 @@ class TestVault {
     final validUntil = validFrom.add(Duration(days: 5));
     final license = License(issuedTo, purpose, validFrom, validUntil);
     final provenClaim = ProvenClaim(
-      signedWitnessStatement.content.content.claim.content,
+      signedWitnessStatement.content.content!.claim.content!,
       [signedWitnessStatement],
     );
     final presentation = Presentation([provenClaim], [license], nonce);
@@ -161,7 +161,7 @@ class TestVault {
 
     final publicKey = statement.signature.publicKey;
     final contentId = selectiveDigestJson(
-      statement.content.content.toJson(),
+      statement.content.content!.toJson(),
       '',
     );
     final signature = statement.signature.bytes;

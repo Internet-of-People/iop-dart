@@ -43,7 +43,7 @@ class OperationData {
 @JsonSerializable(explicitToJson: true)
 class SignableOperationData {
   final DidData did;
-  final String lastTxId;
+  final String? lastTxId;
   final SignableOperationType operation;
 
   SignableOperationData(this.did, this.lastTxId, this.operation);
@@ -76,9 +76,9 @@ class SignedOperationsData extends OperationData {
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
         'operation': operation.toJson(),
-        'signables': signables?.map((e) => e?.toJson())?.toList(),
-        'signerPublicKey': signerPublicKey?.toJson(),
-        'signature': signature?.toJson(),
+        'signables': signables.map((e) => e.toJson()).toList(),
+        'signerPublicKey': signerPublicKey.toJson(),
+        'signature': signature.toJson(),
       };
 }
 
@@ -95,20 +95,20 @@ class RegisterBeforeProofData extends OperationData {
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
         'operation': operation.toJson(),
-        'contentId': contentId?.toJson(),
+        'contentId': contentId.toJson(),
       };
 }
 
 @JsonSerializable(explicitToJson: true, createToJson: false)
 class AddKeyData extends SignableOperationData {
   final AuthenticationData auth;
-  final int expiresAtHeight;
+  final int? expiresAtHeight;
 
   AddKeyData(
     DidData did,
     String lastTxId,
     this.auth, {
-    int expiresAtHeight,
+    int? expiresAtHeight,
   })  : expiresAtHeight = expiresAtHeight,
         super(did, lastTxId, SignableOperationType.addKey);
 
@@ -118,9 +118,9 @@ class AddKeyData extends SignableOperationData {
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
         'operation': operation.toJson(),
-        'did': did?.toJson(),
+        'did': did.toJson(),
         'lastTxId': lastTxId,
-        'auth': auth?.toJson(),
+        'auth': auth.toJson(),
         'expiresAtHeight': expiresAtHeight,
       };
 }
@@ -141,9 +141,9 @@ class RevokeKeyData extends SignableOperationData {
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
         'operation': operation.toJson(),
-        'did': did?.toJson(),
+        'did': did.toJson(),
         'lastTxId': lastTxId,
-        'auth': auth?.toJson(),
+        'auth': auth.toJson(),
       };
 }
 
@@ -165,9 +165,9 @@ class AddRightData extends SignableOperationData {
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
         'operation': operation.toJson(),
-        'did': did?.toJson(),
+        'did': did.toJson(),
         'lastTxId': lastTxId,
-        'auth': auth?.toJson(),
+        'auth': auth.toJson(),
         'right': right,
       };
 }
@@ -190,9 +190,9 @@ class RevokeRightData extends SignableOperationData {
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
         'operation': operation.toJson(),
-        'did': did?.toJson(),
+        'did': did.toJson(),
         'lastTxId': lastTxId,
-        'auth': auth?.toJson(),
+        'auth': auth.toJson(),
         'right': right,
       };
 }
@@ -208,7 +208,7 @@ class TombstoneDidData extends SignableOperationData {
   @override
   Map<String, dynamic> toJson() => <String, dynamic>{
         'operation': operation.toJson(),
-        'did': did?.toJson(),
+        'did': did.toJson(),
         'lastTxId': lastTxId,
       };
 }

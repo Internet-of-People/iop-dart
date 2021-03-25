@@ -27,12 +27,12 @@ extension NetworkProperties on Network {
         Network.TestNet: 'HYD testnet',
         Network.DevNet: 'HYD devnet',
         Network.MainNet: 'HYD mainnet',
-      }[this];
+      }[this]!;
 
   String get seedServerUrlBase => const {
         Network.LocalTestNet: 'http://127.0.0.1',
-        Network.TestNet: 'https://test.hydra.iop.global',
-        Network.DevNet: 'https://dev.hydra.iop.global',
-        Network.MainNet: 'https://hydra.iop.global',
-      }[this];
+        Network.TestNet: 'https://test.explorer.hydraledger.io',
+        Network.DevNet: 'https://dev.explorer.hydraledger.io',
+        Network.MainNet: 'https://explorer.hydraledger.io',
+      }[this]!;
 }

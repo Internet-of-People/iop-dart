@@ -4,10 +4,12 @@ import 'package:iop_sdk/authority.dart';
 import 'package:iop_sdk/entities.dart';
 import 'package:iop_sdk/ssi.dart';
 import 'package:iop_sdk/utils.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../util.dart';
+import 'public_api_test.mocks.dart';
 
 final processesResponse = '''{
   "processes": [
@@ -18,10 +20,7 @@ final processesResponse = '''{
 }
 ''';
 
-class MockApiConfig extends Mock implements ApiConfig {}
-
-class MockClient extends Mock implements Client {}
-
+@GenerateMocks([Client, ApiConfig])
 void main() {
   final client = MockClient();
   final config = MockApiConfig();
@@ -155,7 +154,7 @@ void main() {
 
       expect(r.isPresent, true);
       expect(r.value.status, Status.approved);
-      expect(r.value.signedStatement.signature.publicKey.value,
+      expect(r.value.signedStatement!.signature.publicKey.value,
           'pez2CLkBUjHB8w8G87D3YkREjpRuiqPu6BrRsgHMQy2Pzt6');
       expect(r.value.rejectionReason, null);
     });

@@ -7,7 +7,7 @@ part 'io.g.dart';
 @JsonSerializable(explicitToJson: true)
 class BeforeProofHistoryResponse {
   final ContentId contentId;
-  final int existsFromHeight;
+  final int? existsFromHeight;
   final int queriedAtHeight;
 
   BeforeProofHistoryResponse(
@@ -52,8 +52,8 @@ class DidOperation {
 
 @JsonSerializable(explicitToJson: true)
 class DryRunOperationError<T extends OperationData> {
-  @JsonKey(nullable: true, fromJson: _dataFromJson, toJson: _dataToJson)
-  final T invalidOperationAttempt;
+  @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
+  final T? invalidOperationAttempt;
   final String message;
 
   DryRunOperationError(this.invalidOperationAttempt, this.message);
@@ -70,9 +70,7 @@ Map<String, dynamic> _dataToJson<T>(T input) => {'content': input};
 
 @JsonSerializable(explicitToJson: true)
 class DomainSubtreePolicies {
-  @JsonKey(nullable: true)
-  final int expiration;
-  @JsonKey(nullable: true)
+  final int? expiration;
   final dynamic schema;
 
   DomainSubtreePolicies(this.expiration, this.schema);

@@ -29,16 +29,16 @@ class MorpheusApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<bool> beforeProofExists(ContentId contentId, {int height}) async {
+  Future<bool> beforeProofExists(ContentId contentId, {int? height}) async {
     final resp = await _layer2ApiGet(
-      _widthHeight('/before-proof/${contentId.value}/exists', height),
+      _withHeight('/before-proof/${contentId.value}/exists', height),
     );
     return json.decode(resp.body);
   }
 
-  Future<DidDocument> getDidDocument(Did did, {int height}) async {
+  Future<DidDocument> getDidDocument(Did did, {int? height}) async {
     final resp = await _layer2ApiGet(
-      _widthHeight('/did/${did.toString()}/document', height),
+      _withHeight('/did/${did.toString()}/document', height),
     );
 
     if (resp.statusCode == HttpStatus.ok) {
@@ -63,7 +63,7 @@ class MorpheusApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<String> getLastTxId(Did did) async {
+  Future<String?> getLastTxId(Did did) async {
     final resp =
         await _layer2ApiGet('/did/${did.toString()}/transactions/last');
 
@@ -76,10 +76,10 @@ class MorpheusApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<List<TransactionIdHeight>> getDidTransactionIds(
+  Future<List<TransactionIdHeight>?> getDidTransactionIds(
     Did did,
     int fromHeight, {
-    int untilHeight,
+    int? untilHeight,
   }) async {
     return _didTransactionIdsQuery(
       false,
@@ -89,10 +89,10 @@ class MorpheusApi {
     );
   }
 
-  Future<List<TransactionIdHeight>> getDidTransactionAttemptIds(
+  Future<List<TransactionIdHeight>?> getDidTransactionAttemptIds(
     Did did,
     int fromHeight, {
-    int untilHeight,
+    int? untilHeight,
   }) async {
     return _didTransactionIdsQuery(
       true,
@@ -102,10 +102,10 @@ class MorpheusApi {
     );
   }
 
-  Future<List<DidOperation>> getDidOperations(
+  Future<List<DidOperation>?> getDidOperations(
     Did did,
     int fromHeight, {
-    int untilHeight,
+    int? untilHeight,
   }) async {
     return _didOperationsQuery(
       false,
@@ -115,10 +115,10 @@ class MorpheusApi {
     );
   }
 
-  Future<List<DidOperation>> getDidOperationAttempts(
+  Future<List<DidOperation>?> getDidOperationAttempts(
     Did did,
     int fromHeight, {
-    int untilHeight,
+    int? untilHeight,
   }) async {
     return _didOperationsQuery(
       true,
@@ -147,15 +147,15 @@ class MorpheusApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<List<DidOperation>> _didOperationsQuery(
+  Future<List<DidOperation>?> _didOperationsQuery(
     bool includeAttempts,
     Did did,
     int fromHeight, {
-    int untilHeight,
+    int? untilHeight,
   }) async {
     final path = includeAttempts ? 'operation-attempts' : 'operations';
     final resp = await _layer2ApiGet(
-      _widthHeight('/did/${did.toString()}/$path/$fromHeight', untilHeight),
+      _withHeight('/did/${did.toString()}/$path/$fromHeight', untilHeight),
     );
 
     if (resp.statusCode == HttpStatus.ok) {
@@ -169,15 +169,15 @@ class MorpheusApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<List<TransactionIdHeight>> _didTransactionIdsQuery(
+  Future<List<TransactionIdHeight>?> _didTransactionIdsQuery(
     bool includeAttempts,
     Did did,
     int fromHeight, {
-    int untilHeight,
+    int? untilHeight,
   }) async {
     final path = includeAttempts ? 'transaction-attempts' : 'transactions';
     final resp = await _layer2ApiGet(
-      _widthHeight('/did/${did.toString()}/$path/$fromHeight', untilHeight),
+      _withHeight('/did/${did.toString()}/$path/$fromHeight', untilHeight),
     );
 
     if (resp.statusCode == HttpStatus.ok) {
@@ -191,14 +191,14 @@ class MorpheusApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  String _widthHeight(String path, int height) {
+  String _withHeight(String path, int? height) {
     return height == null ? path : '$path/$height';
   }
 
   Future<Response> _layer2ApiGet(String path) async {
+    final url = '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path';
     return _client.get(
-      Uri.parse(
-          '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path'),
+      Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
       },

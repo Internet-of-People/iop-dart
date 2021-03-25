@@ -112,14 +112,10 @@ class NodeCryptoConfigResponse {
 
 @JsonSerializable(explicitToJson: true)
 class NodeCryptoConfigExceptions {
-  @JsonKey(nullable: true)
-  final List<String> blocks;
-  @JsonKey(nullable: true)
-  final List<String> transactions;
-  @JsonKey(nullable: true)
-  final Map<String, String> outlookTable;
-  @JsonKey(nullable: true)
-  final Map<String, String> transactionIdFixTable;
+  final List<String>? blocks;
+  final List<String>? transactions;
+  final Map<String, String>? outlookTable;
+  final Map<String, String>? transactionIdFixTable;
 
   NodeCryptoConfigExceptions(
     this.blocks,
@@ -184,35 +180,25 @@ class Timestamp {
 
 @JsonSerializable(explicitToJson: true)
 class TransactionStatusResponse {
-  @JsonKey(nullable: true, includeIfNull: false)
-  final String id;
-  @JsonKey(nullable: true)
-  final String blockId;
-  @JsonKey(nullable: true)
-  final int version;
+  @JsonKey(includeIfNull: false)
+  final String? id;
+  final String? blockId;
+  final int? version;
   final int type;
-  @JsonKey(nullable: true)
-  final int typeGroup;
+  final int? typeGroup;
   final String amount;
   final String fee;
   final String sender;
   final String senderPublicKey;
   final String recipient;
-  @JsonKey(nullable: true)
-  final String signature;
-  @JsonKey(nullable: true)
-  final String signSignature;
-  @JsonKey(nullable: true)
-  final List<String> signatures;
-  @JsonKey(nullable: true)
-  final String vendorField;
-  @JsonKey(nullable: true)
-  final Map<String, dynamic> asset;
+  final String? signature;
+  final String? signSignature;
+  final List<String>? signatures;
+  final String? vendorField;
+  final Map<String, dynamic>? asset;
   final int confirmations;
-  @JsonKey(nullable: true)
-  final Timestamp timestamp;
-  @JsonKey(nullable: true)
-  final String nonce;
+  final Timestamp? timestamp;
+  final String? nonce;
 
   TransactionStatusResponse(
     this.id,

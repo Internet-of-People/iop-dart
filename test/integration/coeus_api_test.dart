@@ -13,7 +13,7 @@ final networkConfig = NetworkConfig.fromNetwork(network);
 final layer1Api = Layer1Api.createApi(networkConfig);
 final layer2Api = Layer2Api.createCoeusApi(networkConfig);
 
-void registerDomain(
+Future<void> registerDomain(
   String domain,
   PublicKey owner,
   String data,

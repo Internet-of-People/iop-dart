@@ -9,14 +9,14 @@ part of 'public_api.dart';
 ListScenariosResponse _$ListScenariosResponseFromJson(
     Map<String, dynamic> json) {
   return ListScenariosResponse(
-    (json['scenarios'] as List)
-        ?.map((e) => e == null ? null : ContentId.fromJson(e as String))
-        ?.toList(),
+    (json['scenarios'] as List<dynamic>)
+        .map((e) => ContentId.fromJson(e as String))
+        .toList(),
   );
 }
 
 Map<String, dynamic> _$ListScenariosResponseToJson(
         ListScenariosResponse instance) =>
     <String, dynamic>{
-      'scenarios': instance.scenarios?.map((e) => e?.toJson())?.toList(),
+      'scenarios': instance.scenarios.map((e) => e.toJson()).toList(),
     };

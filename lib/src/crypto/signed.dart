@@ -40,7 +40,7 @@ class SignedBytes implements Disposable {
   }
 
   ValidationResult validateWithDidDoc(String didDoc,
-      {int fromHeightInc, int untilHeightExc}) {
+      {int? fromHeightInc, int? untilHeightExc}) {
     final nativeDidDoc = didDoc.toNativeUtf8();
     final nativeFrom = fromHeightInc.asOptional();
     final nativeUntil = untilHeightExc.asOptional();
@@ -99,7 +99,7 @@ class SignedJson implements Disposable {
   }
 
   ValidationResult validateWithDidDoc(String didDoc,
-      {int fromHeightInc, int untilHeightExc}) {
+      {int? fromHeightInc, int? untilHeightExc}) {
     final nativeDidDoc = didDoc.toNativeUtf8();
     final nativeFrom = fromHeightInc.asOptional();
     final nativeUntil = untilHeightExc.asOptional();

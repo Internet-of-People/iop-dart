@@ -11,16 +11,16 @@ abstract class Api {
 
   Api(this._config) : _baseUrl = '${_config.host}:${_config.port}';
 
-  static Map<String, String> headers(Map<String, String> customHeaders) {
+  static Map<String, String> headers(Map<String, String>? customHeaders) {
     final headers = Map<String, String>.from(_jsonHeaders);
-    if (customHeaders != null) {
+    if (customHeaders != null && customHeaders.isNotEmpty) {
       headers.addAll(customHeaders);
     }
     return headers;
   }
 
   Future<Response> post(String path, dynamic body,
-      {Map<String, String> customHeaders}) async {
+      {Map<String, String>? customHeaders}) async {
     return _config.client.post(
       Uri.parse('${_baseUrl}$path'),
       headers: headers(customHeaders),
@@ -28,7 +28,8 @@ abstract class Api {
     );
   }
 
-  Future<Response> get(String path, {Map<String, String> customHeaders}) async {
+  Future<Response> get(String path,
+      {Map<String, String>? customHeaders}) async {
     return _config.client.get(
       Uri.parse('${_baseUrl}$path'),
       headers: headers(customHeaders),

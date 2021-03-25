@@ -9,14 +9,14 @@ part of 'public_api.dart';
 ListProcessesResponse _$ListProcessesResponseFromJson(
     Map<String, dynamic> json) {
   return ListProcessesResponse(
-    (json['processes'] as List)
-        ?.map((e) => e == null ? null : ContentId.fromJson(e as String))
-        ?.toList(),
+    (json['processes'] as List<dynamic>)
+        .map((e) => ContentId.fromJson(e as String))
+        .toList(),
   );
 }
 
 Map<String, dynamic> _$ListProcessesResponseToJson(
         ListProcessesResponse instance) =>
     <String, dynamic>{
-      'processes': instance.processes?.map((e) => e?.toJson())?.toList(),
+      'processes': instance.processes.map((e) => e.toJson()).toList(),
     };

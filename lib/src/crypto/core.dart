@@ -26,8 +26,8 @@ class Bip39 {
 }
 
 class Authentication {
-  final KeyId keyId;
-  final PublicKey publicKey;
+  final KeyId? keyId;
+  final PublicKey? publicKey;
 
   Authentication._(this.keyId, this.publicKey);
 

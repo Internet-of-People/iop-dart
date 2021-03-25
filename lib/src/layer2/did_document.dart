@@ -8,8 +8,8 @@ part 'did_document.g.dart';
 class KeyData {
   final int index;
   final AuthenticationData auth;
-  final int validFromHeight;
-  final int validUntilHeight;
+  final int? validFromHeight;
+  final int? validUntilHeight;
   final bool valid;
 
   KeyData(
@@ -28,7 +28,7 @@ class KeyData {
 
 @JsonSerializable(explicitToJson: true)
 class KeyRightHistoryPoint {
-  final int height;
+  final int? height;
   final bool valid;
 
   KeyRightHistoryPoint(this.height, this.valid);
@@ -59,7 +59,8 @@ class DidDocumentData {
   final List<KeyData> keys;
   final Map<String, List<KeyRightHistory>> rights;
   final bool tombstoned;
-  final int tombstonedAtHeight;
+  @JsonKey(includeIfNull: false)
+  final int? tombstonedAtHeight;
   final int queriedAtHeight;
 
   DidDocumentData(
@@ -123,9 +124,9 @@ class DidDocument {
   bool isTombstonedAt(int height) {
     _ensureHeightIsKnown(height);
 
-    final tHeight = _data.tombstonedAtHeight ?? -1;
+    final ripHeight = _data.tombstonedAtHeight ?? -1;
 
-    if (height >= tHeight) {
+    if (height >= ripHeight) {
       return true;
     }
     return false;
@@ -152,12 +153,12 @@ class DidDocument {
   }
 
   bool _isKeyValidAt(KeyData keyData, int height) {
-    if (keyData.validFromHeight != null && height < keyData.validFromHeight) {
+    if (keyData.validFromHeight != null && height < keyData.validFromHeight!) {
       return false;
     }
 
     if (keyData.validUntilHeight != null &&
-        height >= keyData.validUntilHeight) {
+        height >= keyData.validUntilHeight!) {
       return false;
     }
 
@@ -168,7 +169,7 @@ class DidDocument {
     var validAtHeight = false;
 
     for (final point in history) {
-      if (point.height != null && point.height > height) {
+      if (point.height != null && point.height! > height) {
         break;
       }
       validAtHeight = point.valid;

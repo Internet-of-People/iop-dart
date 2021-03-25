@@ -5,7 +5,7 @@ import 'package:iop_sdk/src/ffi/ffi.dart';
 import 'package:iop_sdk/src/ffi/native_api.dart';
 
 class DartApi implements Disposable {
-  static DartApi _instance;
+  static DartApi? _instance;
   final NativeApi _native;
 
   DartApi._(this._native);
@@ -18,12 +18,12 @@ class DartApi implements Disposable {
       _instance = DartApi._(api);
     }
 
-    return _instance;
+    return _instance!;
   }
 
   static void disposeIfCreated() {
     if (_instance != null) {
-      _instance.dispose();
+      _instance!.dispose();
       _instance = null;
     }
   }

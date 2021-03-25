@@ -3,22 +3,22 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/crypto.dart';
 
-extension Optional on int {
+extension Optional on int? {
   Pointer<IntPtr> asOptional() {
     Pointer<IntPtr> result = nullptr;
     if (this != null) {
       result = calloc<IntPtr>();
-      result.value = this;
+      result.value = this!;
     }
     return result;
   }
 }
 
 class NativeSlice extends Struct {
-  Pointer<Void> _ptr;
+  external Pointer<Void> _ptr;
 
   @IntPtr()
-  int _length;
+  external int _length;
 
   factory NativeSlice.fromParts(Pointer<Void> ptr, int length) {
     final result = calloc<NativeSlice>();
@@ -87,6 +87,14 @@ extension ResultPtr on Pointer<Result> {
       ref.dispose();
     }
   }
+
+  T? extractNullable<T>(T? Function(Result) fetcher) {
+    try {
+      return fetcher(ref);
+    } finally {
+      ref.dispose();
+    }
+  }
 }
 
 extension StringPtr on Pointer<Utf8> {
@@ -100,8 +108,8 @@ extension StringPtr on Pointer<Utf8> {
 }
 
 class Result extends Struct {
-  Pointer _success;
-  Pointer<Utf8> _error;
+  external Pointer _success;
+  external Pointer<Utf8> _error;
 
   Pointer get _value {
     return _error == nullptr ? _success : throw _error.toDartString();
@@ -121,13 +129,13 @@ class Result extends Struct {
   }
 
   /// Make sure itemFactory releases the native pointer received.
-  List<T> asList<T>(T Function(Pointer<NativeType> raw) itemFactory) {
+  List<T> asList<T>(T Function(Pointer<Void> raw) itemFactory) {
     final slicePtr = asPointer<NativeSlice>();
     try {
       final slice = slicePtr.ref;
       return List.generate(
         slice.length,
-        (i) => itemFactory(slice.at(i)),
+        (i) => itemFactory(slice.at(i) as Pointer<Void>),
         growable: false,
       );
     } finally {

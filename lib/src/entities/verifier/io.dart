@@ -23,8 +23,7 @@ class ValidationRequest {
   final ContentId contentId;
   final SignatureData signature;
   final DidData onBehalfOf;
-  @JsonKey(nullable: true)
-  final AfterProof afterProof;
+  final AfterProof? afterProof;
 
   ValidationRequest(
     this.publicKey,

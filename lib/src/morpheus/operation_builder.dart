@@ -30,7 +30,7 @@ class MorpheusOperationBuilder implements Disposable {
 
   MorpheusOperationBuilder(this._ffi, this._owned);
 
-  factory MorpheusOperationBuilder.create(Did did, String lastTxId) {
+  factory MorpheusOperationBuilder.create(Did did, String? lastTxId) {
     final nativeTxId = lastTxId != null ? lastTxId.toNativeUtf8() : nullptr;
     try {
       final builder = DartApi.native.morpheusOperationBuilder

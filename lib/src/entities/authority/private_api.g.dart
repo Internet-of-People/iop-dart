@@ -8,15 +8,14 @@ part of 'private_api.dart';
 
 ListRequestsResponse _$ListRequestsResponseFromJson(Map<String, dynamic> json) {
   return ListRequestsResponse(
-    (json['requests'] as List)
-        ?.map((e) =>
-            e == null ? null : RequestEntry.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    (json['requests'] as List<dynamic>)
+        .map((e) => RequestEntry.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 }
 
 Map<String, dynamic> _$ListRequestsResponseToJson(
         ListRequestsResponse instance) =>
     <String, dynamic>{
-      'requests': instance.requests?.map((e) => e?.toJson())?.toList(),
+      'requests': instance.requests.map((e) => e.toJson()).toList(),
     };

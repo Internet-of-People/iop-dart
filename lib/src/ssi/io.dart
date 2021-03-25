@@ -28,10 +28,10 @@ class DynamicContent extends WithNonce {
   static List<String> topLevelKeys = ['schema', 'nonce'];
 
   final Map<String, dynamic> content;
-  @JsonKey(nullable: true, includeIfNull: false)
-  final Content<DynamicContent> schema;
+  @JsonKey(includeIfNull: false)
+  final Content<DynamicContent>? schema;
 
-  DynamicContent(this.content, this.schema, Nonce nonce) : super(nonce);
+  DynamicContent(this.content, this.schema, Nonce? nonce) : super(nonce);
 
   factory DynamicContent.fromJson(Map<String, dynamic> json) {
     final content = Map.fromEntries(
@@ -52,9 +52,9 @@ class DynamicContent extends WithNonce {
 
 @JsonSerializable(explicitToJson: true, createToJson: false)
 class Content<T> {
-  @JsonKey(fromJson: _genericFromJson)
-  final T content;
-  final ContentId contentId;
+  @JsonKey(fromJson: _genericContentFromJson)
+  final T? content;
+  final ContentId? contentId;
 
   Content(this.content, this.contentId);
 
@@ -72,12 +72,16 @@ class Content<T> {
     if (content != null) {
       return (content as dynamic).toJson();
     } else {
-      return contentId?.value;
+      return contentId!.value;
     }
   }
 }
 
-T _genericFromJson<T>(Map<String, dynamic> input) {
+T? _genericContentFromJson<T>(Map<String, dynamic>? input) {
+  if (input == null) {
+    return null;
+  }
+
   if (T == DynamicContent) {
     return DynamicContent.fromJson(input) as T;
   } else if (T == Claim) {
@@ -108,8 +112,8 @@ class Signed<T> {
 
 @JsonSerializable(explicitToJson: true)
 class WithNonce {
-  @JsonKey(nullable: true, includeIfNull: false)
-  final Nonce nonce;
+  @JsonKey(includeIfNull: false)
+  final Nonce? nonce;
 
   WithNonce(this.nonce);
 
@@ -149,7 +153,6 @@ class WitnessRequest extends WithNonce {
   final Claim claim;
   final KeyLink claimant;
   final ContentId processId;
-  @JsonKey(nullable: true)
   final Content<DynamicContent> evidence;
 
   WitnessRequest(
@@ -157,7 +160,7 @@ class WitnessRequest extends WithNonce {
     this.claimant,
     this.processId,
     this.evidence,
-    Nonce nonce,
+    Nonce? nonce,
   ) : super(nonce);
 
   factory WitnessRequest.fromJson(Map<String, dynamic> json) =>
@@ -169,14 +172,11 @@ class WitnessRequest extends WithNonce {
 
 @JsonSerializable(explicitToJson: true)
 class Constraint {
-  @JsonKey(nullable: true)
-  final DateTime after;
-  @JsonKey(nullable: true)
-  final DateTime before;
+  final DateTime? after;
+  final DateTime? before;
   final KeyLink witness;
   final DidData authority;
-  @JsonKey(nullable: true)
-  final Content<DynamicContent> content;
+  final Content<DynamicContent>? content;
 
   Constraint(
     this.after,
@@ -202,7 +202,7 @@ class WitnessStatement extends WithNonce {
     this.claim,
     this.processId,
     this.constraints,
-    Nonce nonce,
+    Nonce? nonce,
   ) : super(nonce);
 
   factory WitnessStatement.fromJson(Map<String, dynamic> json) =>
@@ -215,6 +215,7 @@ class WitnessStatement extends WithNonce {
 @JsonSerializable(explicitToJson: true)
 class ProvenClaim {
   final Claim claim;
+  @JsonKey(fromJson: _statementListFromJson)
   final List<Signed<WitnessStatement>> statements;
 
   ProvenClaim(this.claim, this.statements);
@@ -223,6 +224,14 @@ class ProvenClaim {
       _$ProvenClaimFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProvenClaimToJson(this);
+}
+
+List<Signed<WitnessStatement>> _statementListFromJson(
+    Map<String, dynamic> input) {
+  var dynList = input as List<Signed<dynamic>>;
+  return dynList
+      .map((e) => Signed<WitnessStatement>.fromJson(e as Map<String, dynamic>))
+      .toList();
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -245,7 +254,7 @@ class Presentation extends WithNonce {
   final List<ProvenClaim> provenClaims;
   final List<License> licenses;
 
-  Presentation(this.provenClaims, this.licenses, Nonce nonce) : super(nonce);
+  Presentation(this.provenClaims, this.licenses, Nonce? nonce) : super(nonce);
 
   factory Presentation.fromJson(Map<String, dynamic> json) =>
       _$PresentationFromJson(json);

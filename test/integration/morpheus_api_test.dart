@@ -146,7 +146,7 @@ void main() {
 
     test('getDidTransactionIds', () async {
       final resp = await layer2Api.getDidTransactionIds(existingDid, 1);
-      expect(resp.length, greaterThan(0));
+      expect(resp!.length, greaterThan(0));
     });
 
     test('getDidTransactionIds - not existing', () async {
@@ -156,7 +156,7 @@ void main() {
 
     test('getDidTransactionAttemptIds', () async {
       final resp = await layer2Api.getDidTransactionAttemptIds(existingDid, 1);
-      expect(resp.length, greaterThan(0));
+      expect(resp!.length, greaterThan(0));
     });
 
     test('getDidTransactionAttemptIds - not existing', () async {
@@ -167,7 +167,7 @@ void main() {
 
     test('getDidOperations', () async {
       final resp = await layer2Api.getDidOperations(existingDid, 1);
-      expect(resp.length, greaterThan(0));
+      expect(resp!.length, greaterThan(0));
     });
 
     test('getDidOperations - not existing', () async {
@@ -177,7 +177,7 @@ void main() {
 
     test('getDidOperationAttempts', () async {
       final resp = await layer2Api.getDidOperationAttempts(existingDid, 1);
-      expect(resp.length, greaterThan(0));
+      expect(resp!.length, greaterThan(0));
     });
 
     test('getDidOperationAttempts - not existing', () async {

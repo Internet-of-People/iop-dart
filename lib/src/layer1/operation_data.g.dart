@@ -8,7 +8,7 @@ part of 'operation_data.dart';
 
 OperationData _$OperationDataFromJson(Map<String, dynamic> json) {
   return OperationData(
-    _$enumDecodeNullable(_$OperationTypeEnumMap, json['operation']),
+    _$enumDecode(_$OperationTypeEnumMap, json['operation']),
   );
 }
 
@@ -17,36 +17,30 @@ Map<String, dynamic> _$OperationDataToJson(OperationData instance) =>
       'operation': _$OperationTypeEnumMap[instance.operation],
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$OperationTypeEnumMap = {
@@ -57,16 +51,16 @@ const _$OperationTypeEnumMap = {
 SignableOperationData _$SignableOperationDataFromJson(
     Map<String, dynamic> json) {
   return SignableOperationData(
-    json['did'] == null ? null : DidData.fromJson(json['did'] as String),
-    json['lastTxId'] as String,
-    _$enumDecodeNullable(_$SignableOperationTypeEnumMap, json['operation']),
+    DidData.fromJson(json['did'] as String),
+    json['lastTxId'] as String?,
+    _$enumDecode(_$SignableOperationTypeEnumMap, json['operation']),
   );
 }
 
 Map<String, dynamic> _$SignableOperationDataToJson(
         SignableOperationData instance) =>
     <String, dynamic>{
-      'did': instance.did?.toJson(),
+      'did': instance.did.toJson(),
       'lastTxId': instance.lastTxId,
       'operation': _$SignableOperationTypeEnumMap[instance.operation],
     };
@@ -81,75 +75,59 @@ const _$SignableOperationTypeEnumMap = {
 
 SignedOperationsData _$SignedOperationsDataFromJson(Map<String, dynamic> json) {
   return SignedOperationsData(
-    (json['signables'] as List)
-        ?.map((e) => e == null
-            ? null
-            : SignableOperationData.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    json['signerPublicKey'] == null
-        ? null
-        : PublicKeyData.fromJson(json['signerPublicKey'] as String),
-    json['signature'] == null
-        ? null
-        : SignatureData.fromJson(json['signature'] as String),
+    (json['signables'] as List<dynamic>)
+        .map((e) => SignableOperationData.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    PublicKeyData.fromJson(json['signerPublicKey'] as String),
+    SignatureData.fromJson(json['signature'] as String),
   );
 }
 
 RegisterBeforeProofData _$RegisterBeforeProofDataFromJson(
     Map<String, dynamic> json) {
   return RegisterBeforeProofData(
-    json['contentId'] == null
-        ? null
-        : ContentId.fromJson(json['contentId'] as String),
+    ContentId.fromJson(json['contentId'] as String),
   );
 }
 
 AddKeyData _$AddKeyDataFromJson(Map<String, dynamic> json) {
   return AddKeyData(
-    json['did'] == null ? null : DidData.fromJson(json['did'] as String),
+    DidData.fromJson(json['did'] as String),
     json['lastTxId'] as String,
-    json['auth'] == null
-        ? null
-        : AuthenticationData.fromJson(json['auth'] as String),
-    expiresAtHeight: json['expiresAtHeight'] as int,
+    AuthenticationData.fromJson(json['auth'] as String),
+    expiresAtHeight: json['expiresAtHeight'] as int?,
   );
 }
 
 RevokeKeyData _$RevokeKeyDataFromJson(Map<String, dynamic> json) {
   return RevokeKeyData(
-    json['did'] == null ? null : DidData.fromJson(json['did'] as String),
+    DidData.fromJson(json['did'] as String),
     json['lastTxId'] as String,
-    json['auth'] == null
-        ? null
-        : AuthenticationData.fromJson(json['auth'] as String),
+    AuthenticationData.fromJson(json['auth'] as String),
   );
 }
 
 AddRightData _$AddRightDataFromJson(Map<String, dynamic> json) {
   return AddRightData(
-    json['did'] == null ? null : DidData.fromJson(json['did'] as String),
+    DidData.fromJson(json['did'] as String),
     json['lastTxId'] as String,
-    json['auth'] == null
-        ? null
-        : AuthenticationData.fromJson(json['auth'] as String),
+    AuthenticationData.fromJson(json['auth'] as String),
     json['right'] as String,
   );
 }
 
 RevokeRightData _$RevokeRightDataFromJson(Map<String, dynamic> json) {
   return RevokeRightData(
-    json['did'] == null ? null : DidData.fromJson(json['did'] as String),
+    DidData.fromJson(json['did'] as String),
     json['lastTxId'] as String,
-    json['auth'] == null
-        ? null
-        : AuthenticationData.fromJson(json['auth'] as String),
+    AuthenticationData.fromJson(json['auth'] as String),
     json['right'] as String,
   );
 }
 
 TombstoneDidData _$TombstoneDidDataFromJson(Map<String, dynamic> json) {
   return TombstoneDidData(
-    json['did'] == null ? null : DidData.fromJson(json['did'] as String),
+    DidData.fromJson(json['did'] as String),
     json['lastTxId'] as String,
   );
 }

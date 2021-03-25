@@ -9,10 +9,10 @@ part of 'io.dart';
 SendTransactionResponseData _$SendTransactionResponseDataFromJson(
     Map<String, dynamic> json) {
   return SendTransactionResponseData(
-    (json['accept'] as List)?.map((e) => e as String)?.toList(),
-    (json['broadcast'] as List)?.map((e) => e as String)?.toList(),
-    (json['excess'] as List)?.map((e) => e as String)?.toList(),
-    (json['invalid'] as List)?.map((e) => e as String)?.toList(),
+    (json['accept'] as List<dynamic>).map((e) => e as String).toList(),
+    (json['broadcast'] as List<dynamic>).map((e) => e as String).toList(),
+    (json['excess'] as List<dynamic>).map((e) => e as String).toList(),
+    (json['invalid'] as List<dynamic>).map((e) => e as String).toList(),
   );
 }
 
@@ -28,10 +28,7 @@ Map<String, dynamic> _$SendTransactionResponseDataToJson(
 SendTransactionResponse _$SendTransactionResponseFromJson(
     Map<String, dynamic> json) {
   return SendTransactionResponse(
-    json['data'] == null
-        ? null
-        : SendTransactionResponseData.fromJson(
-            json['data'] as Map<String, dynamic>),
+    SendTransactionResponseData.fromJson(json['data'] as Map<String, dynamic>),
     json['errors'],
   );
 }
@@ -39,22 +36,20 @@ SendTransactionResponse _$SendTransactionResponseFromJson(
 Map<String, dynamic> _$SendTransactionResponseToJson(
         SendTransactionResponse instance) =>
     <String, dynamic>{
-      'data': instance.data?.toJson(),
+      'data': instance.data.toJson(),
       'errors': instance.errors,
     };
 
 BlockchainResponse _$BlockchainResponseFromJson(Map<String, dynamic> json) {
   return BlockchainResponse(
-    json['block'] == null
-        ? null
-        : BlockchainBlock.fromJson(json['block'] as Map<String, dynamic>),
+    BlockchainBlock.fromJson(json['block'] as Map<String, dynamic>),
     json['supply'] as String,
   );
 }
 
 Map<String, dynamic> _$BlockchainResponseToJson(BlockchainResponse instance) =>
     <String, dynamic>{
-      'block': instance.block?.toJson(),
+      'block': instance.block.toJson(),
       'supply': instance.supply,
     };
 
@@ -97,39 +92,34 @@ Map<String, dynamic> _$WalletResponseToJson(WalletResponse instance) =>
 NodeCryptoConfigResponse _$NodeCryptoConfigResponseFromJson(
     Map<String, dynamic> json) {
   return NodeCryptoConfigResponse(
-    json['exceptions'] == null
-        ? null
-        : NodeCryptoConfigExceptions.fromJson(
-            json['exceptions'] as Map<String, dynamic>),
+    NodeCryptoConfigExceptions.fromJson(
+        json['exceptions'] as Map<String, dynamic>),
     json['genesisBlock'] as Map<String, dynamic>,
-    (json['milestones'] as List)
-        ?.map((e) => e as Map<String, dynamic>)
-        ?.toList(),
-    json['network'] == null
-        ? null
-        : NodeCryptoConfigNetwork.fromJson(
-            json['network'] as Map<String, dynamic>),
+    (json['milestones'] as List<dynamic>)
+        .map((e) => e as Map<String, dynamic>)
+        .toList(),
+    NodeCryptoConfigNetwork.fromJson(json['network'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$NodeCryptoConfigResponseToJson(
         NodeCryptoConfigResponse instance) =>
     <String, dynamic>{
-      'exceptions': instance.exceptions?.toJson(),
+      'exceptions': instance.exceptions.toJson(),
       'genesisBlock': instance.genesisBlock,
       'milestones': instance.milestones,
-      'network': instance.network?.toJson(),
+      'network': instance.network.toJson(),
     };
 
 NodeCryptoConfigExceptions _$NodeCryptoConfigExceptionsFromJson(
     Map<String, dynamic> json) {
   return NodeCryptoConfigExceptions(
-    (json['blocks'] as List)?.map((e) => e as String)?.toList(),
-    (json['transactions'] as List)?.map((e) => e as String)?.toList(),
-    (json['outlookTable'] as Map<String, dynamic>)?.map(
+    (json['blocks'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    (json['transactions'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    (json['outlookTable'] as Map<String, dynamic>?)?.map(
       (k, e) => MapEntry(k, e as String),
     ),
-    (json['transactionIdFixTable'] as Map<String, dynamic>)?.map(
+    (json['transactionIdFixTable'] as Map<String, dynamic>?)?.map(
       (k, e) => MapEntry(k, e as String),
     ),
   );
@@ -149,17 +139,13 @@ NodeCryptoConfigNetwork _$NodeCryptoConfigNetworkFromJson(
   return NodeCryptoConfigNetwork(
     json['name'] as String,
     json['messagePrefix'] as String,
-    (json['bip32'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as int),
-    ),
+    Map<String, int>.from(json['bip32'] as Map),
     json['pubKeyHash'] as int,
     json['nethash'] as String,
     json['wif'] as int,
     json['slip44'] as int,
     json['aip20'] as int,
-    (json['client'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    ),
+    Map<String, String>.from(json['client'] as Map),
   );
 }
 
@@ -194,26 +180,26 @@ Map<String, dynamic> _$TimestampToJson(Timestamp instance) => <String, dynamic>{
 TransactionStatusResponse _$TransactionStatusResponseFromJson(
     Map<String, dynamic> json) {
   return TransactionStatusResponse(
-    json['id'] as String,
-    json['blockId'] as String,
-    json['version'] as int,
+    json['id'] as String?,
+    json['blockId'] as String?,
+    json['version'] as int?,
     json['type'] as int,
-    json['typeGroup'] as int,
+    json['typeGroup'] as int?,
     json['amount'] as String,
     json['fee'] as String,
     json['sender'] as String,
     json['senderPublicKey'] as String,
     json['recipient'] as String,
-    json['signature'] as String,
-    json['signSignature'] as String,
-    (json['signatures'] as List)?.map((e) => e as String)?.toList(),
-    json['vendorField'] as String,
-    json['asset'] as Map<String, dynamic>,
+    json['signature'] as String?,
+    json['signSignature'] as String?,
+    (json['signatures'] as List<dynamic>?)?.map((e) => e as String).toList(),
+    json['vendorField'] as String?,
+    json['asset'] as Map<String, dynamic>?,
     json['confirmations'] as int,
     json['timestamp'] == null
         ? null
         : Timestamp.fromJson(json['timestamp'] as Map<String, dynamic>),
-    json['nonce'] as String,
+    json['nonce'] as String?,
   );
 }
 

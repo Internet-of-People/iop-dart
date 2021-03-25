@@ -51,7 +51,7 @@ Map<String, dynamic> _$DynamicContentToJson(DynamicContent instance) {
 
 Content<T> _$ContentFromJson<T>(Map<String, dynamic> json) {
   return Content<T>(
-    _genericFromJson(json['content'] as Map<String, dynamic>),
+    _genericContentFromJson(json['content'] as Map<String, dynamic>),
     json['contentId'] == null
         ? null
         : ContentId.fromJson(json['contentId'] as String),
@@ -60,16 +60,14 @@ Content<T> _$ContentFromJson<T>(Map<String, dynamic> json) {
 
 Signed<T> _$SignedFromJson<T>(Map<String, dynamic> json) {
   return Signed<T>(
-    json['signature'] == null
-        ? null
-        : Signature.fromJson(json['signature'] as Map<String, dynamic>),
-    json['content'] == null ? null : Content.fromJson(json['content']),
+    Signature.fromJson(json['signature'] as Map<String, dynamic>),
+    Content.fromJson(json['content']),
   );
 }
 
 Map<String, dynamic> _$SignedToJson<T>(Signed<T> instance) => <String, dynamic>{
-      'signature': instance.signature?.toJson(),
-      'content': instance.content?.toJson(),
+      'signature': instance.signature.toJson(),
+      'content': instance.content.toJson(),
     };
 
 WithNonce _$WithNonceFromJson(Map<String, dynamic> json) {
@@ -93,46 +91,34 @@ Map<String, dynamic> _$WithNonceToJson(WithNonce instance) {
 
 Signature _$SignatureFromJson(Map<String, dynamic> json) {
   return Signature(
-    json['publicKey'] == null
-        ? null
-        : PublicKeyData.fromJson(json['publicKey'] as String),
-    json['bytes'] == null
-        ? null
-        : SignatureData.fromJson(json['bytes'] as String),
+    PublicKeyData.fromJson(json['publicKey'] as String),
+    SignatureData.fromJson(json['bytes'] as String),
   );
 }
 
 Map<String, dynamic> _$SignatureToJson(Signature instance) => <String, dynamic>{
-      'publicKey': instance.publicKey?.toJson(),
-      'bytes': instance.bytes?.toJson(),
+      'publicKey': instance.publicKey.toJson(),
+      'bytes': instance.bytes.toJson(),
     };
 
 Claim _$ClaimFromJson(Map<String, dynamic> json) {
   return Claim(
-    json['subject'] == null
-        ? null
-        : DidData.fromJson(json['subject'] as String),
-    json['content'] == null ? null : Content.fromJson(json['content']),
+    DidData.fromJson(json['subject'] as String),
+    Content.fromJson(json['content']),
   );
 }
 
 Map<String, dynamic> _$ClaimToJson(Claim instance) => <String, dynamic>{
-      'subject': instance.subject?.toJson(),
-      'content': instance.content?.toJson(),
+      'subject': instance.subject.toJson(),
+      'content': instance.content.toJson(),
     };
 
 WitnessRequest _$WitnessRequestFromJson(Map<String, dynamic> json) {
   return WitnessRequest(
-    json['claim'] == null
-        ? null
-        : Claim.fromJson(json['claim'] as Map<String, dynamic>),
-    json['claimant'] == null
-        ? null
-        : KeyLink.fromJson(json['claimant'] as String),
-    json['processId'] == null
-        ? null
-        : ContentId.fromJson(json['processId'] as String),
-    json['evidence'] == null ? null : Content.fromJson(json['evidence']),
+    Claim.fromJson(json['claim'] as Map<String, dynamic>),
+    KeyLink.fromJson(json['claimant'] as String),
+    ContentId.fromJson(json['processId'] as String),
+    Content.fromJson(json['evidence']),
     json['nonce'] == null ? null : Nonce.fromJson(json['nonce'] as String),
   );
 }
@@ -147,10 +133,10 @@ Map<String, dynamic> _$WitnessRequestToJson(WitnessRequest instance) {
   }
 
   writeNotNull('nonce', instance.nonce?.toJson());
-  val['claim'] = instance.claim?.toJson();
-  val['claimant'] = instance.claimant?.toJson();
-  val['processId'] = instance.processId?.toJson();
-  val['evidence'] = instance.evidence?.toJson();
+  val['claim'] = instance.claim.toJson();
+  val['claimant'] = instance.claimant.toJson();
+  val['processId'] = instance.processId.toJson();
+  val['evidence'] = instance.evidence.toJson();
   return val;
 }
 
@@ -158,12 +144,8 @@ Constraint _$ConstraintFromJson(Map<String, dynamic> json) {
   return Constraint(
     json['after'] == null ? null : DateTime.parse(json['after'] as String),
     json['before'] == null ? null : DateTime.parse(json['before'] as String),
-    json['witness'] == null
-        ? null
-        : KeyLink.fromJson(json['witness'] as String),
-    json['authority'] == null
-        ? null
-        : DidData.fromJson(json['authority'] as String),
+    KeyLink.fromJson(json['witness'] as String),
+    DidData.fromJson(json['authority'] as String),
     json['content'] == null ? null : Content.fromJson(json['content']),
   );
 }
@@ -172,20 +154,16 @@ Map<String, dynamic> _$ConstraintToJson(Constraint instance) =>
     <String, dynamic>{
       'after': instance.after?.toIso8601String(),
       'before': instance.before?.toIso8601String(),
-      'witness': instance.witness?.toJson(),
-      'authority': instance.authority?.toJson(),
+      'witness': instance.witness.toJson(),
+      'authority': instance.authority.toJson(),
       'content': instance.content?.toJson(),
     };
 
 WitnessStatement _$WitnessStatementFromJson(Map<String, dynamic> json) {
   return WitnessStatement(
-    json['claim'] == null ? null : Content.fromJson(json['claim']),
-    json['processId'] == null
-        ? null
-        : ContentId.fromJson(json['processId'] as String),
-    json['constraints'] == null
-        ? null
-        : Constraint.fromJson(json['constraints'] as Map<String, dynamic>),
+    Content.fromJson(json['claim']),
+    ContentId.fromJson(json['processId'] as String),
+    Constraint.fromJson(json['constraints'] as Map<String, dynamic>),
     json['nonce'] == null ? null : Nonce.fromJson(json['nonce'] as String),
   );
 }
@@ -200,62 +178,49 @@ Map<String, dynamic> _$WitnessStatementToJson(WitnessStatement instance) {
   }
 
   writeNotNull('nonce', instance.nonce?.toJson());
-  val['claim'] = instance.claim?.toJson();
-  val['processId'] = instance.processId?.toJson();
-  val['constraints'] = instance.constraints?.toJson();
+  val['claim'] = instance.claim.toJson();
+  val['processId'] = instance.processId.toJson();
+  val['constraints'] = instance.constraints.toJson();
   return val;
 }
 
 ProvenClaim _$ProvenClaimFromJson(Map<String, dynamic> json) {
   return ProvenClaim(
-    json['claim'] == null
-        ? null
-        : Claim.fromJson(json['claim'] as Map<String, dynamic>),
-    (json['statements'] as List)
-        ?.map((e) =>
-            e == null ? null : Signed.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    Claim.fromJson(json['claim'] as Map<String, dynamic>),
+    _statementListFromJson(json['statements'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$ProvenClaimToJson(ProvenClaim instance) =>
     <String, dynamic>{
-      'claim': instance.claim?.toJson(),
-      'statements': instance.statements?.map((e) => e?.toJson())?.toList(),
+      'claim': instance.claim.toJson(),
+      'statements': instance.statements.map((e) => e.toJson()).toList(),
     };
 
 License _$LicenseFromJson(Map<String, dynamic> json) {
   return License(
-    json['issuedTo'] == null
-        ? null
-        : DidData.fromJson(json['issuedTo'] as String),
+    DidData.fromJson(json['issuedTo'] as String),
     json['purpose'] as String,
-    json['validFrom'] == null
-        ? null
-        : DateTime.parse(json['validFrom'] as String),
-    json['validUntil'] == null
-        ? null
-        : DateTime.parse(json['validUntil'] as String),
+    DateTime.parse(json['validFrom'] as String),
+    DateTime.parse(json['validUntil'] as String),
   );
 }
 
 Map<String, dynamic> _$LicenseToJson(License instance) => <String, dynamic>{
-      'issuedTo': instance.issuedTo?.toJson(),
+      'issuedTo': instance.issuedTo.toJson(),
       'purpose': instance.purpose,
-      'validFrom': instance.validFrom?.toIso8601String(),
-      'validUntil': instance.validUntil?.toIso8601String(),
+      'validFrom': instance.validFrom.toIso8601String(),
+      'validUntil': instance.validUntil.toIso8601String(),
     };
 
 Presentation _$PresentationFromJson(Map<String, dynamic> json) {
   return Presentation(
-    (json['provenClaims'] as List)
-        ?.map((e) =>
-            e == null ? null : ProvenClaim.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    (json['licenses'] as List)
-        ?.map((e) =>
-            e == null ? null : License.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    (json['provenClaims'] as List<dynamic>)
+        .map((e) => ProvenClaim.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    (json['licenses'] as List<dynamic>)
+        .map((e) => License.fromJson(e as Map<String, dynamic>))
+        .toList(),
     json['nonce'] == null ? null : Nonce.fromJson(json['nonce'] as String),
   );
 }
@@ -270,9 +235,8 @@ Map<String, dynamic> _$PresentationToJson(Presentation instance) {
   }
 
   writeNotNull('nonce', instance.nonce?.toJson());
-  val['provenClaims'] =
-      instance.provenClaims?.map((e) => e?.toJson())?.toList();
-  val['licenses'] = instance.licenses?.map((e) => e?.toJson())?.toList();
+  val['provenClaims'] = instance.provenClaims.map((e) => e.toJson()).toList();
+  val['licenses'] = instance.licenses.map((e) => e.toJson()).toList();
   return val;
 }
 

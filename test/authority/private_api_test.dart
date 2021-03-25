@@ -2,12 +2,14 @@ import 'package:http/http.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/entities.dart';
 import 'package:iop_sdk/utils.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:iop_sdk/authority.dart';
 import 'package:iop_sdk/ssi.dart';
 import 'package:test/test.dart';
 
 import '../util.dart';
+import 'public_api_test.mocks.dart';
 
 final requestsResponse = '''
 {
@@ -32,12 +34,8 @@ final requestsResponse = '''
 }
 ''';
 
-class MockApiConfig extends Mock implements ApiConfig {}
-
-class MockClient extends Mock implements Client {}
-
 Future<Response> jwtResp(Response response, Invocation req, PublicKey pk,
-    {String contentId}) {
+    {String? contentId}) {
   final authorizationHeader =
       req.namedArguments[#headers]['Authorization'].toString();
   final token = authorizationHeader.replaceFirst('Bearer ', '');
@@ -46,6 +44,7 @@ Future<Response> jwtResp(Response response, Invocation req, PublicKey pk,
   return Future.value(valid ? response : resp('', code: 403));
 }
 
+@GenerateMocks([Client, ApiConfig])
 void main() {
   final client = MockClient();
   final config = MockApiConfig();

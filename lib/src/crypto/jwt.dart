@@ -69,7 +69,7 @@ class JwtParser implements Disposable {
 
   JwtParser(this._ffi, this._owned);
 
-  factory JwtParser.create(String token, {DateTime currentTime}) {
+  factory JwtParser.create(String token, {DateTime? currentTime}) {
     Pointer<Int64> epochSecs = nullptr;
     if (currentTime != null) {
       epochSecs = calloc<Int64>();
@@ -105,13 +105,8 @@ class JwtParser implements Disposable {
 
   // TODO maybe this should use Optional<String> instead, see getPrivateBlob() and
   //      import 'package:optional/optional.dart';
-  String get contentId {
-    final cidPtr = DartApi.native.jwtParser.contentId_get(_ffi);
-    if (cidPtr == null) {
-      return null;
-    } else {
-      return cidPtr.intoString();
-    }
+  String? get contentId {
+    return DartApi.native.jwtParser.contentId_get(_ffi).intoString();
   }
 
   @override

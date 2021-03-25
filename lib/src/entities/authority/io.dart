@@ -11,8 +11,7 @@ class RequestEntry {
   final DateTime dateOfRequest;
   final Status status;
   final ContentId processId;
-  @JsonKey(nullable: true)
-  final String notes;
+  final String? notes;
 
   RequestEntry(
     this.capabilityLink,
@@ -44,10 +43,8 @@ enum Status { pending, approved, rejected }
 @JsonSerializable(explicitToJson: true)
 class RequestStatus {
   final Status status;
-  @JsonKey(nullable: true)
-  final Signed<WitnessStatement> signedStatement;
-  @JsonKey(nullable: true)
-  final String rejectionReason;
+  final Signed<WitnessStatement>? signedStatement;
+  final String? rejectionReason;
 
   RequestStatus(this.status, this.signedStatement, this.rejectionReason);
 

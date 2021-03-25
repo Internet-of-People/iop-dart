@@ -3,10 +3,12 @@ import 'package:iop_sdk/entities.dart';
 import 'package:iop_sdk/inspector.dart';
 import 'package:iop_sdk/ssi.dart';
 import 'package:iop_sdk/utils.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../util.dart';
+import 'public_api_test.mocks.dart';
 
 final scenariosResponse = '''
 {
@@ -16,10 +18,7 @@ final scenariosResponse = '''
 }
 ''';
 
-class MockApiConfig extends Mock implements ApiConfig {}
-
-class MockClient extends Mock implements Client {}
-
+@GenerateMocks([Client, ApiConfig])
 void main() {
   final client = MockClient();
   final config = MockApiConfig();

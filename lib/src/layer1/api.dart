@@ -49,7 +49,7 @@ class Layer1Api {
     String targetAddress,
     int amountInFlake,
     HydraPrivate hydraPrivate, {
-    int nonce,
+    int? nonce,
   }) async {
     final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
     nonce ??= (await getWalletNonce(senderAddress)) + 1;
@@ -76,7 +76,7 @@ class Layer1Api {
     String passphrase,
     String targetAddress,
     int amountInFlake, {
-    int nonce,
+    int? nonce,
   }) async {
     final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
     final senderPubKey = secpPrivKey.publicKey();
@@ -99,12 +99,13 @@ class Layer1Api {
   Future<String> sendVoteOrUnvote(
     String voterAddress,
     HydraPrivate hydraPrivate,
-    String createTx(
+    String Function(
       HydraTxBuilder builder,
       SecpPublicKey senderPubKey,
       int nonce,
-    ),
-    int nonce,
+    )
+        createTx,
+    int? nonce,
   ) async {
     final voterBip44PubKey = hydraPrivate.public.keyByAddress(voterAddress);
     nonce ??= (await getWalletNonce(voterAddress)) + 1;
@@ -125,7 +126,7 @@ class Layer1Api {
     String voterAddress,
     SecpPublicKey delegate,
     HydraPrivate hydraPrivate, {
-    int nonce,
+    int? nonce,
   }) async {
     return await sendVoteOrUnvote(
       voterAddress,
@@ -140,7 +141,7 @@ class Layer1Api {
     String voterAddress,
     SecpPublicKey delegate,
     HydraPrivate hydraPrivate, {
-    int nonce,
+    int? nonce,
   }) async {
     return await sendVoteOrUnvote(
       voterAddress,
@@ -155,7 +156,7 @@ class Layer1Api {
     String senderAddress,
     MorpheusAsset morpheusAsset,
     HydraPrivate hydraPrivate, {
-    int nonce,
+    int? nonce,
   }) async {
     final senderBip44PubKey = hydraPrivate.public.keyByAddress(senderAddress);
     nonce ??= (await getWalletNonce(senderAddress)) + 1;
@@ -177,7 +178,7 @@ class Layer1Api {
   Future<String> sendMorpheusTxWithPassphrase(
     MorpheusAsset morpheusAsset,
     String passphrase, {
-    int nonce,
+    int? nonce,
   }) async {
     final secpPrivKey = SecpPrivateKey.fromArkPassphrase(passphrase);
     final senderPubKey = secpPrivKey.publicKey();
@@ -198,8 +199,8 @@ class Layer1Api {
     String fromAddress,
     List<UserOperation> userOperations,
     HydraPrivate hydraPrivate, {
-    int layer1SenderNonce,
-    int layer2PublicKeyNonce,
+    int? layer1SenderNonce,
+    int? layer2PublicKeyNonce,
   }) async {
     // TODO: we have to get the nonce from somewhere else rather using layer2api
     final layer2Api = Layer2Api.createCoeusApi(_networkConfig);
@@ -298,8 +299,9 @@ class Layer1Api {
   }
 
   Future<Response> _layer1ApiGet(String path) async {
+    final url = '${_networkConfig.host}:${_networkConfig.port}/api/v2$path';
     return _client.get(
-      Uri.parse('${_networkConfig.host}:${_networkConfig.port}/api/v2$path'),
+      Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
       },
