@@ -103,8 +103,6 @@ class JwtParser implements Disposable {
     return Duration(seconds: secs);
   }
 
-  // TODO maybe this should use Optional<String> instead, see getPrivateBlob() and
-  //      import 'package:optional/optional.dart';
   String? get contentId {
     return DartApi.native.jwtParser.contentId_get(_ffi).intoString();
   }

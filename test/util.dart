@@ -7,7 +7,6 @@ import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/ssi.dart';
 import 'package:iop_sdk/verifier.dart';
-import 'package:optional/optional.dart';
 import 'package:test/test.dart';
 
 final networkConfig = NetworkConfig.fromNetwork(Network.TestNet);
@@ -22,7 +21,7 @@ Future<void> waitForLayer1Confirmation(String txId, bool expected) async {
   for (var i = 0; i < 12; i++) {
     await Future.delayed(const Duration(seconds: 2));
     final status = await layer1.getTxnStatus(txId);
-    if (status.isPresent && status.value.id == txId) {
+    if (status != null && status.id == txId) {
       success = true;
       break;
     }
@@ -31,23 +30,23 @@ Future<void> waitForLayer1Confirmation(String txId, bool expected) async {
 }
 
 Future<void> waitForCoeusLayer2Confirmation(String txId, bool expected) async {
-  var txStatus = Optional.empty();
+  var txStatus;
   do {
     await Future.delayed(Duration(seconds: 2));
     txStatus = await coeusLayer2.getTxnStatus(txId);
-  } while (txStatus.isEmpty);
-  final success = txStatus.value;
+  } while (txStatus == null);
+  final success = txStatus!;
   expect(success, expected);
 }
 
 Future<void> waitForMorpheusLayer2Confirmation(
     String txId, bool expected) async {
-  var txStatus = Optional.empty();
+  var txStatus;
   do {
     await Future.delayed(Duration(seconds: 2));
     txStatus = await morpheusLayer2.getTxnStatus(txId);
-  } while (txStatus.isEmpty);
-  final success = txStatus.value;
+  } while (txStatus == null);
+  final success = txStatus!;
   expect(success, expected);
 }
 

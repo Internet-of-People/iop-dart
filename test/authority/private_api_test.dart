@@ -120,8 +120,8 @@ void main() {
       )).thenAnswer((req) => jwtResp(resp('BLOB'), req, sk.publicKey()));
 
       final r = await api.getPrivateBlob(id, sk);
-      expect(r.isPresent, true);
-      expect(r.value, 'BLOB');
+      expect(r, isNotNull);
+      expect(r, 'BLOB');
     });
 
     test('getPrivateBlob - http404', () async {
@@ -133,7 +133,7 @@ void main() {
 
       final sk = TestVault.create().privateKey;
       final r = await api.getPrivateBlob(id, sk);
-      expect(r.isPresent, false);
+      expect(r, isNull);
     });
 
     test('getPrivateBlob - not http200/404', () async {

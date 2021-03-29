@@ -5,7 +5,6 @@ import 'package:http/http.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/utils.dart';
-import 'package:optional/optional.dart';
 
 import 'io.dart';
 
@@ -15,54 +14,54 @@ class CoeusApi {
 
   CoeusApi(this._networkConfig);
 
-  Future<Optional<bool>> getTxnStatus(String txId) async {
+  Future<bool?> getTxnStatus(String txId) async {
     final resp = await _layer2ApiGet('/txn-status/$txId');
 
     if (resp.statusCode == HttpStatus.ok) {
-      return Optional.of(json.decode(resp.body));
+      return json.decode(resp.body);
     } else if (resp.statusCode == HttpStatus.notFound) {
-      return Optional.empty();
+      return null;
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<Optional<String>> resolve(String name) async {
+  Future<String?> resolve(String name) async {
     final resp = await _layer2ApiGet('/resolve/$name');
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
-      return Optional.of(json.encode(body['data']));
+      return json.encode(body['data']);
     } else if (resp.statusCode == HttpStatus.notFound) {
-      return Optional.empty();
+      return null;
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<Optional<DomainMetadata>> getMetadata(String name) async {
+  Future<DomainMetadata?> getMetadata(String name) async {
     final resp = await _layer2ApiGet('/metadata/$name');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
       final metadata = DomainMetadata.fromJson(body);
-      return Optional.of(metadata);
+      return metadata;
     } else if (resp.statusCode == HttpStatus.notFound) {
-      return Optional.empty();
+      return null;
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<Optional<List<String>>> getChildren(String name) async {
+  Future<List<String>?> getChildren(String name) async {
     final resp = await _layer2ApiGet('/children/$name');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
       final children =
           (body['children'] as List<dynamic>).map((e) => e as String).toList();
-      return Optional.of(children);
+      return children;
     } else if (resp.statusCode == HttpStatus.notFound) {
-      return Optional.empty();
+      return null;
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));

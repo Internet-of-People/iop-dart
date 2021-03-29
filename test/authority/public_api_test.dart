@@ -64,8 +64,8 @@ void main() {
       ).thenAnswer((_) => Future.value(resp('BLOB')));
 
       final r = await api.getPublicBlob(id);
-      expect(r.isPresent, true);
-      expect(r.value, 'BLOB');
+      expect(r, isNotNull);
+      expect(r, 'BLOB');
     });
 
     test('getPublicBlob - http404', () async {
@@ -76,7 +76,7 @@ void main() {
       ).thenAnswer((_) => Future.value(resp('', code: 404)));
 
       final r = await api.getPublicBlob(id);
-      expect(r.isPresent, false);
+      expect(r, isNull);
     });
 
     test('getPublicBlob - not http200/404', () async {
@@ -134,10 +134,10 @@ void main() {
 
       final r = await api.getRequestStatus(link);
 
-      expect(r.isPresent, true);
-      expect(r.value.status, Status.pending);
-      expect(r.value.signedStatement, null);
-      expect(r.value.rejectionReason, null);
+      expect(r, isNotNull);
+      expect(r!.status, Status.pending);
+      expect(r.signedStatement, null);
+      expect(r.rejectionReason, null);
     });
 
     test('getRequestStatus - approved', () async {
@@ -152,11 +152,11 @@ void main() {
 
       final r = await api.getRequestStatus(link);
 
-      expect(r.isPresent, true);
-      expect(r.value.status, Status.approved);
-      expect(r.value.signedStatement!.signature.publicKey.value,
+      expect(r, isNotNull);
+      expect(r!.status, Status.approved);
+      expect(r.signedStatement!.signature.publicKey.value,
           'pez2CLkBUjHB8w8G87D3YkREjpRuiqPu6BrRsgHMQy2Pzt6');
-      expect(r.value.rejectionReason, null);
+      expect(r.rejectionReason, null);
     });
 
     test('getRequestStatus - rejected', () async {
@@ -168,10 +168,10 @@ void main() {
 
       final r = await api.getRequestStatus(link);
 
-      expect(r.isPresent, true);
-      expect(r.value.status, Status.rejected);
-      expect(r.value.signedStatement, null);
-      expect(r.value.rejectionReason, 'blurred image');
+      expect(r, isNotNull);
+      expect(r!.status, Status.rejected);
+      expect(r.signedStatement, null);
+      expect(r.rejectionReason, 'blurred image');
     });
 
     test('getRequestStatus - http404', () async {
@@ -183,7 +183,7 @@ void main() {
 
       final r = await api.getRequestStatus(link);
 
-      expect(r.isPresent, false);
+      expect(r, isNull);
     });
 
     test('getRequestStatus - not http200/404', () async {

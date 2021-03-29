@@ -60,8 +60,8 @@ void main() {
       ).thenAnswer((_) => Future.value(resp('BLOB')));
 
       final r = await api.getPublicBlob(id);
-      expect(r.isPresent, true);
-      expect(r.value, 'BLOB');
+      expect(r, isNotNull);
+      expect(r, 'BLOB');
     });
 
     test('getPublicBlob - http404', () async {
@@ -72,7 +72,7 @@ void main() {
       ).thenAnswer((_) => Future.value(resp('', code: 404)));
 
       final r = await api.getPublicBlob(id);
-      expect(r.isPresent, false);
+      expect(r, isNull);
     });
 
     test('getPublicBlob - not http200/404', () async {

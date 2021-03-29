@@ -20,29 +20,29 @@ void main() {
       const id =
           'ec38441844b31a47660a9c6a3b78a2fe62913034ce152c11a3d94a8887806fff';
       final status = await api.getTxnStatus(id);
-      expect(status.isPresent, true);
-      expect(status.value.id, id);
-      expect(status.value.timestamp!.unix, 1564646400);
+      expect(status, isNotNull);
+      expect(status!.id, id);
+      expect(status.timestamp!.unix, 1564646400);
     });
 
     test('getTxnStatus - not existing', () async {
       const id =
           '0000c59f7ce76ae8483f064ed92c7d6f791f0ddd7c89525dcf92c95f8800ec59';
       final status = await api.getTxnStatus(id);
-      expect(status.isPresent, false);
+      expect(status, isNull);
     });
 
     test('getWallet', () async {
       const address = 'tjseecxRmob5qBS2T3qc8frXDKz3YUGB8J';
       final wallet = await api.getWallet(address);
-      expect(wallet.isPresent, true);
-      expect(wallet.value.address, address);
+      expect(wallet, isNotNull);
+      expect(wallet!.address, address);
     });
 
     test('getWallet - not existing', () async {
       const address = 'tjseecxRmob5qBS2T3qc8frXDKz3YUaaaa';
       final wallet = await api.getWallet(address);
-      expect(wallet.isPresent, false);
+      expect(wallet, isNull);
     });
 
     test('getWalletNonce', () async {

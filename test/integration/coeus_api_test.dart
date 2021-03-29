@@ -5,7 +5,6 @@ import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/src/coeus/operation.dart';
-import 'package:optional/optional.dart';
 import 'package:test/test.dart';
 
 final network = Network.TestNet;
@@ -35,12 +34,12 @@ Future<void> registerDomain(
     hydraPrivate,
   );
 
-  Optional<bool> txStatus;
+  bool? txStatus;
   do {
     await Future.delayed(Duration(seconds: 2));
     txStatus = await layer2Api.getTxnStatus(txId);
-  } while (txStatus.isEmpty);
-  expect(txStatus, Optional.of(true));
+  } while (txStatus == null);
+  expect(txStatus, true);
 }
 
 void main() async {
@@ -77,29 +76,29 @@ void main() async {
     test('resolve', () async {
       final resp = await layer2Api.resolve(registeredDomain);
 
-      expect(resp.isPresent, true);
-      expect(resp.value, registeredDomainData);
+      expect(resp, isNotNull);
+      expect(resp, registeredDomainData);
     });
 
     test('resolve - not existing', () async {
       final resp = await layer2Api.resolve('.schema.itsnotthere');
-      expect(resp.isPresent, false);
+      expect(resp, isNull);
     });
 
     test('getMetadata', () async {
       final resp = await layer2Api.getMetadata(registeredDomain);
-      expect(resp.isPresent, true);
-      expect(resp.value.expiresAtHeight, registeredDomainExpiresAtHeight);
-      expect(resp.value.owner, domainOwnerPublicKey.toString());
-      expect(resp.value.registrationPolicy, DomainRegistrationPolicy.owner);
-      expect(resp.value.subtreePolicies, isNotNull);
-      expect(resp.value.subtreePolicies.expiration, isNull);
-      expect(resp.value.subtreePolicies.schema, isNull);
+      expect(resp, isNotNull);
+      expect(resp!.expiresAtHeight, registeredDomainExpiresAtHeight);
+      expect(resp.owner, domainOwnerPublicKey.toString());
+      expect(resp.registrationPolicy, DomainRegistrationPolicy.owner);
+      expect(resp.subtreePolicies, isNotNull);
+      expect(resp.subtreePolicies.expiration, isNull);
+      expect(resp.subtreePolicies.schema, isNull);
     });
 
     test('getMetadata - not existing', () async {
       final resp = await layer2Api.getMetadata('.schema.itsnotthere');
-      expect(resp.isPresent, false);
+      expect(resp, isNull);
     });
 
     test('getChildren', () async {
@@ -122,15 +121,15 @@ void main() async {
       );
 
       final resp = await layer2Api.getChildren(registeredDomain);
-      expect(resp.isPresent, true);
-      expect(resp.value.length, 2);
-      expect(resp.value.contains('sub1'), true);
-      expect(resp.value.contains('sub2'), true);
+      expect(resp, isNotNull);
+      expect(resp!.length, 2);
+      expect(resp.contains('sub1'), true);
+      expect(resp.contains('sub2'), true);
     });
 
     test('getChildren - not existing', () async {
       final resp = await layer2Api.getChildren('.schema.itsnotthere');
-      expect(resp.isPresent, false);
+      expect(resp, isNull);
     });
 
     test('getLastNonce', () async {

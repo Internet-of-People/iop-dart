@@ -60,13 +60,13 @@ void main() {
       do {
         await Future.delayed(Duration(seconds: 2));
         txStatus = await layer1Api.getTxnStatus(txId);
-      } while (txStatus.isEmpty);
+      } while (txStatus == null);
 
       final layer2Api = Layer2Api.createMorpheusApi(
         NetworkConfig.fromNetwork(network),
       );
       final ssiTxStatus = await layer2Api.getTxnStatus(txId);
-      expect(ssiTxStatus.isPresent, true);
+      expect(ssiTxStatus, isNotNull);
 
       final expectedContentId = digestJson(signedContractJson);
 

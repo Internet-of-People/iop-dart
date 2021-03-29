@@ -10,7 +10,6 @@ import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/src/layer1/hydra_tx.dart';
 import 'package:iop_sdk/utils.dart';
 import 'package:iop_sdk/network.dart';
-import 'package:optional/optional.dart';
 
 class Layer1Api {
   final Client _client = Client();
@@ -226,27 +225,27 @@ class Layer1Api {
     return await sendTx(signedTx.toString());
   }
 
-  Future<Optional<TransactionStatusResponse>> getTxnStatus(String txId) async {
+  Future<TransactionStatusResponse?> getTxnStatus(String txId) async {
     final resp = await _layer1ApiGet('/transactions/$txId');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
-      return Optional.of(TransactionStatusResponse.fromJson(body['data']));
+      return TransactionStatusResponse.fromJson(body['data']);
     } else if (resp.statusCode == HttpStatus.notFound) {
-      return Optional.empty();
+      return null;
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<Optional<WalletResponse>> getWallet(String addressOrPublicKey) async {
+  Future<WalletResponse?> getWallet(String addressOrPublicKey) async {
     final resp = await _layer1ApiGet('/wallets/$addressOrPublicKey');
 
     if (resp.statusCode == HttpStatus.ok) {
       final body = json.decode(resp.body);
-      return Optional.of(WalletResponse.fromJson(body['data']));
+      return WalletResponse.fromJson(body['data']);
     } else if (resp.statusCode == HttpStatus.notFound) {
-      return Optional.empty();
+      return null;
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
@@ -254,12 +253,12 @@ class Layer1Api {
 
   Future<int> getWalletNonce(String addressOrPublicKey) async {
     final wallet = await getWallet(addressOrPublicKey);
-    return wallet.isPresent ? int.parse(wallet.value.nonce) : 0;
+    return wallet != null ? int.parse(wallet.nonce) : 0;
   }
 
   Future<int> getWalletBalance(String addressOrPublicKey) async {
     final wallet = await getWallet(addressOrPublicKey);
-    return wallet.isPresent ? int.parse(wallet.value.balance) : 0;
+    return wallet != null ? int.parse(wallet.balance) : 0;
   }
 
   Future<String> sendTx(String signedTx) async {

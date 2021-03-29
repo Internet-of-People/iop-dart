@@ -125,13 +125,13 @@ void main() {
 
     test('getTxnStatus', () async {
       final resp = await layer2Api.getTxnStatus(beforeProofTxId);
-      expect(resp.isPresent, true);
-      expect(resp.value, true);
+      expect(resp, isNotNull);
+      expect(resp!, true);
     });
 
     test('getTxnStatus - not existing', () async {
       final resp = await layer2Api.getTxnStatus('not-existing');
-      expect(resp.isPresent, false);
+      expect(resp, isNull);
     });
 
     test('getLastTxId', () async {

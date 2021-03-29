@@ -7,7 +7,6 @@ import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/ssi.dart';
 import 'package:iop_sdk/utils.dart';
-import 'package:optional/optional.dart';
 
 class MorpheusApi {
   final Client _client = Client();
@@ -50,14 +49,14 @@ class MorpheusApi {
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
   }
 
-  Future<Optional<bool>> getTxnStatus(String txId) async {
+  Future<bool?> getTxnStatus(String txId) async {
     final resp = await _layer2ApiGet('/txn-status/$txId');
 
     if (resp.statusCode == HttpStatus.ok) {
       final decoded = json.decode(resp.body);
-      return Optional.of(decoded);
+      return decoded;
     } else if (resp.statusCode == HttpStatus.notFound) {
-      return Optional.empty();
+      return null;
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
@@ -196,7 +195,8 @@ class MorpheusApi {
   }
 
   Future<Response> _layer2ApiGet(String path) async {
-    final url = '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path';
+    final url =
+        '${_networkConfig.host}:${_networkConfig.port}/morpheus/v1$path';
     return _client.get(
       Uri.parse(url),
       headers: {
