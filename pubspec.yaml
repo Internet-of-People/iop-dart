@@ -2,7 +2,7 @@ name: iop_sdk
 description: SDK for Decentralized Access Control based on W3C standards to provide SSI with decentralized identifiers (DID), keys, rights and verifiable claims/credentials (VC).
 documentation: https://developer.iop.global
 homepage: https://iop.global
-repository: https://github.com/Internet-of-People/morpheus-dart
+repository: https://github.com/Internet-of-People/iop-dart
 
 version: 4.0.0
 
