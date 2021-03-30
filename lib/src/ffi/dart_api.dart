@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
@@ -14,7 +15,9 @@ class DartApi implements Disposable {
 
   static DartApi get instance {
     if (_instance == null) {
-      final api = NativeApi.load('./libiop_sdk_ffi.so');
+      final libName = 'libiop_sdk_ffi.so';
+      final libPath = Platform.isAndroid ? libName : './$libName';
+      final api = NativeApi.load(libPath);
       _instance = DartApi._(api);
     }
 
