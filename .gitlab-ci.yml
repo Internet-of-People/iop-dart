@@ -9,7 +9,7 @@ analyze:
   script:
     - dart --version
     - pub get
-    - dartanalyzer .
+    # TODO - dartanalyzer .
 
 unit_test:
   stage: test
