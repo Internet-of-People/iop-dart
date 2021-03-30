@@ -34,11 +34,11 @@ mkdir -p "$ANDROID_JNILIBS_PATH/x86_64"
 
 echo Downloading latest shared library binaries
 curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/arm64-v8a/Android-ARMv8.zip" \
-  https://github.com/Internet-of-People/morpheus-rust/releases/latest/download/Android-ARMv8.zip
+  https://github.com/Internet-of-People/iop-rs/releases/latest/download/Android-ARMv8.zip
 curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/x86_64/Android-x86_64.zip" \
-  https://github.com/Internet-of-People/morpheus-rust/releases/latest/download/Android-x86_64.zip
+  https://github.com/Internet-of-People/iop-rs/releases/latest/download/Android-x86_64.zip
 curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/x86/Android-x86.zip" \
-  https://github.com/Internet-of-People/morpheus-rust/releases/latest/download/Android-x86.zip
+  https://github.com/Internet-of-People/iop-rs/releases/latest/download/Android-x86.zip
 
 echo Extracting downloaded archives
 unzip $ANDROID_JNILIBS_PATH/arm64-v8a/Android-ARMv8.zip -d $ANDROID_JNILIBS_PATH/arm64-v8a
