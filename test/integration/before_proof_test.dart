@@ -8,6 +8,8 @@ import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:test/test.dart';
 
+import '../util.dart';
+
 final network = Network.TestNet;
 final unlockPassword = '+*7=_X8<3yH:v2@s';
 final hydraAccount = 0;
@@ -55,22 +57,11 @@ void main() {
         asset,
         hydraPrivate,
       );
-
-      var txStatus;
-      do {
-        await Future.delayed(Duration(seconds: 2));
-        txStatus = await layer1Api.getTxnStatus(txId);
-      } while (txStatus == null);
-
-      final layer2Api = Layer2Api.createMorpheusApi(
-        NetworkConfig.fromNetwork(network),
-      );
-      final ssiTxStatus = await layer2Api.getTxnStatus(txId);
-      expect(ssiTxStatus, isNotNull);
+      await waitForMorpheusLayer2Confirmation(txId, true);
 
       final expectedContentId = digestJson(signedContractJson);
 
-      final history = await layer2Api.getBeforeProofHistory(expectedContentId);
+      final history = await morpheusLayer2.getBeforeProofHistory(expectedContentId);
       expect(history, isNotNull);
 
       hydraPrivate.dispose();

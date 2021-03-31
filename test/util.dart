@@ -14,8 +14,12 @@ final layer1 = Layer1Api.createApi(networkConfig);
 final coeusLayer2 = Layer2Api.createCoeusApi(networkConfig);
 final morpheusLayer2 = Layer2Api.createMorpheusApi(networkConfig);
 
-// TODO generalize the different waitFor...Confirmation functions below
-//      with too much shared implementeation
+// NOTE normally this should not be here, but Ark seems to propagate wallet nonce
+//      changes very slowly. Ark developers said that a delay of 2-3 secs is "normal".
+Future<void> waitForArkInternalRefresh() async {
+  await Future.delayed(const Duration(seconds: 6));
+}
+
 Future<void> waitForLayer1Confirmation(String txId, bool expected) async {
   var success = false;
   for (var i = 0; i < 12; i++) {
@@ -27,6 +31,7 @@ Future<void> waitForLayer1Confirmation(String txId, bool expected) async {
     }
   }
   expect(success, expected);
+  await waitForArkInternalRefresh();
 }
 
 Future<void> waitForCoeusLayer2Confirmation(String txId, bool expected) async {
@@ -37,6 +42,11 @@ Future<void> waitForCoeusLayer2Confirmation(String txId, bool expected) async {
   } while (txStatus == null);
   final success = txStatus!;
   expect(success, expected);
+  final layer1Status = await layer1.getTxnStatus(txId);
+  if (expected && layer1Status == null) {
+    fail("COEUS LAYER2 SUCCEEDED, LAYER1 STILL INCOMPLETE");
+  }
+  await waitForArkInternalRefresh();
 }
 
 Future<void> waitForMorpheusLayer2Confirmation(
@@ -48,6 +58,11 @@ Future<void> waitForMorpheusLayer2Confirmation(
   } while (txStatus == null);
   final success = txStatus!;
   expect(success, expected);
+  final layer1Status = await layer1.getTxnStatus(txId);
+  if (expected && layer1Status == null) {
+    fail("MORPHEUS LAYER2 SUCCEEDED, LAYER1 STILL INCOMPLETE");
+  }
+  await waitForArkInternalRefresh();
 }
 
 Response resp(String body, {int code = 200}) {

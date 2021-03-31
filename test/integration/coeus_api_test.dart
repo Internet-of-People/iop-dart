@@ -1,3 +1,5 @@
+@Timeout(Duration(seconds: 60))
+
 import 'dart:math';
 
 import 'package:iop_sdk/crypto.dart';
@@ -6,6 +8,8 @@ import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:iop_sdk/src/coeus/operation.dart';
 import 'package:test/test.dart';
+
+import '../util.dart';
 
 final network = Network.TestNet;
 final networkConfig = NetworkConfig.fromNetwork(network);
@@ -34,12 +38,7 @@ Future<void> registerDomain(
     hydraPrivate,
   );
 
-  bool? txStatus;
-  do {
-    await Future.delayed(Duration(seconds: 2));
-    txStatus = await layer2Api.getTxnStatus(txId);
-  } while (txStatus == null);
-  expect(txStatus, true);
+  await waitForCoeusLayer2Confirmation(txId, true);
 }
 
 void main() async {
