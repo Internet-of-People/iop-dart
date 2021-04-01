@@ -14,7 +14,7 @@ class AuthorityPrivateApi extends Api {
   AuthorityPrivateApi(ApiConfig config) : super(config);
 
   Future<List<RequestEntry>> listRequests(PrivateKey withPrivateKey) async {
-    final resp = await getAuth('/requests', withPrivateKey);
+    final resp = await getAuth('/request', withPrivateKey);
     if (resp.statusCode == HttpStatus.ok) {
       return ListRequestsResponse.fromJson(json.decode(resp.body)).requests;
     }
@@ -42,7 +42,7 @@ class AuthorityPrivateApi extends Api {
   ) async {
     final content = signedWitnessStatement.toJson();
     final resp = await postAuth(
-      '/requests/${capabilityLink.value}/approve',
+      '/request/${capabilityLink.value}/approve',
       content,
       withPrivateKey,
     );
@@ -59,7 +59,7 @@ class AuthorityPrivateApi extends Api {
   ) async {
     final content = {'rejectionReason': rejectionReason};
     final resp = await postAuth(
-      '/requests/${capabilityLink.value}/reject',
+      '/request/${capabilityLink.value}/reject',
       content,
       withPrivateKey,
     );

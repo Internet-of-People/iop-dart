@@ -58,7 +58,7 @@ void main() {
     test('listRequests', () async {
       final sk = TestVault.create().privateKey;
       when(
-        client.get(Uri.parse('$baseUrl/requests'),
+        client.get(Uri.parse('$baseUrl/request'),
             headers: anyNamed('headers')),
       ).thenAnswer(
           (req) => jwtResp(resp(requestsResponse), req, sk.publicKey()));
@@ -100,7 +100,7 @@ void main() {
 
     test('listRequests - not http200', () async {
       when(
-        client.get(Uri.parse('$baseUrl/requests'),
+        client.get(Uri.parse('$baseUrl/request'),
             headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
@@ -155,7 +155,7 @@ void main() {
       final link = CapabilityLink('link');
       final statement = TestVault.create().createSignedWitnessStatement();
       when(client.post(
-        Uri.parse('$baseUrl/requests/${link.value}/approve'),
+        Uri.parse('$baseUrl/request/${link.value}/approve'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -171,7 +171,7 @@ void main() {
       final link = CapabilityLink('link');
       final statement = TestVault.create().createSignedWitnessStatement();
       when(client.post(
-        Uri.parse('$baseUrl/requests/${link.value}/approve'),
+        Uri.parse('$baseUrl/request/${link.value}/approve'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -187,7 +187,7 @@ void main() {
       final sk = TestVault.create().privateKey;
       final link = CapabilityLink('link');
       when(client.post(
-        Uri.parse('$baseUrl/requests/${link.value}/reject'),
+        Uri.parse('$baseUrl/request/${link.value}/reject'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -200,7 +200,7 @@ void main() {
     test('rejectRequest - not http200', () async {
       final link = CapabilityLink('link');
       when(client.post(
-        Uri.parse('$baseUrl/requests/${link.value}/reject'),
+        Uri.parse('$baseUrl/request/${link.value}/reject'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(

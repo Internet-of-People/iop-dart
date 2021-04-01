@@ -10,7 +10,7 @@ class VerifierPublicApi extends Api {
   VerifierPublicApi(ApiConfig config) : super(config);
 
   Future<AfterProof> getAfterProof() async {
-    final resp = await get('/after-proof');
+    final resp = await get('/afterProof');
 
     if (resp.statusCode == HttpStatus.ok) {
       return AfterProof.fromJson(json.decode(resp.body));

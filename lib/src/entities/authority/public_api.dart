@@ -13,7 +13,7 @@ class AuthorityPublicApi extends Api {
   AuthorityPublicApi(ApiConfig config) : super(config);
 
   Future<List<ContentId>> listProcesses() async {
-    final resp = await get('/processes');
+    final resp = await get('/process');
     if (resp.statusCode == HttpStatus.ok) {
       return ListProcessesResponse.fromJson(json.decode(resp.body)).processes;
     }
@@ -35,7 +35,7 @@ class AuthorityPublicApi extends Api {
   Future<CapabilityLink> sendRequest(
     Signed<WitnessRequest> witnessRequest,
   ) async {
-    final resp = await post('/requests', witnessRequest.toJson());
+    final resp = await post('/request', witnessRequest.toJson());
 
     if (resp.statusCode == HttpStatus.accepted) {
       return CapabilityLink.fromJson(resp.body);
@@ -47,7 +47,7 @@ class AuthorityPublicApi extends Api {
   Future<RequestStatus?> getRequestStatus(
     CapabilityLink capabilityLink,
   ) async {
-    final resp = await get('/requests/${capabilityLink.value}/status');
+    final resp = await get('/request/${capabilityLink.value}/status');
 
     if (resp.statusCode == HttpStatus.ok) {
       return RequestStatus.fromJson(json.decode(resp.body));

@@ -33,7 +33,7 @@ void main() {
   group('AuthorityPublicApi', () {
     test('listProcesses', () async {
       when(
-        client.get(Uri.parse('$baseUrl/processes'),
+        client.get(Uri.parse('$baseUrl/process'),
             headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp(processesResponse)));
 
@@ -46,7 +46,7 @@ void main() {
 
     test('listProcesses - not http200', () async {
       when(
-        client.get(Uri.parse('$baseUrl/processes'),
+        client.get(Uri.parse('$baseUrl/process'),
             headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
@@ -97,7 +97,7 @@ void main() {
           TestVault.create().createSignedWitnessRequest();
       final link = CapabilityLink('link');
       when(client.post(
-        Uri.parse('$baseUrl/requests'),
+        Uri.parse('$baseUrl/request'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -113,7 +113,7 @@ void main() {
       final signedWitnessRequest =
           TestVault.create().createSignedWitnessRequest();
       when(client.post(
-        Uri.parse('$baseUrl/requests'),
+        Uri.parse('$baseUrl/request'),
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
@@ -177,7 +177,7 @@ void main() {
     test('getRequestStatus - http404', () async {
       final link = CapabilityLink('link');
       when(client.get(
-        Uri.parse('$baseUrl/requests/${link.value}/status'),
+        Uri.parse('$baseUrl/request/${link.value}/status'),
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 404)));
 
@@ -189,7 +189,7 @@ void main() {
     test('getRequestStatus - not http200/404', () async {
       final link = CapabilityLink('link');
       when(client.get(
-        Uri.parse('$baseUrl/requests/${link.value}/status'),
+        Uri.parse('$baseUrl/request/${link.value}/status'),
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 500)));
 

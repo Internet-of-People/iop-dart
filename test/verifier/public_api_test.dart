@@ -24,7 +24,7 @@ void main() {
   group('VerifierPublicApi', () {
     test('getAfterProof', () async {
       when(
-        client.get(Uri.parse('$baseUrl/after-proof'),
+        client.get(Uri.parse('$baseUrl/afterProof'),
             headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp(
             json.encode({'blockHash': 'hash', 'blockHeight': 42}),
@@ -37,7 +37,7 @@ void main() {
 
     test('getAfterProof - not http200', () async {
       when(
-        client.get(Uri.parse('$baseUrl/after-proof'),
+        client.get(Uri.parse('$baseUrl/afterProof'),
             headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
