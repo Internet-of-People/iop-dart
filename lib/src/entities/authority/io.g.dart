@@ -6,6 +6,30 @@ part of 'io.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+Process _$ProcessFromJson(Map<String, dynamic> json) {
+  return Process(
+    json['name'] as String,
+    json['version'] as int,
+    json['description'] as String,
+    Content.fromJson(json['claimSchema']),
+    json['evidenceSchema'] == null
+        ? null
+        : Content.fromJson(json['evidenceSchema']),
+    json['constraintsSchema'] == null
+        ? null
+        : Content.fromJson(json['constraintsSchema']),
+  );
+}
+
+Map<String, dynamic> _$ProcessToJson(Process instance) => <String, dynamic>{
+      'name': instance.name,
+      'version': instance.version,
+      'description': instance.description,
+      'claimSchema': instance.claimSchema.toJson(),
+      'evidenceSchema': instance.evidenceSchema?.toJson(),
+      'constraintsSchema': instance.constraintsSchema?.toJson(),
+    };
+
 RequestEntry _$RequestEntryFromJson(Map<String, dynamic> json) {
   return RequestEntry(
     CapabilityLink.fromJson(json['capabilityLink'] as String),

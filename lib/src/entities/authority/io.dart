@@ -1,8 +1,33 @@
+import 'dart:ffi';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:iop_sdk/scalar_box.dart';
 import 'package:iop_sdk/ssi.dart';
 
 part 'io.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+class Process {
+  final String name;
+  final int version;
+  final String description;
+  final Content<DynamicContent> claimSchema;
+  final Content<DynamicContent>? evidenceSchema;
+  final Content<DynamicContent>? constraintsSchema;
+
+  Process(
+      this.name,
+      this.version,
+      this.description,
+      this.claimSchema,
+      this.evidenceSchema,
+      this.constraintsSchema,);
+
+  factory Process.fromJson(Map<String, dynamic> json) =>
+      _$ProcessFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProcessToJson(this);
+}
 
 @JsonSerializable(explicitToJson: true)
 class RequestEntry {
