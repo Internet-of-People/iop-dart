@@ -51,7 +51,7 @@ Map<String, dynamic> _$DynamicContentToJson(DynamicContent instance) {
 
 Content<T> _$ContentFromJson<T>(Map<String, dynamic> json) {
   return Content<T>(
-    _genericContentFromJson(json['content'] as Map<String, dynamic>),
+    _genericContentFromJson(json['content']),
     json['contentId'] == null
         ? null
         : ContentId.fromJson(json['contentId'] as String),
