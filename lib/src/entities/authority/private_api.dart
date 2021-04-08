@@ -43,7 +43,7 @@ class AuthorityPrivateApi extends Api {
     final content = signedWitnessStatement.toJson();
     final resp = await postAuth(
       '/request/${capabilityLink.value}/approve',
-      content,
+      json.encode(content),
       withPrivateKey,
     );
 
@@ -60,7 +60,7 @@ class AuthorityPrivateApi extends Api {
     final content = {'rejectionReason': rejectionReason};
     final resp = await postAuth(
       '/request/${capabilityLink.value}/reject',
-      content,
+      json.encode(content),
       withPrivateKey,
     );
 

@@ -41,7 +41,7 @@ abstract class Api {
   }
 
   Future<Response> postAuth(
-      String path, dynamic content, PrivateKey withPrivateKey) async {
+      String path, String content, PrivateKey withPrivateKey) async {
     return await post(path, content,
         customHeaders: _authHeader(withPrivateKey, content: content));
   }
