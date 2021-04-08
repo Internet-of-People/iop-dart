@@ -101,7 +101,7 @@ void main() {
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
-        (_) => Future.value(resp(link.value, code: 202)),
+        (_) => Future.value(resp('{"capabilityLink":"${link.value}"}', code: 202)),
       );
 
       final r = await api.sendRequest(signedWitnessRequest);

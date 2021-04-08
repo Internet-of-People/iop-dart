@@ -110,3 +110,15 @@ Map<String, dynamic> _$RequestStatusToJson(RequestStatus instance) =>
       'signedStatement': instance.signedStatement?.toJson(),
       'rejectionReason': instance.rejectionReason,
     };
+
+SendRequestResponse _$SendRequestResponseFromJson(Map<String, dynamic> json) {
+  return SendRequestResponse(
+    CapabilityLink.fromJson(json['capabilityLink'] as String),
+  );
+}
+
+Map<String, dynamic> _$SendRequestResponseToJson(
+        SendRequestResponse instance) =>
+    <String, dynamic>{
+      'capabilityLink': instance.capabilityLink.toJson(),
+    };

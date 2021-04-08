@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:iop_sdk/scalar_box.dart';
 import 'package:iop_sdk/ssi.dart';
@@ -77,4 +75,16 @@ class RequestStatus {
       _$RequestStatusFromJson(json);
 
   Map<String, dynamic> toJson() => _$RequestStatusToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SendRequestResponse {
+  final CapabilityLink capabilityLink;
+
+  SendRequestResponse(this.capabilityLink);
+
+  factory SendRequestResponse.fromJson(Map<String, dynamic> json) =>
+      _$SendRequestResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SendRequestResponseToJson(this);
 }
