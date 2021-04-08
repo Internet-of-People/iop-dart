@@ -34,7 +34,7 @@ class InspectorPublicApi extends Api {
   Future<ContentId> uploadPresentation(
     Signed<Presentation> presentation,
   ) async {
-    final resp = await post('/presentation', presentation.toJson());
+    final resp = await post('/presentation', json.encode(presentation.toJson()));
 
     if (resp.statusCode == HttpStatus.accepted) {
       return ContentId.fromJson(resp.body);

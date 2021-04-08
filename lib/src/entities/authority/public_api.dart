@@ -35,7 +35,7 @@ class AuthorityPublicApi extends Api {
   Future<CapabilityLink> sendRequest(
     Signed<WitnessRequest> witnessRequest,
   ) async {
-    final resp = await post('/request', witnessRequest.toJson());
+    final resp = await post('/request', json.encode(witnessRequest.toJson()));
 
     if (resp.statusCode == HttpStatus.accepted) {
       return CapabilityLink.fromJson(resp.body);

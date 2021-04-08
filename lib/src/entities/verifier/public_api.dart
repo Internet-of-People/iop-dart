@@ -20,7 +20,7 @@ class VerifierPublicApi extends Api {
   }
 
   Future<ValidationResult> validate(ValidationRequest request) async {
-    final resp = await post('/validate', request.toJson());
+    final resp = await post('/validate', json.encode(request.toJson()));
 
     if (resp.statusCode == HttpStatus.ok) {
       return ValidationResult.fromJson(json.decode(resp.body));

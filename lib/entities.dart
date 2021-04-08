@@ -3,7 +3,7 @@ import 'package:iop_sdk/crypto.dart';
 
 abstract class Api {
   static final Map<String, String> _jsonHeaders = {
-    'Content-Type': 'application/json',
+    'content-type': 'application/json',
   };
 
   final ApiConfig _config;
@@ -19,10 +19,10 @@ abstract class Api {
     return headers;
   }
 
-  Future<Response> post(String path, dynamic body,
+  Future<Response> post(String path, String body,
       {Map<String, String>? customHeaders}) async {
     return _config.client.post(
-      Uri.parse('${_baseUrl}$path'),
+      Uri.parse('$_baseUrl$path'),
       headers: headers(customHeaders),
       body: body,
     );
@@ -31,7 +31,7 @@ abstract class Api {
   Future<Response> get(String path,
       {Map<String, String>? customHeaders}) async {
     return _config.client.get(
-      Uri.parse('${_baseUrl}$path'),
+      Uri.parse('$_baseUrl$path'),
       headers: headers(customHeaders),
     );
   }
