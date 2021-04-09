@@ -12,7 +12,7 @@ class InspectorPublicApi extends Api {
   InspectorPublicApi(ApiConfig config) : super(config);
 
   Future<List<ContentId>> listScenarios() async {
-    final resp = await get('/scenarios');
+    final resp = await get('/scenario');
     if (resp.statusCode == HttpStatus.ok) {
       return ListScenariosResponse.fromJson(json.decode(resp.body)).scenarios;
     }

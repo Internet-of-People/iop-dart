@@ -31,7 +31,7 @@ void main() {
   group('InspectorPublicApi', () {
     test('listScenarios', () async {
       when(
-        client.get(Uri.parse('$baseUrl/scenarios'),
+        client.get(Uri.parse('$baseUrl/scenario'),
             headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp(scenariosResponse)));
 
@@ -42,7 +42,7 @@ void main() {
 
     test('listScenarios - not http200', () async {
       when(
-        client.get(Uri.parse('$baseUrl/scenarios'),
+        client.get(Uri.parse('$baseUrl/scenario'),
             headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
