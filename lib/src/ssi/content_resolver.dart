@@ -5,19 +5,30 @@ class ContentResolver<T> {
 
   ContentResolver(this._downloader);
 
-  Future<T> resolve(ContentId id) async {
-    return await _downloader(id);
-  }
-
-  Future<Map<ContentId, T>> resolveByContentIds(List<ContentId> ids) async {
-    final contentResolvers = ids.map((id) async => await resolve(id)).toList();
-    final contents = await Future.wait(contentResolvers);
-
-    final contentIdContentMap = <ContentId, T>{};
-    for(var i=0;i<contents.length;i++) {
-      contentIdContentMap[ids[i]] = contents[i];
+  Future<T> resolve(Content<T> content) async {
+    if(content.content != null) {
+      return content.content!;
     }
 
-    return contentIdContentMap;
+    return await _downloader(content.contentId!);
+  }
+
+  Future<Map<ContentId, T>> resolveContentIds(List<ContentId> ids) async {
+    final resolverFuts = ids.map((id) async => await resolve(Content(null, id))).toList();
+    final result = await Future.wait(resolverFuts, eagerError: true);
+    final map = <ContentId, T>{};
+    for(var i=0;i<ids.length;i++){
+      map[ids[i]] = result[i];
+    }
+
+    return map;
+  }
+
+  Future<List<T>> resolveContents(List<Content<T>> contents) async {
+    final resolverFuts = contents
+      .map((content) async => resolve(content))
+      .toList();
+
+    return await Future.wait(resolverFuts, eagerError: true);
   }
 }

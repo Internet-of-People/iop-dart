@@ -7,9 +7,9 @@ abstract class Api {
   };
 
   final ApiConfig _config;
-  final String _baseUrl;
+  final String baseUrl;
 
-  Api(this._config) : _baseUrl = '${_config.host}:${_config.port}';
+  Api(this._config) : baseUrl = '${_config.host}:${_config.port}';
 
   static Map<String, String> headers(Map<String, String>? customHeaders) {
     final headers = Map<String, String>.from(_jsonHeaders);
@@ -22,7 +22,7 @@ abstract class Api {
   Future<Response> post(String path, String body,
       {Map<String, String>? customHeaders}) async {
     return _config.client.post(
-      Uri.parse('$_baseUrl$path'),
+      Uri.parse('$baseUrl$path'),
       headers: headers(customHeaders),
       body: body,
     );
@@ -31,7 +31,7 @@ abstract class Api {
   Future<Response> get(String path,
       {Map<String, String>? customHeaders}) async {
     return _config.client.get(
-      Uri.parse('$_baseUrl$path'),
+      Uri.parse('$baseUrl$path'),
       headers: headers(customHeaders),
     );
   }

@@ -9,6 +9,7 @@ part of 'io.dart';
 Scenario _$ScenarioFromJson(Map<String, dynamic> json) {
   return Scenario(
     json['name'] as String,
+    json['version'] as int,
     json['description'] as String,
     (json['prerequisites'] as List<dynamic>)
         .map((e) => Prerequisite.fromJson(e as Map<String, dynamic>))
@@ -24,6 +25,7 @@ Scenario _$ScenarioFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ScenarioToJson(Scenario instance) => <String, dynamic>{
       'name': instance.name,
+      'version': instance.version,
       'description': instance.description,
       'prerequisites': instance.prerequisites.map((e) => e.toJson()).toList(),
       'requiredLicenses':

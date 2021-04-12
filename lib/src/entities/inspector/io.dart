@@ -8,6 +8,7 @@ part 'io.g.dart';
 @JsonSerializable(explicitToJson: true)
 class Scenario {
   final String name;
+  final int version;
   final String description;
   final List<Prerequisite> prerequisites;
   final List<LicenseSpecification> requiredLicenses;
@@ -15,6 +16,7 @@ class Scenario {
 
   Scenario(
     this.name,
+    this.version,
     this.description,
     this.prerequisites,
     this.requiredLicenses,
