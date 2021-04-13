@@ -14,12 +14,13 @@ class Process {
   final Content<DynamicContent>? constraintsSchema;
 
   Process(
-      this.name,
-      this.version,
-      this.description,
-      this.claimSchema,
-      this.evidenceSchema,
-      this.constraintsSchema,);
+    this.name,
+    this.version,
+    this.description,
+    this.claimSchema,
+    this.evidenceSchema,
+    this.constraintsSchema,
+  );
 
   factory Process.fromJson(Map<String, dynamic> json) =>
       _$ProcessFromJson(json);

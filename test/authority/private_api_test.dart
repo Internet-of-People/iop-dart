@@ -58,8 +58,7 @@ void main() {
     test('listRequests', () async {
       final sk = TestVault.create().privateKey;
       when(
-        client.get(Uri.parse('$baseUrl/request'),
-            headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/request'), headers: anyNamed('headers')),
       ).thenAnswer(
           (req) => jwtResp(resp(requestsResponse), req, sk.publicKey()));
 
@@ -100,8 +99,7 @@ void main() {
 
     test('listRequests - not http200', () async {
       when(
-        client.get(Uri.parse('$baseUrl/request'),
-            headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/request'), headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       final sk = TestVault.create().privateKey;

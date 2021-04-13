@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/layer1.dart';
-import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
 import 'package:test/test.dart';
 
@@ -61,7 +60,8 @@ void main() {
 
       final expectedContentId = digestJson(signedContractJson);
 
-      final history = await morpheusLayer2.getBeforeProofHistory(expectedContentId);
+      final history =
+          await morpheusLayer2.getBeforeProofHistory(expectedContentId);
       expect(history, isNotNull);
 
       hydraPrivate.dispose();

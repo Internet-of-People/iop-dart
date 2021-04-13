@@ -33,8 +33,7 @@ void main() {
   group('AuthorityPublicApi', () {
     test('listProcesses', () async {
       when(
-        client.get(Uri.parse('$baseUrl/process'),
-            headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/process'), headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp(processesResponse)));
 
       final r = await api.listProcesses();
@@ -46,8 +45,7 @@ void main() {
 
     test('listProcesses - not http200', () async {
       when(
-        client.get(Uri.parse('$baseUrl/process'),
-            headers: anyNamed('headers')),
+        client.get(Uri.parse('$baseUrl/process'), headers: anyNamed('headers')),
       ).thenAnswer((_) => Future.value(resp('', code: 500)));
 
       expect(
@@ -101,7 +99,8 @@ void main() {
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
-        (_) => Future.value(resp('{"capabilityLink":"${link.value}"}', code: 202)),
+        (_) =>
+            Future.value(resp('{"capabilityLink":"${link.value}"}', code: 202)),
       );
 
       final r = await api.sendRequest(signedWitnessRequest);

@@ -44,7 +44,7 @@ Future<void> waitForCoeusLayer2Confirmation(String txId, bool expected) async {
   expect(success, expected);
   final layer1Status = await layer1.getTxnStatus(txId);
   if (expected && layer1Status == null) {
-    fail("COEUS LAYER2 SUCCEEDED, LAYER1 STILL INCOMPLETE");
+    fail('COEUS LAYER2 SUCCEEDED, LAYER1 STILL INCOMPLETE');
   }
   await waitForArkInternalRefresh();
 }
@@ -60,7 +60,7 @@ Future<void> waitForMorpheusLayer2Confirmation(
   expect(success, expected);
   final layer1Status = await layer1.getTxnStatus(txId);
   if (expected && layer1Status == null) {
-    fail("MORPHEUS LAYER2 SUCCEEDED, LAYER1 STILL INCOMPLETE");
+    fail('MORPHEUS LAYER2 SUCCEEDED, LAYER1 STILL INCOMPLETE');
   }
   await waitForArkInternalRefresh();
 }
