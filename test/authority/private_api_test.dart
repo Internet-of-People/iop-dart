@@ -113,7 +113,7 @@ void main() {
       final sk = TestVault.create().privateKey;
       final id = ContentId('contentId');
       when(client.get(
-        Uri.parse('$baseUrl/private-blob/${id.value}'),
+        Uri.parse('$baseUrl/privateBlob/${id.value}'),
         headers: anyNamed('headers'),
       )).thenAnswer((req) => jwtResp(resp('BLOB'), req, sk.publicKey()));
 
@@ -125,7 +125,7 @@ void main() {
     test('getPrivateBlob - http404', () async {
       final id = ContentId('contentId');
       when(client.get(
-        Uri.parse('$baseUrl/private-blob/${id.value}'),
+        Uri.parse('$baseUrl/privateBlob/${id.value}'),
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 404)));
 
@@ -137,7 +137,7 @@ void main() {
     test('getPrivateBlob - not http200/404', () async {
       final id = ContentId('contentId');
       when(client.get(
-        Uri.parse('$baseUrl/private-blob/${id.value}'),
+        Uri.parse('$baseUrl/privateBlob/${id.value}'),
         headers: anyNamed('headers'),
       )).thenAnswer((_) => Future.value(resp('', code: 500)));
 

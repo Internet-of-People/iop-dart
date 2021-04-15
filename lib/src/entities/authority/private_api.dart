@@ -25,7 +25,7 @@ class AuthorityPrivateApi extends Api {
   Future<dynamic> getPrivateBlob(
       ContentId contentId, PrivateKey withPrivateKey) async {
     final resp =
-        await getAuth('/private-blob/${contentId.value}', withPrivateKey);
+        await getAuth('/privateBlob/${contentId.value}', withPrivateKey);
     if (resp.statusCode == HttpStatus.ok) {
       return resp.body;
     } else if (resp.statusCode == HttpStatus.notFound) {
