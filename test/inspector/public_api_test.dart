@@ -95,11 +95,11 @@ void main() {
         headers: anyNamed('headers'),
         body: anyNamed('body'),
       )).thenAnswer(
-        (_) => Future.value(resp('contentId', code: 202)),
+        (_) => Future.value(resp('{"contentId": "mycontentid"}', code: 202)),
       );
 
       final r = await api.uploadPresentation(presentation);
-      expect(r.value, 'contentId');
+      expect(r.value, 'mycontentid');
     });
 
     test('uploadPresentation - not http202', () async {
