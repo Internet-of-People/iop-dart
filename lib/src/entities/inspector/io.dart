@@ -55,3 +55,15 @@ class LicenseSpecification {
 
   Map<String, dynamic> toJson() => _$LicenseSpecificationToJson(this);
 }
+
+@JsonSerializable(explicitToJson: true)
+class UploadPresentationResponse {
+  final ContentId contentId;
+
+  UploadPresentationResponse(this.contentId);
+
+  factory UploadPresentationResponse.fromJson(Map<String, dynamic> json) =>
+      _$UploadPresentationResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UploadPresentationResponseToJson(this);
+}

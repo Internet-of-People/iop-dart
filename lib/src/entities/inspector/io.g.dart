@@ -61,3 +61,16 @@ Map<String, dynamic> _$LicenseSpecificationToJson(
       'purpose': instance.purpose,
       'expiry': instance.expiry,
     };
+
+UploadPresentationResponse _$UploadPresentationResponseFromJson(
+    Map<String, dynamic> json) {
+  return UploadPresentationResponse(
+    ContentId.fromJson(json['contentId'] as String),
+  );
+}
+
+Map<String, dynamic> _$UploadPresentationResponseToJson(
+        UploadPresentationResponse instance) =>
+    <String, dynamic>{
+      'contentId': instance.contentId.toJson(),
+    };

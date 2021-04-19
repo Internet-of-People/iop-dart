@@ -6,6 +6,8 @@ import 'package:iop_sdk/ssi.dart';
 import 'package:iop_sdk/utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'io.dart';
+
 part 'public_api.g.dart';
 
 class InspectorPublicApi extends Api {
@@ -38,7 +40,7 @@ class InspectorPublicApi extends Api {
         await post('/presentation', json.encode(presentation.toJson()));
 
     if (resp.statusCode == HttpStatus.accepted) {
-      return ContentId.fromJson(resp.body);
+      return UploadPresentationResponse.fromJson(json.decode(resp.body)).contentId;
     }
 
     return Future.error(HttpResponseError(resp.statusCode, resp.body));
