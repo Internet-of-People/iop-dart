@@ -6,6 +6,7 @@
 ### Changed
 - Updated to Dart 2.12, codebase is now  null-safe
 - Renamed vault plugin operation `rewind` to `init`
+- Updated authority and inspector calls to latest service endpoints
 
 ## [3.2.0] - 2020-09-08
 
