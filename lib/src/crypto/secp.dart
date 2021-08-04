@@ -186,7 +186,7 @@ class SecpSignature implements Disposable {
 
   ByteData toDer() {
     final nativeData = DartApi.native.secpSignature.toDer(_ffi);
-    final slice = ByteSlice(nativeData.ref);
+    final slice = ByteSlice(nativeData);
     try {
       return slice.toBytes();
     } finally {

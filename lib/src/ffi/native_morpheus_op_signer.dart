@@ -39,11 +39,11 @@ typedef DMorpheusOperationSigner_Add = void Function(
   Pointer<Void> operation,
 );
 
-typedef NMorpheusOperationSigner_Sign = Pointer<Result> Function(
+typedef NMorpheusOperationSigner_SignWithKey = Pointer<Result> Function(
   Pointer<Void> signer,
   Pointer<Void> privateKey,
 );
-typedef DMorpheusOperationSigner_Sign = Pointer<Result> Function(
+typedef DMorpheusOperationSigner_SignWithKey = Pointer<Result> Function(
   Pointer<Void> signer,
   Pointer<Void> privateKey,
 );
@@ -52,7 +52,7 @@ class NativeMorpheusOperationSigner {
   final DDelete_MorpheusOperationSigner delete;
   final DMorpheusOperationSigner_New create;
   final DMorpheusOperationSigner_Add add;
-  final DMorpheusOperationSigner_Sign sign;
+  final DMorpheusOperationSigner_SignWithKey signWithKey;
 
   NativeMorpheusOperationSigner(DynamicLibrary lib)
       : delete = lib.lookupFunction<NDelete_MorpheusOperationSigner,
@@ -67,8 +67,8 @@ class NativeMorpheusOperationSigner {
             DMorpheusOperationSigner_Add>(
           'MorpheusOperationSigner_add',
         ),
-        sign = lib.lookupFunction<NMorpheusOperationSigner_Sign,
-            DMorpheusOperationSigner_Sign>(
-          'MorpheusOperationSigner_sign',
+        signWithKey = lib.lookupFunction<NMorpheusOperationSigner_SignWithKey,
+            DMorpheusOperationSigner_SignWithKey>(
+          'MorpheusOperationSigner_sign_with_key',
         );
 }

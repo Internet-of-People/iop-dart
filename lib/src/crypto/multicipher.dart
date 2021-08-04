@@ -47,7 +47,7 @@ class KeyId implements Disposable {
 
   ByteData toBytes() {
     final nativeSlice = DartApi.native.keyId.toBytes(_ffi);
-    final slice = ByteSlice(nativeSlice.ref);
+    final slice = ByteSlice(nativeSlice);
     try {
       return slice.toBytes();
     } finally {
@@ -153,7 +153,7 @@ class PublicKey implements Disposable {
 
   ByteData toBytes() {
     final nativeSlice = DartApi.native.publicKey.toBytes(_ffi);
-    final slice = ByteSlice(nativeSlice.ref);
+    final slice = ByteSlice(nativeSlice);
     try {
       return slice.toBytes();
     } finally {
@@ -240,7 +240,7 @@ class Signature implements Disposable {
 
   ByteData toBytes() {
     final nativeSlice = DartApi.native.signature.toBytes(_ffi);
-    final slice = ByteSlice(nativeSlice.ref);
+    final slice = ByteSlice(nativeSlice);
     try {
       return slice.toBytes();
     } finally {

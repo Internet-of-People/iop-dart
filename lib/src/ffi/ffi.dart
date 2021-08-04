@@ -20,18 +20,19 @@ class NativeSlice extends Struct {
   @IntPtr()
   external int _length;
 
-  factory NativeSlice.fromParts(Pointer<Void> ptr, int length) {
+  static Pointer<NativeSlice> fromParts(Pointer<Void> ptr, int length) {
     final result = calloc<NativeSlice>();
-    return result.ref
+    result.ref
       .._ptr = ptr
       .._length = length;
+    return result;
   }
 
   int get length => _length;
 }
 
 class ByteSlice implements Disposable {
-  NativeSlice _slice;
+  Pointer<NativeSlice> _slice;
 
   ByteSlice(this._slice);
 
@@ -50,19 +51,19 @@ class ByteSlice implements Disposable {
   }
 
   ByteData toBytes() {
-    final length = _slice.length;
+    final length = _slice.ref.length;
     final bytes = Uint8List(length);
-    final ptr = _slice.ptr.cast<Uint8>();
+    final ptr = _slice.ref.ptr.cast<Uint8>();
     bytes.setAll(0, ptr.asTypedList(length));
     return bytes.buffer.asByteData();
   }
 
-  Pointer<NativeSlice> get addressOf => _slice.addressOf;
+  Pointer<NativeSlice> get addressOf => _slice;
 
   @override
   void dispose() {
-    calloc.free(_slice.ptr);
-    calloc.free(_slice.addressOf);
+    calloc.free(_slice.ref.ptr);
+    calloc.free(_slice);
   }
 }
 
@@ -79,24 +80,6 @@ extension PointerSlice<T extends NativeType> on NativeSlice {
   }
 }
 
-extension ResultPtr on Pointer<Result> {
-  T extract<T>(T Function(Result) fetcher) {
-    try {
-      return fetcher(ref);
-    } finally {
-      ref.dispose();
-    }
-  }
-
-  T? extractNullable<T>(T? Function(Result) fetcher) {
-    try {
-      return fetcher(ref);
-    } finally {
-      ref.dispose();
-    }
-  }
-}
-
 extension StringPtr on Pointer<Utf8> {
   String intoString() {
     try {
@@ -107,7 +90,7 @@ extension StringPtr on Pointer<Utf8> {
   }
 }
 
-class Result extends Struct {
+class Result extends Struct implements Disposable {
   external Pointer _success;
   external Pointer<Utf8> _error;
 
@@ -116,7 +99,7 @@ class Result extends Struct {
   }
 
   String get asString {
-    final Pointer<Utf8> rawUtf8Ptr = _value.cast();
+    final rawUtf8Ptr = _value.cast<Utf8>();
     final result = rawUtf8Ptr.toDartString();
     return result;
   }
@@ -146,7 +129,7 @@ class Result extends Struct {
   List<String> asStringList() {
     return asList((raw) {
       try {
-        Pointer<Utf8> rawUtfPtr = raw.cast();
+        final rawUtfPtr = raw.cast<Utf8>();
         return rawUtfPtr.toDartString();
       } finally {
         calloc.free(raw);
@@ -184,6 +167,7 @@ class Result extends Struct {
     }
   }
 
+  @override
   void dispose() {
     if (_success != nullptr) {
       calloc.free(_success);
@@ -191,6 +175,25 @@ class Result extends Struct {
     if (_error != nullptr) {
       calloc.free(_error);
     }
-    calloc.free(addressOf);
+  }
+}
+
+extension ResultPtr on Pointer<Result> {
+  T extract<T>(T Function(Result) fetcher) {
+    try {
+      return fetcher(ref);
+    } finally {
+      ref.dispose();
+      calloc.free(this);
+    }
+  }
+
+  T? extractNullable<T>(T? Function(Result) fetcher) {
+    try {
+      return fetcher(ref);
+    } finally {
+      ref.dispose();
+      calloc.free(this);
+    }
   }
 }

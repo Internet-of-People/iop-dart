@@ -77,7 +77,7 @@ class Content<T> {
   }
 }
 
-T? _genericContentFromJson<T>(dynamic? input) {
+T? _genericContentFromJson<T>(dynamic input) {
   if (input == null) {
     return null;
   }

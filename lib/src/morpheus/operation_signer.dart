@@ -49,7 +49,7 @@ class MorpheusOperationSigner implements Disposable {
 
   MorpheusSignedOperation signWithKey(PrivateKey privateKey) {
     final signed = DartApi.native.morpheusOperationSigner
-        .sign(_ffi, privateKey.ffi)
+        .signWithKey(_ffi, privateKey.ffi)
         .extract((res) => res.asPointer<Void>());
     return MorpheusSignedOperation(signed, true);
   }

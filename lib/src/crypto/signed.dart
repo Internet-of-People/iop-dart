@@ -18,7 +18,7 @@ class SignedBytes implements Disposable {
 
   ByteData get content {
     final nativeSlice = DartApi.native.signedBytes.contentGet(_ffi);
-    final slice = ByteSlice(nativeSlice.ref);
+    final slice = ByteSlice(nativeSlice);
     try {
       return slice.toBytes();
     } finally {
