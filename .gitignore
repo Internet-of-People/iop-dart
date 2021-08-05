@@ -1,5 +1,4 @@
 .dart_tool
 .idea
 .packages
-pubspec.lock
 libiop_sdk_ffi.so

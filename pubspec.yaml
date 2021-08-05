@@ -4,7 +4,7 @@ documentation: https://developer.iop.technology/
 homepage: https://iop.global
 repository: https://github.com/Internet-of-People/iop-dart
 
-version: 5.0.0-alpha3
+version: 5.0.0
 
 environment:
   sdk: ">=2.13.0 <3.0.0"

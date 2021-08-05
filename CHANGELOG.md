@@ -1,10 +1,10 @@
-## [5.0.0] - 2021-04-13
+## [5.0.0] - 2021-08-05
 
 ### Added
 - Hydra, Morpheus (SSI) and Coeus (DNS) transaction builders
 
 ### Changed
-- Updated to Dart 2.12, codebase is now  null-safe
+- Updated to Dart 2.13 with FFI 1.0, codebase is now  null-safe
 - Renamed vault plugin operation `rewind` to `init`
 - Updated authority and inspector calls to latest service endpoints
 
