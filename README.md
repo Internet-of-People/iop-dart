@@ -113,6 +113,14 @@ $ pub run test --concurrency=1 # note: the test must run on a single thread beca
 $ dartanalyzer .
 ```
 
+## Resource Finalizers
+
+A relevant part of this Dart library is implemented in Rust and exported through a shared library (C ABI) that is called using Dart FFI. Related Dart objects are just wrappers around external pointers allocated on the C heap (i.e. outside the Dart VM) and thus has to be deallocated the same way.
+
+The convenient way for automated deallocation of underlying FFI resources during garbage collection would be using [Dart finalizers](https://github.com/dart-lang/sdk/issues/45455). Unfortunately they are still very much work in progress and yet unreleased.
+
+As a temporary solution, classes wrapping FFI-allocated resources all implement a custom `Disposable` interface. The owner of such object instances has to explicitly free their underlying resources calling `obj.dispose()` when the object is not needed anymore. We understand that this is very inconvenient and error-prone, thus we plan to add support for automated finalizers as soon as the Dart feature gets stabilized.
+
 ## Contributing
 
 Feel free to open issues and pull requests in this repository. By contributing you agree to transfer all intellectual property from your changes to the Decentralized Society Foundation, Panama, copyright owner of this code. To avoid losing precious time you spend on coding, you could open an issue first and discuss what you are up to before forking and sending us a PR.
