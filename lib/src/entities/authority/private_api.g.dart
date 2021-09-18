@@ -6,13 +6,13 @@ part of 'private_api.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ListRequestsResponse _$ListRequestsResponseFromJson(Map<String, dynamic> json) {
-  return ListRequestsResponse(
-    (json['requests'] as List<dynamic>)
-        .map((e) => RequestEntry.fromJson(e as Map<String, dynamic>))
-        .toList(),
-  );
-}
+ListRequestsResponse _$ListRequestsResponseFromJson(
+        Map<String, dynamic> json) =>
+    ListRequestsResponse(
+      (json['requests'] as List<dynamic>)
+          .map((e) => RequestEntry.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$ListRequestsResponseToJson(
         ListRequestsResponse instance) =>

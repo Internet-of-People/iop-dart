@@ -7,13 +7,12 @@ part of 'io.dart';
 // **************************************************************************
 
 BeforeProofHistoryResponse _$BeforeProofHistoryResponseFromJson(
-    Map<String, dynamic> json) {
-  return BeforeProofHistoryResponse(
-    ContentId.fromJson(json['contentId'] as String),
-    json['existsFromHeight'] as int?,
-    json['queriedAtHeight'] as int,
-  );
-}
+        Map<String, dynamic> json) =>
+    BeforeProofHistoryResponse(
+      ContentId.fromJson(json['contentId'] as String),
+      json['existsFromHeight'] as int?,
+      json['queriedAtHeight'] as int,
+    );
 
 Map<String, dynamic> _$BeforeProofHistoryResponseToJson(
         BeforeProofHistoryResponse instance) =>
@@ -23,12 +22,11 @@ Map<String, dynamic> _$BeforeProofHistoryResponseToJson(
       'queriedAtHeight': instance.queriedAtHeight,
     };
 
-TransactionIdHeight _$TransactionIdHeightFromJson(Map<String, dynamic> json) {
-  return TransactionIdHeight(
-    json['transactionId'] as String,
-    json['height'] as int,
-  );
-}
+TransactionIdHeight _$TransactionIdHeightFromJson(Map<String, dynamic> json) =>
+    TransactionIdHeight(
+      json['transactionId'] as String,
+      json['height'] as int,
+    );
 
 Map<String, dynamic> _$TransactionIdHeightToJson(
         TransactionIdHeight instance) =>
@@ -37,14 +35,12 @@ Map<String, dynamic> _$TransactionIdHeightToJson(
       'height': instance.height,
     };
 
-DidOperation _$DidOperationFromJson(Map<String, dynamic> json) {
-  return DidOperation(
-    json['transactionId'] as String,
-    json['blockHeight'] as int,
-    SignableOperationData.fromJson(json['data'] as Map<String, dynamic>),
-    json['valid'] as bool,
-  );
-}
+DidOperation _$DidOperationFromJson(Map<String, dynamic> json) => DidOperation(
+      json['transactionId'] as String,
+      json['blockHeight'] as int,
+      SignableOperationData.fromJson(json['data'] as Map<String, dynamic>),
+      json['valid'] as bool,
+    );
 
 Map<String, dynamic> _$DidOperationToJson(DidOperation instance) =>
     <String, dynamic>{
@@ -55,12 +51,11 @@ Map<String, dynamic> _$DidOperationToJson(DidOperation instance) =>
     };
 
 DryRunOperationError<T> _$DryRunOperationErrorFromJson<T extends OperationData>(
-    Map<String, dynamic> json) {
-  return DryRunOperationError<T>(
-    _dataFromJson(json['invalidOperationAttempt'] as Map<String, dynamic>),
-    json['message'] as String,
-  );
-}
+        Map<String, dynamic> json) =>
+    DryRunOperationError<T>(
+      _dataFromJson(json['invalidOperationAttempt'] as Map<String, dynamic>),
+      json['message'] as String,
+    );
 
 Map<String, dynamic> _$DryRunOperationErrorToJson<T extends OperationData>(
         DryRunOperationError<T> instance) =>
@@ -70,12 +65,11 @@ Map<String, dynamic> _$DryRunOperationErrorToJson<T extends OperationData>(
     };
 
 DomainSubtreePolicies _$DomainSubtreePoliciesFromJson(
-    Map<String, dynamic> json) {
-  return DomainSubtreePolicies(
-    json['expiration'] as int?,
-    json['schema'],
-  );
-}
+        Map<String, dynamic> json) =>
+    DomainSubtreePolicies(
+      json['expiration'] as int?,
+      json['schema'],
+    );
 
 Map<String, dynamic> _$DomainSubtreePoliciesToJson(
         DomainSubtreePolicies instance) =>
@@ -84,15 +78,15 @@ Map<String, dynamic> _$DomainSubtreePoliciesToJson(
       'schema': instance.schema,
     };
 
-DomainMetadata _$DomainMetadataFromJson(Map<String, dynamic> json) {
-  return DomainMetadata(
-    json['owner'] as String,
-    DomainSubtreePolicies.fromJson(
-        json['subtreePolicies'] as Map<String, dynamic>),
-    _$enumDecode(_$DomainRegistrationPolicyEnumMap, json['registrationPolicy']),
-    json['expiresAtHeight'] as int,
-  );
-}
+DomainMetadata _$DomainMetadataFromJson(Map<String, dynamic> json) =>
+    DomainMetadata(
+      json['owner'] as String,
+      DomainSubtreePolicies.fromJson(
+          json['subtreePolicies'] as Map<String, dynamic>),
+      _$enumDecode(
+          _$DomainRegistrationPolicyEnumMap, json['registrationPolicy']),
+      json['expiresAtHeight'] as int,
+    );
 
 Map<String, dynamic> _$DomainMetadataToJson(DomainMetadata instance) =>
     <String, dynamic>{

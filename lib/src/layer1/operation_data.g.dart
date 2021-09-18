@@ -6,11 +6,10 @@ part of 'operation_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-OperationData _$OperationDataFromJson(Map<String, dynamic> json) {
-  return OperationData(
-    _$enumDecode(_$OperationTypeEnumMap, json['operation']),
-  );
-}
+OperationData _$OperationDataFromJson(Map<String, dynamic> json) =>
+    OperationData(
+      _$enumDecode(_$OperationTypeEnumMap, json['operation']),
+    );
 
 Map<String, dynamic> _$OperationDataToJson(OperationData instance) =>
     <String, dynamic>{
@@ -49,13 +48,12 @@ const _$OperationTypeEnumMap = {
 };
 
 SignableOperationData _$SignableOperationDataFromJson(
-    Map<String, dynamic> json) {
-  return SignableOperationData(
-    DidData.fromJson(json['did'] as String),
-    json['lastTxId'] as String?,
-    _$enumDecode(_$SignableOperationTypeEnumMap, json['operation']),
-  );
-}
+        Map<String, dynamic> json) =>
+    SignableOperationData(
+      DidData.fromJson(json['did'] as String),
+      json['lastTxId'] as String?,
+      _$enumDecode(_$SignableOperationTypeEnumMap, json['operation']),
+    );
 
 Map<String, dynamic> _$SignableOperationDataToJson(
         SignableOperationData instance) =>
@@ -73,61 +71,53 @@ const _$SignableOperationTypeEnumMap = {
   SignableOperationType.tombstoneDid: 'tombstoneDid',
 };
 
-SignedOperationsData _$SignedOperationsDataFromJson(Map<String, dynamic> json) {
-  return SignedOperationsData(
-    (json['signables'] as List<dynamic>)
-        .map((e) => SignableOperationData.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    PublicKeyData.fromJson(json['signerPublicKey'] as String),
-    SignatureData.fromJson(json['signature'] as String),
-  );
-}
+SignedOperationsData _$SignedOperationsDataFromJson(
+        Map<String, dynamic> json) =>
+    SignedOperationsData(
+      (json['signables'] as List<dynamic>)
+          .map((e) => SignableOperationData.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      PublicKeyData.fromJson(json['signerPublicKey'] as String),
+      SignatureData.fromJson(json['signature'] as String),
+    );
 
 RegisterBeforeProofData _$RegisterBeforeProofDataFromJson(
-    Map<String, dynamic> json) {
-  return RegisterBeforeProofData(
-    ContentId.fromJson(json['contentId'] as String),
-  );
-}
+        Map<String, dynamic> json) =>
+    RegisterBeforeProofData(
+      ContentId.fromJson(json['contentId'] as String),
+    );
 
-AddKeyData _$AddKeyDataFromJson(Map<String, dynamic> json) {
-  return AddKeyData(
-    DidData.fromJson(json['did'] as String),
-    json['lastTxId'] as String,
-    AuthenticationData.fromJson(json['auth'] as String),
-    expiresAtHeight: json['expiresAtHeight'] as int?,
-  );
-}
+AddKeyData _$AddKeyDataFromJson(Map<String, dynamic> json) => AddKeyData(
+      DidData.fromJson(json['did'] as String),
+      json['lastTxId'] as String,
+      AuthenticationData.fromJson(json['auth'] as String),
+      expiresAtHeight: json['expiresAtHeight'] as int?,
+    );
 
-RevokeKeyData _$RevokeKeyDataFromJson(Map<String, dynamic> json) {
-  return RevokeKeyData(
-    DidData.fromJson(json['did'] as String),
-    json['lastTxId'] as String,
-    AuthenticationData.fromJson(json['auth'] as String),
-  );
-}
+RevokeKeyData _$RevokeKeyDataFromJson(Map<String, dynamic> json) =>
+    RevokeKeyData(
+      DidData.fromJson(json['did'] as String),
+      json['lastTxId'] as String,
+      AuthenticationData.fromJson(json['auth'] as String),
+    );
 
-AddRightData _$AddRightDataFromJson(Map<String, dynamic> json) {
-  return AddRightData(
-    DidData.fromJson(json['did'] as String),
-    json['lastTxId'] as String,
-    AuthenticationData.fromJson(json['auth'] as String),
-    json['right'] as String,
-  );
-}
+AddRightData _$AddRightDataFromJson(Map<String, dynamic> json) => AddRightData(
+      DidData.fromJson(json['did'] as String),
+      json['lastTxId'] as String,
+      AuthenticationData.fromJson(json['auth'] as String),
+      json['right'] as String,
+    );
 
-RevokeRightData _$RevokeRightDataFromJson(Map<String, dynamic> json) {
-  return RevokeRightData(
-    DidData.fromJson(json['did'] as String),
-    json['lastTxId'] as String,
-    AuthenticationData.fromJson(json['auth'] as String),
-    json['right'] as String,
-  );
-}
+RevokeRightData _$RevokeRightDataFromJson(Map<String, dynamic> json) =>
+    RevokeRightData(
+      DidData.fromJson(json['did'] as String),
+      json['lastTxId'] as String,
+      AuthenticationData.fromJson(json['auth'] as String),
+      json['right'] as String,
+    );
 
-TombstoneDidData _$TombstoneDidDataFromJson(Map<String, dynamic> json) {
-  return TombstoneDidData(
-    DidData.fromJson(json['did'] as String),
-    json['lastTxId'] as String,
-  );
-}
+TombstoneDidData _$TombstoneDidDataFromJson(Map<String, dynamic> json) =>
+    TombstoneDidData(
+      DidData.fromJson(json['did'] as String),
+      json['lastTxId'] as String,
+    );

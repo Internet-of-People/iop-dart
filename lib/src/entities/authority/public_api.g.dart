@@ -7,13 +7,12 @@ part of 'public_api.dart';
 // **************************************************************************
 
 ListProcessesResponse _$ListProcessesResponseFromJson(
-    Map<String, dynamic> json) {
-  return ListProcessesResponse(
-    (json['processes'] as List<dynamic>)
-        .map((e) => ContentId.fromJson(e as String))
-        .toList(),
-  );
-}
+        Map<String, dynamic> json) =>
+    ListProcessesResponse(
+      (json['processes'] as List<dynamic>)
+          .map((e) => ContentId.fromJson(e as String))
+          .toList(),
+    );
 
 Map<String, dynamic> _$ListProcessesResponseToJson(
         ListProcessesResponse instance) =>

@@ -6,22 +6,20 @@ part of 'io.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Scenario _$ScenarioFromJson(Map<String, dynamic> json) {
-  return Scenario(
-    json['name'] as String,
-    json['version'] as int,
-    json['description'] as String,
-    (json['prerequisites'] as List<dynamic>)
-        .map((e) => Prerequisite.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    (json['requiredLicenses'] as List<dynamic>)
-        .map((e) => LicenseSpecification.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    json['resultSchema'] == null
-        ? null
-        : Content.fromJson(json['resultSchema']),
-  );
-}
+Scenario _$ScenarioFromJson(Map<String, dynamic> json) => Scenario(
+      json['name'] as String,
+      json['version'] as int,
+      json['description'] as String,
+      (json['prerequisites'] as List<dynamic>)
+          .map((e) => Prerequisite.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      (json['requiredLicenses'] as List<dynamic>)
+          .map((e) => LicenseSpecification.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      json['resultSchema'] == null
+          ? null
+          : Content.fromJson(json['resultSchema']),
+    );
 
 Map<String, dynamic> _$ScenarioToJson(Scenario instance) => <String, dynamic>{
       'name': instance.name,
@@ -33,12 +31,10 @@ Map<String, dynamic> _$ScenarioToJson(Scenario instance) => <String, dynamic>{
       'resultSchema': instance.resultSchema?.toJson(),
     };
 
-Prerequisite _$PrerequisiteFromJson(Map<String, dynamic> json) {
-  return Prerequisite(
-    Content.fromJson(json['process']),
-    (json['claimFields'] as List<dynamic>).map((e) => e as String).toList(),
-  );
-}
+Prerequisite _$PrerequisiteFromJson(Map<String, dynamic> json) => Prerequisite(
+      Content.fromJson(json['process']),
+      (json['claimFields'] as List<dynamic>).map((e) => e as String).toList(),
+    );
 
 Map<String, dynamic> _$PrerequisiteToJson(Prerequisite instance) =>
     <String, dynamic>{
@@ -46,13 +42,13 @@ Map<String, dynamic> _$PrerequisiteToJson(Prerequisite instance) =>
       'claimFields': instance.claimFields,
     };
 
-LicenseSpecification _$LicenseSpecificationFromJson(Map<String, dynamic> json) {
-  return LicenseSpecification(
-    DidData.fromJson(json['issuedTo'] as String),
-    json['purpose'] as String,
-    json['expiry'] as String,
-  );
-}
+LicenseSpecification _$LicenseSpecificationFromJson(
+        Map<String, dynamic> json) =>
+    LicenseSpecification(
+      DidData.fromJson(json['issuedTo'] as String),
+      json['purpose'] as String,
+      json['expiry'] as String,
+    );
 
 Map<String, dynamic> _$LicenseSpecificationToJson(
         LicenseSpecification instance) =>
@@ -63,11 +59,10 @@ Map<String, dynamic> _$LicenseSpecificationToJson(
     };
 
 UploadPresentationResponse _$UploadPresentationResponseFromJson(
-    Map<String, dynamic> json) {
-  return UploadPresentationResponse(
-    ContentId.fromJson(json['contentId'] as String),
-  );
-}
+        Map<String, dynamic> json) =>
+    UploadPresentationResponse(
+      ContentId.fromJson(json['contentId'] as String),
+    );
 
 Map<String, dynamic> _$UploadPresentationResponseToJson(
         UploadPresentationResponse instance) =>

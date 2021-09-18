@@ -6,20 +6,18 @@ part of 'io.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Process _$ProcessFromJson(Map<String, dynamic> json) {
-  return Process(
-    json['name'] as String,
-    json['version'] as int,
-    json['description'] as String,
-    Content.fromJson(json['claimSchema']),
-    json['evidenceSchema'] == null
-        ? null
-        : Content.fromJson(json['evidenceSchema']),
-    json['constraintsSchema'] == null
-        ? null
-        : Content.fromJson(json['constraintsSchema']),
-  );
-}
+Process _$ProcessFromJson(Map<String, dynamic> json) => Process(
+      json['name'] as String,
+      json['version'] as int,
+      json['description'] as String,
+      Content.fromJson(json['claimSchema']),
+      json['evidenceSchema'] == null
+          ? null
+          : Content.fromJson(json['evidenceSchema']),
+      json['constraintsSchema'] == null
+          ? null
+          : Content.fromJson(json['constraintsSchema']),
+    );
 
 Map<String, dynamic> _$ProcessToJson(Process instance) => <String, dynamic>{
       'name': instance.name,
@@ -30,16 +28,14 @@ Map<String, dynamic> _$ProcessToJson(Process instance) => <String, dynamic>{
       'constraintsSchema': instance.constraintsSchema?.toJson(),
     };
 
-RequestEntry _$RequestEntryFromJson(Map<String, dynamic> json) {
-  return RequestEntry(
-    CapabilityLink.fromJson(json['capabilityLink'] as String),
-    ContentId.fromJson(json['requestId'] as String),
-    DateTime.parse(json['dateOfRequest'] as String),
-    _$enumDecode(_$StatusEnumMap, json['status']),
-    ContentId.fromJson(json['processId'] as String),
-    json['notes'] as String?,
-  );
-}
+RequestEntry _$RequestEntryFromJson(Map<String, dynamic> json) => RequestEntry(
+      CapabilityLink.fromJson(json['capabilityLink'] as String),
+      ContentId.fromJson(json['requestId'] as String),
+      DateTime.parse(json['dateOfRequest'] as String),
+      _$enumDecode(_$StatusEnumMap, json['status']),
+      ContentId.fromJson(json['processId'] as String),
+      json['notes'] as String?,
+    );
 
 Map<String, dynamic> _$RequestEntryToJson(RequestEntry instance) =>
     <String, dynamic>{
@@ -83,26 +79,24 @@ const _$StatusEnumMap = {
   Status.rejected: 'rejected',
 };
 
-CapabilityLink _$CapabilityLinkFromJson(Map<String, dynamic> json) {
-  return CapabilityLink(
-    json['value'] as String,
-  );
-}
+CapabilityLink _$CapabilityLinkFromJson(Map<String, dynamic> json) =>
+    CapabilityLink(
+      json['value'] as String,
+    );
 
 Map<String, dynamic> _$CapabilityLinkToJson(CapabilityLink instance) =>
     <String, dynamic>{
       'value': instance.value,
     };
 
-RequestStatus _$RequestStatusFromJson(Map<String, dynamic> json) {
-  return RequestStatus(
-    _$enumDecode(_$StatusEnumMap, json['status']),
-    json['signedStatement'] == null
-        ? null
-        : Signed.fromJson(json['signedStatement'] as Map<String, dynamic>),
-    json['rejectionReason'] as String?,
-  );
-}
+RequestStatus _$RequestStatusFromJson(Map<String, dynamic> json) =>
+    RequestStatus(
+      _$enumDecode(_$StatusEnumMap, json['status']),
+      json['signedStatement'] == null
+          ? null
+          : Signed.fromJson(json['signedStatement'] as Map<String, dynamic>),
+      json['rejectionReason'] as String?,
+    );
 
 Map<String, dynamic> _$RequestStatusToJson(RequestStatus instance) =>
     <String, dynamic>{
@@ -111,11 +105,10 @@ Map<String, dynamic> _$RequestStatusToJson(RequestStatus instance) =>
       'rejectionReason': instance.rejectionReason,
     };
 
-SendRequestResponse _$SendRequestResponseFromJson(Map<String, dynamic> json) {
-  return SendRequestResponse(
-    CapabilityLink.fromJson(json['capabilityLink'] as String),
-  );
-}
+SendRequestResponse _$SendRequestResponseFromJson(Map<String, dynamic> json) =>
+    SendRequestResponse(
+      CapabilityLink.fromJson(json['capabilityLink'] as String),
+    );
 
 Map<String, dynamic> _$SendRequestResponseToJson(
         SendRequestResponse instance) =>
