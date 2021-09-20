@@ -5,6 +5,7 @@ import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
+import 'package:iop_sdk/src/ffi/native_did.dart';
 // ignore: library_prefixes
 import 'package:iop_sdk/ssi.dart' as Ssi;
 
@@ -89,9 +90,42 @@ class MorpheusPublic implements Disposable {
 
   MorpheusPublic._(this._ffi, this._owned);
 
+  MorpheusPublicKind kind(String didKind) {
+    final nativeDidKind = didKind.toNativeUtf8();
+    try {
+      final kind = DartApi.native.morpheusPublic
+          .kind(_ffi, nativeDidKind)
+          .extract((res) => res.asPointer<Void>());
+      return MorpheusPublicKind._(kind, true);
+    } finally {
+      calloc.free(nativeDidKind);
+    }
+  }
+
   MorpheusPublicKind get personas {
     final kind = DartApi.native.morpheusPublic
         .personasGet(_ffi)
+        .extract((res) => res.asPointer<Void>());
+    return MorpheusPublicKind._(kind, true);
+  }
+
+  MorpheusPublicKind get devices {
+    final kind = DartApi.native.morpheusPublic
+        .devicesGet(_ffi)
+        .extract((res) => res.asPointer<Void>());
+    return MorpheusPublicKind._(kind, true);
+  }
+
+  MorpheusPublicKind get groups {
+    final kind = DartApi.native.morpheusPublic
+        .groupsGet(_ffi)
+        .extract((res) => res.asPointer<Void>());
+    return MorpheusPublicKind._(kind, true);
+  }
+
+  MorpheusPublicKind get resources {
+    final kind = DartApi.native.morpheusPublic
+        .resourcesGet(_ffi)
         .extract((res) => res.asPointer<Void>());
     return MorpheusPublicKind._(kind, true);
   }
@@ -209,9 +243,42 @@ class MorpheusPrivate implements Disposable {
 
   MorpheusPrivate._(this._ffi, this._owned);
 
+  MorpheusPrivateKind kind(String didKind) {
+    final nativeDidKind = didKind.toNativeUtf8();
+    try {
+      final kind = DartApi.native.morpheusPrivate
+          .kind(_ffi, nativeDidKind)
+          .extract((res) => res.asPointer<Void>());
+      return MorpheusPrivateKind._(kind, true);
+    } finally {
+      calloc.free(nativeDidKind);
+    }
+  }
+
   MorpheusPrivateKind get personas {
     final ffiKind = DartApi.native.morpheusPrivate
         .personasGet(_ffi)
+        .extract((res) => res.asPointer<Void>());
+    return MorpheusPrivateKind._(ffiKind, true);
+  }
+
+  MorpheusPrivateKind get devices {
+    final ffiKind = DartApi.native.morpheusPrivate
+        .devicesGet(_ffi)
+        .extract((res) => res.asPointer<Void>());
+    return MorpheusPrivateKind._(ffiKind, true);
+  }
+
+  MorpheusPrivateKind get groups {
+    final ffiKind = DartApi.native.morpheusPrivate
+        .groupsGet(_ffi)
+        .extract((res) => res.asPointer<Void>());
+    return MorpheusPrivateKind._(ffiKind, true);
+  }
+
+  MorpheusPrivateKind get resources {
+    final ffiKind = DartApi.native.morpheusPrivate
+        .resourcesGet(_ffi)
         .extract((res) => res.asPointer<Void>());
     return MorpheusPrivateKind._(ffiKind, true);
   }

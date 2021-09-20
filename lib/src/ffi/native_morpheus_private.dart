@@ -9,10 +9,40 @@ typedef DDelete_MorpheusPrivate = void Function(
   Pointer<Void> morpheusPrivate,
 );
 
+typedef NMorpheusPrivate_Kind = Pointer<Result> Function(
+  Pointer<Void> morpheusPrivate,
+  Pointer<Utf8> didKind,
+);
+typedef DMorpheusPrivate_Kind = Pointer<Result> Function(
+  Pointer<Void> morpheusPrivate,
+  Pointer<Utf8> didKind,
+);
+
 typedef NMorpheusPrivate_Personas_Get = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
 );
 typedef DMorpheusPrivate_Personas_Get = Pointer<Result> Function(
+  Pointer<Void> morpheusPrivate,
+);
+
+typedef NMorpheusPrivate_Devices_Get = Pointer<Result> Function(
+  Pointer<Void> morpheusPrivate,
+);
+typedef DMorpheusPrivate_Devices_Get = Pointer<Result> Function(
+  Pointer<Void> morpheusPrivate,
+);
+
+typedef NMorpheusPrivate_Groups_Get = Pointer<Result> Function(
+  Pointer<Void> morpheusPrivate,
+);
+typedef DMorpheusPrivate_Groups_Get = Pointer<Result> Function(
+  Pointer<Void> morpheusPrivate,
+);
+
+typedef NMorpheusPrivate_Resources_Get = Pointer<Result> Function(
+  Pointer<Void> morpheusPrivate,
+);
+typedef DMorpheusPrivate_Resources_Get = Pointer<Result> Function(
   Pointer<Void> morpheusPrivate,
 );
 
@@ -78,7 +108,11 @@ typedef DMorpheusPrivate_SignClaimPresentation = Pointer<Result> Function(
 
 class NativeMorpheusPrivate {
   final DDelete_MorpheusPrivate delete;
+  final DMorpheusPrivate_Kind kind;
   final DMorpheusPrivate_Personas_Get personasGet;
+  final DMorpheusPrivate_Devices_Get devicesGet;
+  final DMorpheusPrivate_Groups_Get groupsGet;
+  final DMorpheusPrivate_Resources_Get resourcesGet;
   final DMorpheusPrivate_Public_Get publicGet;
   final DMorpheusPrivate_KeyByPk keyByPk;
   final DMorpheusPrivate_SignDidOperations signDidOperations;
@@ -91,9 +125,24 @@ class NativeMorpheusPrivate {
             .lookupFunction<NDelete_MorpheusPrivate, DDelete_MorpheusPrivate>(
           'delete_MorpheusPrivate',
         ),
+        kind = lib.lookupFunction<NMorpheusPrivate_Kind, DMorpheusPrivate_Kind>(
+          'MorpheusPrivate_kind',
+        ),
         personasGet = lib.lookupFunction<NMorpheusPrivate_Personas_Get,
             DMorpheusPrivate_Personas_Get>(
           'MorpheusPrivate_personas_get',
+        ),
+        devicesGet = lib.lookupFunction<NMorpheusPrivate_Devices_Get,
+            DMorpheusPrivate_Devices_Get>(
+          'MorpheusPrivate_devices_get',
+        ),
+        groupsGet = lib.lookupFunction<NMorpheusPrivate_Groups_Get,
+            DMorpheusPrivate_Groups_Get>(
+          'MorpheusPrivate_groups_get',
+        ),
+        resourcesGet = lib.lookupFunction<NMorpheusPrivate_Resources_Get,
+            DMorpheusPrivate_Resources_Get>(
+          'MorpheusPrivate_resources_get',
         ),
         publicGet = lib.lookupFunction<NMorpheusPrivate_Public_Get,
             DMorpheusPrivate_Public_Get>(

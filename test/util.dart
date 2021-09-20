@@ -100,6 +100,12 @@ class TestVault {
     final id = did.defaultKeyId();
     expect(id.toString(), 'iezqztJ6XX6GDxdSgdiySiT3J');
 
+    final resource20Pk = morpheusPrivate.resources.key(20).neuter().publicKey();
+    expect(
+      resource20Pk.toString(),
+      'pezDf6Ev4nNAjY7XTsPPY2bxiqE7ts6XxBAA9z9NiYGcBRS',
+    );
+
     return TestVault._(morpheusPrivate, privateKey, did, id);
   }
 
