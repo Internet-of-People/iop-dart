@@ -8,11 +8,14 @@ part 'io.g.dart';
 class BeforeProofHistoryResponse {
   final ContentId contentId;
   final int? existsFromHeight;
+  @JsonKey(required: false)
+  final String? txid;
   final int queriedAtHeight;
 
   BeforeProofHistoryResponse(
     this.contentId,
     this.existsFromHeight,
+    this.txid,
     this.queriedAtHeight,
   );
 

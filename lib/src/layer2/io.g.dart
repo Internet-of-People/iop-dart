@@ -11,6 +11,7 @@ BeforeProofHistoryResponse _$BeforeProofHistoryResponseFromJson(
     BeforeProofHistoryResponse(
       ContentId.fromJson(json['contentId'] as String),
       json['existsFromHeight'] as int?,
+      json['txid'] as String?,
       json['queriedAtHeight'] as int,
     );
 
@@ -19,6 +20,7 @@ Map<String, dynamic> _$BeforeProofHistoryResponseToJson(
     <String, dynamic>{
       'contentId': instance.contentId.toJson(),
       'existsFromHeight': instance.existsFromHeight,
+      'txid': instance.txid,
       'queriedAtHeight': instance.queriedAtHeight,
     };
 
