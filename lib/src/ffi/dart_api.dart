@@ -32,7 +32,7 @@ class DartApi implements Disposable {
         Directory(Platform.resolvedExecutable).parent.path,
         join(CMAKE_BUILT_DEKSTOP_NATIVE_PATH, '${NATIVE_LIB_NAME}_windows.dll'),
       ));
-    } else if(Platform.isLinux) {
+    } else if (Platform.isLinux) {
       return _tryOnPathOrFromSDKRepo('${NATIVE_LIB_NAME}_linux.so');
     } else if (Platform.isAndroid) {
       return _tryOnPathOrFromSDKRepo(join(

@@ -173,7 +173,7 @@ class TestVault {
     final statement = createSignedWitnessStatement();
 
     final publicKey = statement.signature.publicKey;
-    final contentId = selectiveDigestJson(
+    final digest = selectiveDigestJson(
       statement.content.content!.toJson(),
       '',
     );
@@ -182,7 +182,7 @@ class TestVault {
     final afterProof = null;
     return ValidationRequest(
       publicKey,
-      contentId,
+      digest.contentId!,
       signature,
       onBehalfOf,
       afterProof,

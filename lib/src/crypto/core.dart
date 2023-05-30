@@ -43,14 +43,33 @@ class Authentication {
   bool get isPublicKey => publicKey != null;
 }
 
-ContentId selectiveDigestJson(
+class DigestJsonResult {
+  final DynamicContent? collapsedJson;
+  final ContentId? contentId;
+
+  DigestJsonResult({this.collapsedJson, this.contentId});
+}
+
+DigestJsonResult selectiveDigestJson(
   Map<String, dynamic> data,
   String keepPropertiesList,
 ) {
-  return ContentId(DartApi.instance.selectiveDigestJson(
+  final res = DartApi.instance.selectiveDigestJson(
     json.encode(data),
     keepPropertiesList,
-  ));
+  );
+
+  try {
+    return DigestJsonResult(
+      collapsedJson: DynamicContent.fromJson(json.decode(res)),
+    );
+  } catch (e) {
+    if (e is FormatException) {
+      return DigestJsonResult(contentId: ContentId(res));
+    }
+
+    rethrow;
+  }
 }
 
 ContentId digestJson(dynamic data) {
