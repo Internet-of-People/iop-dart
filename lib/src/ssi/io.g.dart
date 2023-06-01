@@ -183,7 +183,7 @@ Map<String, dynamic> _$WitnessStatementToJson(WitnessStatement instance) {
 
 ProvenClaim _$ProvenClaimFromJson(Map<String, dynamic> json) => ProvenClaim(
       Claim.fromJson(json['claim'] as Map<String, dynamic>),
-      _statementListFromJson(json['statements'] as Map<String, dynamic>),
+      _statementListFromJson(json['statements'] as List),
     );
 
 Map<String, dynamic> _$ProvenClaimToJson(ProvenClaim instance) =>

@@ -241,10 +241,8 @@ class ProvenClaim {
   Map<String, dynamic> toJson() => _$ProvenClaimToJson(this);
 }
 
-List<Signed<WitnessStatement>> _statementListFromJson(
-    Map<String, dynamic> input) {
-  var dynList = input as List<Signed<dynamic>>;
-  return dynList
+List<Signed<WitnessStatement>> _statementListFromJson(List<dynamic> input) {
+  return input
       .map((e) => Signed<WitnessStatement>.fromJson(e as Map<String, dynamic>))
       .toList();
 }
