@@ -9,6 +9,17 @@ typedef DDelete_SignedBytes = void Function(
   Pointer<Void> signedBytes,
 );
 
+typedef NSignedBytes_New = Pointer<Void> Function(
+  Pointer<Void> publicKey,
+  Pointer<NativeSlice> content,
+  Pointer<Void> signature,
+);
+typedef DSignedBytes_New = Pointer<Void> Function(
+  Pointer<Void> publicKey,
+  Pointer<NativeSlice> content,
+  Pointer<Void> signature,
+);
+
 typedef NSignedBytes_PublicKey_Get = Pointer<Void> Function(
   Pointer<Void> signedBytes,
 );
@@ -61,6 +72,7 @@ typedef DSignedBytes_ValidateWithDidDoc = Pointer<Result> Function(
 
 class NativeSignedBytes {
   final DDelete_SignedBytes delete;
+  final DSignedBytes_New create;
   final DSignedBytes_PublicKey_Get publicKeyGet;
   final DSignedBytes_Content_Get contentGet;
   final DSignedBytes_Signature_Get signatureGet;
@@ -71,6 +83,9 @@ class NativeSignedBytes {
   NativeSignedBytes(DynamicLibrary lib)
       : delete = lib.lookupFunction<NDelete_SignedBytes, DDelete_SignedBytes>(
           'delete_SignedBytes',
+        ),
+        create = lib.lookupFunction<NSignedBytes_New, DSignedBytes_New>(
+          'SignedBytes_new',
         ),
         publicKeyGet = lib.lookupFunction<NSignedBytes_PublicKey_Get,
             DSignedBytes_PublicKey_Get>(

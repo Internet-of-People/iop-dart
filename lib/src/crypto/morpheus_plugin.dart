@@ -5,7 +5,6 @@ import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/src/ffi/dart_api.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
-import 'package:iop_sdk/src/ffi/native_did.dart';
 // ignore: library_prefixes
 import 'package:iop_sdk/ssi.dart' as Ssi;
 

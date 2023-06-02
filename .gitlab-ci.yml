@@ -8,12 +8,12 @@ analyze:
   stage: analyze
   script:
     - dart --version
-    - pub get
-    # TODO - dartanalyzer .
+    - dart pub get
+    - dart analyze
 
 unit_test:
   stage: test
   script:
     - flutter --version
-    - pub get
+    - dart pub get
     - ./test.sh

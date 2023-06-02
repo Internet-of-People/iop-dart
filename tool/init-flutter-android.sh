@@ -32,27 +32,17 @@ mkdir -p "$ANDROID_JNILIBS_PATH/arm64-v8a"
 mkdir -p "$ANDROID_JNILIBS_PATH/x86"
 mkdir -p "$ANDROID_JNILIBS_PATH/x86_64"
 
-echo Downloading latest shared library binaries
-curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/arm64-v8a/Android-ARMv8.zip" \
-  https://github.com/Internet-of-People/iop-rs/releases/latest/download/Android-ARMv8.zip
-curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/x86_64/Android-x86_64.zip" \
-  https://github.com/Internet-of-People/iop-rs/releases/latest/download/Android-x86_64.zip
-curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/x86/Android-x86.zip" \
-  https://github.com/Internet-of-People/iop-rs/releases/latest/download/Android-x86.zip
-
-echo Extracting downloaded archives
-unzip $ANDROID_JNILIBS_PATH/arm64-v8a/Android-ARMv8.zip -d $ANDROID_JNILIBS_PATH/arm64-v8a
-unzip $ANDROID_JNILIBS_PATH/x86_64/Android-x86_64.zip -d $ANDROID_JNILIBS_PATH/x86_64
-unzip $ANDROID_JNILIBS_PATH/x86/Android-x86.zip -d $ANDROID_JNILIBS_PATH/x86
-
-echo Removing extracted archives
-rm $ANDROID_JNILIBS_PATH/arm64-v8a/Android-ARMv8.zip
-rm $ANDROID_JNILIBS_PATH/x86_64/Android-x86_64.zip
-rm $ANDROID_JNILIBS_PATH/x86/Android-x86.zip
+echo Downloading shared library binaries
+curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/arm64-v8a/libiop_sdk_ffi.so" \
+  https://raw.githubusercontent.com/Internet-of-People/iop-dart/master/iop_sdk/f9fa08b/libiop_sdk_ffi_android-armv8.so
+curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/x86_64/libiop_sdk_ffi.so" \
+  https://raw.githubusercontent.com/Internet-of-People/iop-dart/master/iop_sdk/f9fa08b/libiop_sdk_ffi_android-x86_64.so
+curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/x86/libiop_sdk_ffi.so" \
+  https://raw.githubusercontent.com/Internet-of-People/iop-dart/master/iop_sdk/f9fa08b/libiop_sdk_ffi_android-x86.so
 
 # TODO consider autoextracting sdk version from our pubspec.yaml
 IOP_DEPENDENCY_NAME="iop_sdk"
-IOP_DEPENDENCY_LATEST_VERSION="5.0.0"
+IOP_DEPENDENCY_LATEST_VERSION="6.0.0"
 echo Checking IoP package dependency
 if ! grep -zqP "$IOP_DEPENDENCY_NAME:" $PROJECT_FILE
 then

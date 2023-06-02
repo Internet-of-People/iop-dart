@@ -3,6 +3,13 @@ import 'package:ffi/ffi.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/src/ffi/ffi.dart';
 import 'package:iop_sdk/src/ffi/native_api.dart';
+import 'package:path/path.dart';
+
+// Also update tool/init-flutter-android.sh
+const IOP_SDK_VERSION = '0.0.17-snapshot';
+const NATIVE_LIB_NAME = 'libiop_sdk_ffi';
+final CMAKE_BUILT_DEKSTOP_NATIVE_PATH =
+    join('data', 'flutter_assets', 'assets', 'native');
 
 class DartApi implements Disposable {
   static DartApi? _instance;
@@ -13,14 +20,45 @@ class DartApi implements Disposable {
   static NativeApi get native => instance._native;
 
   static DartApi get instance {
-    if (_instance == null) {
-      final libName = 'libiop_sdk_ffi.so';
-      final libPath = Platform.isAndroid ? libName : './$libName';
-      final api = NativeApi.load(libPath);
-      _instance = DartApi._(api);
+    _instance ??= _loadNativeSDK();
+    return _instance!;
+  }
+
+  static DartApi _loadNativeSDK() {
+    if (Platform.isMacOS) {
+      return _tryOnPathOrFromSDKRepo('${NATIVE_LIB_NAME}_macos.dylib');
+    } else if (Platform.isWindows) {
+      return _tryOnPathOrFromSDKRepo(join(
+        Directory(Platform.resolvedExecutable).parent.path,
+        join(CMAKE_BUILT_DEKSTOP_NATIVE_PATH, '${NATIVE_LIB_NAME}_windows.dll'),
+      ));
+    } else if(Platform.isLinux) {
+      return _tryOnPathOrFromSDKRepo('${NATIVE_LIB_NAME}_linux.so');
+    } else if (Platform.isAndroid) {
+      return _tryOnPathOrFromSDKRepo(join(
+        Directory(Platform.resolvedExecutable).parent.path,
+        join(CMAKE_BUILT_DEKSTOP_NATIVE_PATH, '$NATIVE_LIB_NAME.so'),
+      ));
     }
 
-    return _instance!;
+    throw Exception('Unknown platform: ${Platform.operatingSystem}');
+  }
+
+  static DartApi _tryOnPathOrFromSDKRepo(String path) {
+    try {
+      return DartApi._(NativeApi.load(path));
+    } catch (e) {
+      final alternativePath = join(
+        Directory.current.path,
+        'iop_sdk',
+        IOP_SDK_VERSION,
+        path,
+      );
+      print('[IOP_SDK] WARNING: could not load $path');
+      print('[IOP_SDK] WARNING: trying to load it from $alternativePath...');
+      // if running from a test or locally, try to load it from the sdk repo
+      return DartApi._(NativeApi.load(alternativePath));
+    }
   }
 
   static void disposeIfCreated() {

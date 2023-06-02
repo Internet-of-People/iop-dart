@@ -1,3 +1,4 @@
+import 'package:iop_sdk/src/ssi/nonced_valut_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/scalar_box.dart';
@@ -121,6 +122,20 @@ class WithNonce {
       _$WithNonceFromJson(json);
 
   Map<String, dynamic> toJson() => _$WithNonceToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class NoncedValue<T> {
+  final Nonce nonce;
+  @NoncedValueConverter()
+  final T value;
+
+  NoncedValue(this.nonce, this.value);
+
+  factory NoncedValue.fromJson(Map<String, dynamic> json) =>
+      _$NoncedValueFromJson<T>(json);
+
+  Map<String, dynamic> toJson() => _$NoncedValueToJson<T>(this);
 }
 
 @JsonSerializable(explicitToJson: true)

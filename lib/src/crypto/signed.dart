@@ -11,6 +11,21 @@ class SignedBytes implements Disposable {
 
   SignedBytes(this._ffi, this._owned);
 
+  factory SignedBytes.create(
+    PublicKey publicKey,
+    ByteData content,
+    Signature signature,
+  ) {
+    final nativeData = ByteSlice.fromBytes(content);
+    try {
+      final nativeSignedBytes = DartApi.native.signedBytes
+          .create(publicKey.ffi, nativeData.addressOf, signature.ffi);
+      return SignedBytes(nativeSignedBytes, true);
+    } finally {
+      nativeData.dispose();
+    }
+  }
+
   PublicKey get publicKey {
     final ffiPk = DartApi.native.signedBytes.publicKeyGet(_ffi);
     return PublicKey(ffiPk, true);
@@ -75,6 +90,22 @@ class SignedJson implements Disposable {
   bool _owned;
 
   SignedJson(this._ffi, this._owned);
+
+  factory SignedJson.create(
+    PublicKey publicKey,
+    String content,
+    Signature signature,
+  ) {
+    final nativeContent = content.toNativeUtf8();
+    try {
+      final nativeSignedJson = DartApi.native.signedJson
+          .create(publicKey.ffi, nativeContent, signature.ffi)
+          .extract((res) => res.asPointer<Void>());
+      return SignedJson(nativeSignedJson, true);
+    } finally {
+      calloc.free(nativeContent);
+    }
+  }
 
   PublicKey get publicKey {
     final ffiPk = DartApi.native.signedJson.publicKeyGet(_ffi);

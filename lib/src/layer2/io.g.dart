@@ -85,7 +85,7 @@ DomainMetadata _$DomainMetadataFromJson(Map<String, dynamic> json) =>
       json['owner'] as String,
       DomainSubtreePolicies.fromJson(
           json['subtreePolicies'] as Map<String, dynamic>),
-      _$enumDecode(
+      $enumDecode(
           _$DomainRegistrationPolicyEnumMap, json['registrationPolicy']),
       json['expiresAtHeight'] as int,
     );
@@ -95,35 +95,9 @@ Map<String, dynamic> _$DomainMetadataToJson(DomainMetadata instance) =>
       'owner': instance.owner,
       'subtreePolicies': instance.subtreePolicies.toJson(),
       'registrationPolicy':
-          _$DomainRegistrationPolicyEnumMap[instance.registrationPolicy],
+          _$DomainRegistrationPolicyEnumMap[instance.registrationPolicy]!,
       'expiresAtHeight': instance.expiresAtHeight,
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
 
 const _$DomainRegistrationPolicyEnumMap = {
   DomainRegistrationPolicy.owner: 'owner',

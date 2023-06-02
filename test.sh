@@ -1,15 +1,9 @@
 #!/usr/bin/env sh
 
-LIB_ZIP_FILENAME="Linux-x86.zip"
-
 echo Checking presence of Morpheus shared library binary
-if [ ! -e libiop_sdk_ffi.so ]; then
-  echo Downloading Morpheus shared library binary
-  curl --proto '=https' --tlsv1.2 -#L -o $LIB_ZIP_FILENAME \
-    https://github.com/Internet-of-People/iop-rs/releases/latest/download/$LIB_ZIP_FILENAME
-  unzip $LIB_ZIP_FILENAME
-  rm $LIB_ZIP_FILENAME
+if [ ! -e libiop_sdk_ffi_linux.so ]; then
+  cp iop_sdk/0.0.17-snapshot/libiop_sdk_ffi_linux.so libiop_sdk_ffi_linux.so
 fi
 
 echo Running tests
-pub run test --concurrency=1
+dart test --concurrency=1

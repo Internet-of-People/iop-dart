@@ -25,7 +25,13 @@ This SDK is a work in progress and its convenience improves over time.
 ## Prerequisites
 
 - Dart 2.12.0+
-- Linux / MacOS
+- Linux / MacOS / Windows
+
+## Supported OS
+
+- Android (ARMv8, x86, x86_64)
+- MacOS
+- Windows
 
 ## Install
 
@@ -33,7 +39,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  iop_sdk: ^5.0.0
+  iop_sdk: ^6.0.0
 ```
 
 ## Architecture
@@ -100,17 +106,17 @@ Contains all interfaces needed to use the SSI (project Morpheus) protocol includ
 
 ```bash
 # Build json converters
-$ pub run build_runner build --delete-conflicting-outputs
+$ dart run build_runner build --delete-conflicting-outputs
 ```
 
 ```bash
 # Run tests
-$ pub run test --concurrency=1 # note: the test must run on a single thread becaus of nonce generation
+$ dart test --concurrency=1 # note: the test must run on a single thread becaus of nonce generation
 ```
 
 ```bash
 # Run Analyzer
-$ dartanalyzer .
+$ dart analyze
 ```
 
 ## Resource Finalizers
@@ -129,4 +135,4 @@ Small note: If editing the README, please conform to the standard-readme specifi
 
 ## License
 
-[LGPL-3.0 or later](https://spdx.org/licenses/LGPL-3.0-or-later) © 2020 Decentralized Society Foundation, PA
+[LGPL-3.0 or later](https://spdx.org/licenses/LGPL-3.0-or-later) © 2023 Decentralized Society Foundation, PA

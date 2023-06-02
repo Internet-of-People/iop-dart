@@ -6,7 +6,6 @@ import 'package:iop_sdk/crypto.dart';
 import 'package:iop_sdk/layer1.dart';
 import 'package:iop_sdk/layer2.dart';
 import 'package:iop_sdk/network.dart';
-import 'package:iop_sdk/src/coeus/operation.dart';
 import 'package:test/test.dart';
 
 import '../util.dart';

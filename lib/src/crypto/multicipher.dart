@@ -16,8 +16,8 @@ class KeyId implements Disposable {
     return DartApi.native.keyId.prefix().intoString();
   }
 
-  static KeyId fromSecp(SecpKeyId secp_id) {
-    final id = DartApi.native.keyId.fromSecp(secp_id.ffi);
+  static KeyId fromSecp(SecpKeyId secpId) {
+    final id = DartApi.native.keyId.fromSecp(secpId.ffi);
     return KeyId(id, true);
   }
 
@@ -122,8 +122,8 @@ class PublicKey implements Disposable {
     return DartApi.native.publicKey.prefix().intoString();
   }
 
-  static PublicKey fromSecp(SecpPublicKey secp_pk) {
-    final pk = DartApi.native.publicKey.fromSecp(secp_pk.ffi);
+  static PublicKey fromSecp(SecpPublicKey secpPk) {
+    final pk = DartApi.native.publicKey.fromSecp(secpPk.ffi);
     return PublicKey(pk, true);
   }
 
@@ -204,6 +204,8 @@ class Signature implements Disposable {
   bool _owned;
 
   Signature(this._ffi, this._owned);
+
+  Pointer<Void> get ffi => _ffi;
 
   static String prefix() {
     return DartApi.native.signature.prefix().intoString();

@@ -9,6 +9,17 @@ typedef DDelete_SignedJson = void Function(
   Pointer<Void> signedJson,
 );
 
+typedef NSignedJson_New = Pointer<Result> Function(
+  Pointer<Void> publicKey,
+  Pointer<Utf8> content,
+  Pointer<Void> signature,
+);
+typedef DSignedJson_New = Pointer<Result> Function(
+  Pointer<Void> publicKey,
+  Pointer<Utf8> content,
+  Pointer<Void> signature,
+);
+
 typedef NSignedJson_PublicKey_Get = Pointer<Void> Function(
   Pointer<Void> signedJson,
 );
@@ -61,6 +72,7 @@ typedef DSignedJson_ValidateWithDidDoc = Pointer<Result> Function(
 
 class NativeSignedJson {
   final DDelete_SignedJson delete;
+  final DSignedJson_New create;
   final DSignedJson_PublicKey_Get publicKeyGet;
   final DSignedJson_Content_Get contentGet;
   final DSignedJson_Signature_Get signatureGet;
@@ -71,6 +83,9 @@ class NativeSignedJson {
   NativeSignedJson(DynamicLibrary lib)
       : delete = lib.lookupFunction<NDelete_SignedJson, DDelete_SignedJson>(
           'delete_SignedJson',
+        ),
+        create = lib.lookupFunction<NSignedJson_New, DSignedJson_New>(
+          'SignedJson_new',
         ),
         publicKeyGet = lib.lookupFunction<NSignedJson_PublicKey_Get,
             DSignedJson_PublicKey_Get>(

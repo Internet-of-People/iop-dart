@@ -74,7 +74,7 @@ extension ArraySlice<T extends NativeType> on NativeSlice {
 extension PointerSlice<T extends NativeType> on NativeSlice {
   Pointer<T> at(int index) {
     if (index >= _length) {
-      throw IndexError(index, this);
+      throw IndexError.withLength(index, _length);
     }
     return (_ptr as Pointer<Pointer<T>>)[index].cast();
   }

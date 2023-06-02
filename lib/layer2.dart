@@ -1,5 +1,6 @@
 export './src/layer2/did_document.dart';
 export './src/layer2/io.dart';
+export './src/layer2/morpheus_api.dart';
 
 import './src/layer2/coeus_api.dart';
 import './src/layer2/morpheus_api.dart';

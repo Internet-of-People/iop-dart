@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:iop_sdk/scalar_box.dart';
 
@@ -39,6 +42,9 @@ class PublicKeyData extends ScalarBox<String> {
       _$PublicKeyDataFromJson({'value': value});
 
   String toJson() => _$PublicKeyDataToJson(this)['value'];
+
+  ByteData toByteData() =>
+      Uint8List.fromList(utf8.encode(value)).buffer.asByteData();
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -49,4 +55,7 @@ class SignatureData extends ScalarBox<String> {
       _$SignatureDataFromJson({'value': value});
 
   String toJson() => _$SignatureDataToJson(this)['value'];
+
+  ByteData toByteData() =>
+      Uint8List.fromList(utf8.encode(value)).buffer.asByteData();
 }

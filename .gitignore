@@ -2,3 +2,4 @@
 .idea
 .packages
 libiop_sdk_ffi.so
+.DS_Store

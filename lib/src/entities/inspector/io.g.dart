@@ -18,7 +18,7 @@ Scenario _$ScenarioFromJson(Map<String, dynamic> json) => Scenario(
           .toList(),
       json['resultSchema'] == null
           ? null
-          : Content.fromJson(json['resultSchema']),
+          : Content<DynamicContent>.fromJson(json['resultSchema']),
     );
 
 Map<String, dynamic> _$ScenarioToJson(Scenario instance) => <String, dynamic>{
@@ -32,7 +32,7 @@ Map<String, dynamic> _$ScenarioToJson(Scenario instance) => <String, dynamic>{
     };
 
 Prerequisite _$PrerequisiteFromJson(Map<String, dynamic> json) => Prerequisite(
-      Content.fromJson(json['process']),
+      Content<Process>.fromJson(json['process']),
       (json['claimFields'] as List<dynamic>).map((e) => e as String).toList(),
     );
 

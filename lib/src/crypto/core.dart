@@ -64,3 +64,8 @@ String stringifyJson(dynamic data) {
 Nonce nonce264() {
   return Nonce(DartApi.instance.nonce264());
 }
+
+// TODO: this method is available in the webassembly, but not yet in FFI
+NoncedValue<T> wrapWithNonce<T>(T value) {
+  return NoncedValue(nonce264(), value);
+}

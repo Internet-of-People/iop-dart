@@ -8,39 +8,13 @@ part of 'operation_data.dart';
 
 OperationData _$OperationDataFromJson(Map<String, dynamic> json) =>
     OperationData(
-      _$enumDecode(_$OperationTypeEnumMap, json['operation']),
+      $enumDecode(_$OperationTypeEnumMap, json['operation']),
     );
 
 Map<String, dynamic> _$OperationDataToJson(OperationData instance) =>
     <String, dynamic>{
-      'operation': _$OperationTypeEnumMap[instance.operation],
+      'operation': _$OperationTypeEnumMap[instance.operation]!,
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
 
 const _$OperationTypeEnumMap = {
   OperationType.signed: 'signed',
@@ -52,7 +26,7 @@ SignableOperationData _$SignableOperationDataFromJson(
     SignableOperationData(
       DidData.fromJson(json['did'] as String),
       json['lastTxId'] as String?,
-      _$enumDecode(_$SignableOperationTypeEnumMap, json['operation']),
+      $enumDecode(_$SignableOperationTypeEnumMap, json['operation']),
     );
 
 Map<String, dynamic> _$SignableOperationDataToJson(
@@ -60,7 +34,7 @@ Map<String, dynamic> _$SignableOperationDataToJson(
     <String, dynamic>{
       'did': instance.did.toJson(),
       'lastTxId': instance.lastTxId,
-      'operation': _$SignableOperationTypeEnumMap[instance.operation],
+      'operation': _$SignableOperationTypeEnumMap[instance.operation]!,
     };
 
 const _$SignableOperationTypeEnumMap = {
