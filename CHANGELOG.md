@@ -1,3 +1,8 @@
+## [6.0.0] - 2023-06-02
+
+- Follow the 0.0.17 IOP SDK's API
+- Fix: data structure and its parsing mechanism.
+
 ## [5.0.0] - 2021-08-05
 
 ### Added
