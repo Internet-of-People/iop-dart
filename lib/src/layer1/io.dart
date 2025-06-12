@@ -67,7 +67,7 @@ class BlockchainBlock {
 @JsonSerializable(explicitToJson: true)
 class WalletResponse {
   final String address;
-  final String publicKey;
+  final String? publicKey;
   final String nonce;
   final String balance;
   final dynamic attributes;

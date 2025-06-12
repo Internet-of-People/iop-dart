@@ -54,7 +54,7 @@ Map<String, dynamic> _$BlockchainResponseToJson(BlockchainResponse instance) =>
 BlockchainBlock _$BlockchainBlockFromJson(Map<String, dynamic> json) =>
     BlockchainBlock(
       json['id'] as String,
-      json['height'] as int,
+      (json['height'] as num).toInt(),
     );
 
 Map<String, dynamic> _$BlockchainBlockToJson(BlockchainBlock instance) =>
@@ -66,7 +66,7 @@ Map<String, dynamic> _$BlockchainBlockToJson(BlockchainBlock instance) =>
 WalletResponse _$WalletResponseFromJson(Map<String, dynamic> json) =>
     WalletResponse(
       json['address'] as String,
-      json['publicKey'] as String,
+      json['publicKey'] as String?,
       json['nonce'] as String,
       json['balance'] as String,
       json['attributes'],
@@ -136,11 +136,11 @@ NodeCryptoConfigNetwork _$NodeCryptoConfigNetworkFromJson(
       json['name'] as String,
       json['messagePrefix'] as String,
       Map<String, int>.from(json['bip32'] as Map),
-      json['pubKeyHash'] as int,
+      (json['pubKeyHash'] as num).toInt(),
       json['nethash'] as String,
-      json['wif'] as int,
-      json['slip44'] as int,
-      json['aip20'] as int,
+      (json['wif'] as num).toInt(),
+      (json['slip44'] as num).toInt(),
+      (json['aip20'] as num).toInt(),
       Map<String, String>.from(json['client'] as Map),
     );
 
@@ -159,8 +159,8 @@ Map<String, dynamic> _$NodeCryptoConfigNetworkToJson(
     };
 
 Timestamp _$TimestampFromJson(Map<String, dynamic> json) => Timestamp(
-      json['epoch'] as int,
-      json['unix'] as int,
+      (json['epoch'] as num).toInt(),
+      (json['unix'] as num).toInt(),
       json['human'] as String,
     );
 
@@ -175,9 +175,9 @@ TransactionStatusResponse _$TransactionStatusResponseFromJson(
     TransactionStatusResponse(
       json['id'] as String?,
       json['blockId'] as String?,
-      json['version'] as int?,
-      json['type'] as int,
-      json['typeGroup'] as int?,
+      (json['version'] as num?)?.toInt(),
+      (json['type'] as num).toInt(),
+      (json['typeGroup'] as num?)?.toInt(),
       json['amount'] as String,
       json['fee'] as String,
       json['sender'] as String,
@@ -188,7 +188,7 @@ TransactionStatusResponse _$TransactionStatusResponseFromJson(
       (json['signatures'] as List<dynamic>?)?.map((e) => e as String).toList(),
       json['vendorField'] as String?,
       json['asset'] as Map<String, dynamic>?,
-      json['confirmations'] as int,
+      (json['confirmations'] as num).toInt(),
       json['timestamp'] == null
           ? null
           : Timestamp.fromJson(json['timestamp'] as Map<String, dynamic>),
@@ -196,32 +196,24 @@ TransactionStatusResponse _$TransactionStatusResponseFromJson(
     );
 
 Map<String, dynamic> _$TransactionStatusResponseToJson(
-    TransactionStatusResponse instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('id', instance.id);
-  val['blockId'] = instance.blockId;
-  val['version'] = instance.version;
-  val['type'] = instance.type;
-  val['typeGroup'] = instance.typeGroup;
-  val['amount'] = instance.amount;
-  val['fee'] = instance.fee;
-  val['sender'] = instance.sender;
-  val['senderPublicKey'] = instance.senderPublicKey;
-  val['recipient'] = instance.recipient;
-  val['signature'] = instance.signature;
-  val['signSignature'] = instance.signSignature;
-  val['signatures'] = instance.signatures;
-  val['vendorField'] = instance.vendorField;
-  val['asset'] = instance.asset;
-  val['confirmations'] = instance.confirmations;
-  val['timestamp'] = instance.timestamp?.toJson();
-  val['nonce'] = instance.nonce;
-  return val;
-}
+        TransactionStatusResponse instance) =>
+    <String, dynamic>{
+      if (instance.id case final value?) 'id': value,
+      'blockId': instance.blockId,
+      'version': instance.version,
+      'type': instance.type,
+      'typeGroup': instance.typeGroup,
+      'amount': instance.amount,
+      'fee': instance.fee,
+      'sender': instance.sender,
+      'senderPublicKey': instance.senderPublicKey,
+      'recipient': instance.recipient,
+      'signature': instance.signature,
+      'signSignature': instance.signSignature,
+      'signatures': instance.signatures,
+      'vendorField': instance.vendorField,
+      'asset': instance.asset,
+      'confirmations': instance.confirmations,
+      'timestamp': instance.timestamp?.toJson(),
+      'nonce': instance.nonce,
+    };

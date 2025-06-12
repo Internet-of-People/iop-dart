@@ -10,9 +10,9 @@ BeforeProofHistoryResponse _$BeforeProofHistoryResponseFromJson(
         Map<String, dynamic> json) =>
     BeforeProofHistoryResponse(
       ContentId.fromJson(json['contentId'] as String),
-      json['existsFromHeight'] as int?,
+      (json['existsFromHeight'] as num?)?.toInt(),
       json['txid'] as String?,
-      json['queriedAtHeight'] as int,
+      (json['queriedAtHeight'] as num).toInt(),
     );
 
 Map<String, dynamic> _$BeforeProofHistoryResponseToJson(
@@ -27,7 +27,7 @@ Map<String, dynamic> _$BeforeProofHistoryResponseToJson(
 TransactionIdHeight _$TransactionIdHeightFromJson(Map<String, dynamic> json) =>
     TransactionIdHeight(
       json['transactionId'] as String,
-      json['height'] as int,
+      (json['height'] as num).toInt(),
     );
 
 Map<String, dynamic> _$TransactionIdHeightToJson(
@@ -39,7 +39,7 @@ Map<String, dynamic> _$TransactionIdHeightToJson(
 
 DidOperation _$DidOperationFromJson(Map<String, dynamic> json) => DidOperation(
       json['transactionId'] as String,
-      json['blockHeight'] as int,
+      (json['blockHeight'] as num).toInt(),
       SignableOperationData.fromJson(json['data'] as Map<String, dynamic>),
       json['valid'] as bool,
     );
@@ -69,7 +69,7 @@ Map<String, dynamic> _$DryRunOperationErrorToJson<T extends OperationData>(
 DomainSubtreePolicies _$DomainSubtreePoliciesFromJson(
         Map<String, dynamic> json) =>
     DomainSubtreePolicies(
-      json['expiration'] as int?,
+      (json['expiration'] as num?)?.toInt(),
       json['schema'],
     );
 
@@ -87,7 +87,7 @@ DomainMetadata _$DomainMetadataFromJson(Map<String, dynamic> json) =>
           json['subtreePolicies'] as Map<String, dynamic>),
       $enumDecode(
           _$DomainRegistrationPolicyEnumMap, json['registrationPolicy']),
-      json['expiresAtHeight'] as int,
+      (json['expiresAtHeight'] as num).toInt(),
     );
 
 Map<String, dynamic> _$DomainMetadataToJson(DomainMetadata instance) =>

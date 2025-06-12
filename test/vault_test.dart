@@ -23,7 +23,6 @@ void main() {
       final loadedVault = Vault.load(backup);
 
       expect(loadedVault.save(), serializedState);
-      ;
 
       await File('tutorial_vault.state').delete();
     });

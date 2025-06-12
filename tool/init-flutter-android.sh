@@ -42,7 +42,7 @@ curl --proto '=https' --tlsv1.2 -#L -o "$ANDROID_JNILIBS_PATH/x86/libiop_sdk_ffi
 
 # TODO consider autoextracting sdk version from our pubspec.yaml
 IOP_DEPENDENCY_NAME="iop_sdk"
-IOP_DEPENDENCY_LATEST_VERSION="6.0.0"
+IOP_DEPENDENCY_LATEST_VERSION="6.0.1"
 echo Checking IoP package dependency
 if ! grep -zqP "$IOP_DEPENDENCY_NAME:" $PROJECT_FILE
 then

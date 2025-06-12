@@ -8,7 +8,7 @@ part of 'io.dart';
 
 Scenario _$ScenarioFromJson(Map<String, dynamic> json) => Scenario(
       json['name'] as String,
-      json['version'] as int,
+      (json['version'] as num).toInt(),
       json['description'] as String,
       (json['prerequisites'] as List<dynamic>)
           .map((e) => Prerequisite.fromJson(e as Map<String, dynamic>))

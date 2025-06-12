@@ -14,7 +14,7 @@ extension Optional on int? {
   }
 }
 
-class NativeSlice extends Struct {
+final class NativeSlice extends Struct {
   external Pointer<Void> _ptr;
 
   @IntPtr()
@@ -90,7 +90,7 @@ extension StringPtr on Pointer<Utf8> {
   }
 }
 
-class Result extends Struct implements Disposable {
+final class Result extends Struct implements Disposable {
   external Pointer _success;
   external Pointer<Utf8> _error;
 

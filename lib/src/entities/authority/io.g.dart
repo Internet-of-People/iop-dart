@@ -8,7 +8,7 @@ part of 'io.dart';
 
 Process _$ProcessFromJson(Map<String, dynamic> json) => Process(
       json['name'] as String,
-      json['version'] as int,
+      (json['version'] as num).toInt(),
       json['description'] as String,
       Content<DynamicContent>.fromJson(json['claimSchema']),
       json['evidenceSchema'] == null

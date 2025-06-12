@@ -1,3 +1,9 @@
+## [6.0.1] - 2025-06-12
+
+- Fix: updated macos dylib
+- Fix: update to latest dependencies
+- Fix: update to latest dart
+
 ## [6.0.0] - 2023-06-02
 
 - Follow the 0.0.17 IOP SDK's API

@@ -65,7 +65,7 @@ AddKeyData _$AddKeyDataFromJson(Map<String, dynamic> json) => AddKeyData(
       DidData.fromJson(json['did'] as String),
       json['lastTxId'] as String,
       AuthenticationData.fromJson(json['auth'] as String),
-      expiresAtHeight: json['expiresAtHeight'] as int?,
+      expiresAtHeight: (json['expiresAtHeight'] as num?)?.toInt(),
     );
 
 RevokeKeyData _$RevokeKeyDataFromJson(Map<String, dynamic> json) =>

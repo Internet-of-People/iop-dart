@@ -7,10 +7,10 @@ part of 'did_document.dart';
 // **************************************************************************
 
 KeyData _$KeyDataFromJson(Map<String, dynamic> json) => KeyData(
-      json['index'] as int,
+      (json['index'] as num).toInt(),
       AuthenticationData.fromJson(json['auth'] as String),
-      json['validFromHeight'] as int?,
-      json['validUntilHeight'] as int?,
+      (json['validFromHeight'] as num?)?.toInt(),
+      (json['validUntilHeight'] as num?)?.toInt(),
       json['valid'] as bool,
     );
 
@@ -25,7 +25,7 @@ Map<String, dynamic> _$KeyDataToJson(KeyData instance) => <String, dynamic>{
 KeyRightHistoryPoint _$KeyRightHistoryPointFromJson(
         Map<String, dynamic> json) =>
     KeyRightHistoryPoint(
-      json['height'] as int?,
+      (json['height'] as num?)?.toInt(),
       json['valid'] as bool,
     );
 
@@ -66,26 +66,18 @@ DidDocumentData _$DidDocumentDataFromJson(Map<String, dynamic> json) =>
                 .toList()),
       ),
       json['tombstoned'] as bool,
-      json['tombstonedAtHeight'] as int?,
-      json['queriedAtHeight'] as int,
+      (json['tombstonedAtHeight'] as num?)?.toInt(),
+      (json['queriedAtHeight'] as num).toInt(),
     );
 
-Map<String, dynamic> _$DidDocumentDataToJson(DidDocumentData instance) {
-  final val = <String, dynamic>{
-    'did': instance.did.toJson(),
-    'keys': instance.keys.map((e) => e.toJson()).toList(),
-    'rights': instance.rights
-        .map((k, e) => MapEntry(k, e.map((e) => e.toJson()).toList())),
-    'tombstoned': instance.tombstoned,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('tombstonedAtHeight', instance.tombstonedAtHeight);
-  val['queriedAtHeight'] = instance.queriedAtHeight;
-  return val;
-}
+Map<String, dynamic> _$DidDocumentDataToJson(DidDocumentData instance) =>
+    <String, dynamic>{
+      'did': instance.did.toJson(),
+      'keys': instance.keys.map((e) => e.toJson()).toList(),
+      'rights': instance.rights
+          .map((k, e) => MapEntry(k, e.map((e) => e.toJson()).toList())),
+      'tombstoned': instance.tombstoned,
+      if (instance.tombstonedAtHeight case final value?)
+        'tombstonedAtHeight': value,
+      'queriedAtHeight': instance.queriedAtHeight,
+    };

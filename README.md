@@ -24,7 +24,7 @@ This SDK is a work in progress and its convenience improves over time.
 
 ## Prerequisites
 
-- Dart 2.12.0+
+- Dart 3
 - Linux / MacOS / Windows
 
 ## Supported OS
@@ -39,7 +39,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  iop_sdk: ^6.0.0
+  iop_sdk: ^6.0.1
 ```
 
 ## Architecture

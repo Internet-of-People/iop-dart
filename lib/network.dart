@@ -31,8 +31,8 @@ extension NetworkProperties on Network {
 
   String get seedServerUrlBase => const {
         Network.LocalTestNet: 'http://127.0.0.1',
-        Network.TestNet: 'https://test.explorer.hydraledger.io',
-        Network.DevNet: 'https://dev.explorer.hydraledger.io',
-        Network.MainNet: 'https://explorer.hydraledger.io',
+        Network.TestNet: 'https://test.explorer.hydraledger.tech',
+        Network.DevNet: 'https://dev.explorer.hydraledger.tech',
+        Network.MainNet: 'https://explorer.hydraledger.tech',
       }[this]!;
 }
